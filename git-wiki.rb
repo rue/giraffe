@@ -1,5 +1,5 @@
 #!/usr/bin/env ruby
-%w(sinatra haml sass rubygems git bluecloth rubypants).each do |dependency|
+%w(sinatra haml sass rubygems git redcloth).each do |dependency|
   begin
     $: << File.expand_path(File.dirname(__FILE__) + "/vendor/#{dependency}/lib")
     require dependency
@@ -26,7 +26,7 @@ class Page
   end
 
   def body
-    BlueCloth.new(RubyPants.new(raw_body).to_html).to_html.
+    RedCloth.new(raw_body).to_html.
       gsub(/\b((?:[A-Z]\w+){2,})/) do |page|
         "<a class='#{Page.new(page).tracked? ? 'exists' : 'unknown'}' href='#{page}'>#{page}</a>"
       end
