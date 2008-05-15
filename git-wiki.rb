@@ -1,11 +1,23 @@
 #!/usr/bin/env ruby
-%w(sinatra haml sass rubygems git redcloth).each do |dependency|
+%w(sinatra haml sass rubygems git redcloth yaml).each do |dependency|
   begin
     $: << File.expand_path(File.dirname(__FILE__) + "/vendor/#{dependency}/lib")
     require dependency
   rescue LoadError
     abort "Unable to load #{dependency}. Did you run 'git submodule init' ? If so install #{dependency}"
   end
+end
+
+#included until http://sinatra.lighthouseapp.com/projects/9779/tickets/16-patch-http-authentication is in a released version
+require File.dirname(__FILE__) + '/sinatra_http_auth'
+
+begin
+  config = YAML.load(File.read(ENV['CONFIG']))
+rescue
+  config = {
+    'username' =>  nil,
+    'password' =>  nil
+  }
 end
 
 class Page
@@ -93,6 +105,11 @@ helpers do
 end
 
 before do
+  # unless config['username'].nil? && config['password'].nil?
+    authenticate_or_request_with_http_basic "GitWiki" do
+      |user, pass| user == config['username'] && pass == config['password']
+    end
+  # end
   content_type 'text/html', :charset => 'utf-8'
 end
 
