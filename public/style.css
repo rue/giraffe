@@ -161,7 +161,7 @@ ul {
 .sub_nav .details {
   color: #888;
   font-size: .85em;
-  margin-left: 0.3em;
+  margin: 0 0 0.3em 0.3em;
 }
 
 .sub_nav .details a {
