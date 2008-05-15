@@ -18,37 +18,42 @@
 
 <%= @env %>
 
-<div class="sub_nav">
+<ul class="sub_nav">
   <% if params[:rev] %>
-    <a href="/<%= @page.name %>" class="nav_link">current</a> &bull;
+    <li><a href="/<%= @page.name %>" class="nav_link">current</a></li>
   <% else %>
-    <a href="/e/<%= @page.name %>" class="nav_link">edit</a> &bull;
+    <li><a href="/e/<%= @page.name %>" class="nav_link">edit</a></li>
   <% end %>
   
   <% if params[:rev] %>
-    <a href="/h/<%= @page.name %>/<%= @page.commit %>.txt" class="nav_link">raw</a> &bull;
+    <li><a href="/h/<%= @page.name %>/<%= @page.commit %>.txt" class="nav_link">raw</a></li>
   <% else %>
-    <a href="<%= @page.name %>.txt" class="nav_link">raw</a> &bull;
+    <li><a href="<%= @page.name %>.txt" class="nav_link">raw</a></li>
   <% end %>
 
-  <a href="/h/<%= @page.name %>" class="nav_link">history</a>
+  <li><a href="/h/<%= @page.name %>" class="nav_link">history</a></li>
   
   <% if @page.previous_commit %>
-    &bull; <a href="/h/<%= @page.name %>/<%= @page.previous_commit %>" class="nav_link">older</a>
+    <li><a href="/h/<%= @page.name %>/<%= @page.previous_commit %>" class="nav_link">older</a></li>
   <% end %>
   
   <% if @page.next_commit %>
-    &bull; <a href="/h/<%= @page.name %>/<%= @page.next_commit %>" class="nav_link">newer</a>
+    <li><a href="/h/<%= @page.name %>/<%= @page.next_commit %>" class="nav_link">newer</a></li>
   <% end %>
 
-  <div class="sub_nav details">
-    <script type="text/javascript">
-      document.write(time_ago_in_words(<%= @page.updated_at.for_time_ago_in_words %>) + ' ago');
-    </script>
-    <br />
-    <%= $repo.current_branch %> branch    
-  </div>
+  <li>
+    <ul class="sub_nav details">
+      <li>updated 
+        <script type="text/javascript">
+          document.write(time_ago_in_words(<%= @page.updated_at.for_time_ago_in_words %>) + ' ago');
+        </script>
+      </li>
+      <li>
+        <%= $repo.current_branch %> <a href="/a/branches">branch</a>
+      </li>
+    </ul>
+  </li>
   
-</div>
+</ul>
 
 <div class="content edit_area"><%= @page.body %></div>

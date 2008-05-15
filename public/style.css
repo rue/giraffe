@@ -146,9 +146,16 @@ ul {
   font-weight: bold;
 }
 
-.sub_nav { 
-  float: left; 
-  padding-top: 8px;
+.sub_nav {
+  float: left;
+  list-style-type:none;
+  padding: 8px 0 0 0;
+  margin: 0;
+  width:200px;
+}
+
+.sub_nav li {
+  padding:0;
 }
 
 .sub_nav .details {
@@ -156,6 +163,12 @@ ul {
   font-size: .85em;
   margin-left: 0.3em;
 }
+
+.sub_nav .details a {
+  color: #666;
+  text-decoration: underline;
+}
+
 span.detail {
 	color: #888;
 	font-size: .85em;

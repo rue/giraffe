@@ -1,19 +1,18 @@
 <h1>Branches</h1>
 
-<div class="sub_nav">
+<ul class="sub_nav">
   <% @branches.each do |b| %>
     <% next if b.full == 'origin/master' %>
     <% if b.current %>
-      <strong><%= b.full %></strong>
+      <li><strong><%= b.full %></strong></li>
     <% else %>
-      <%= b.full %>
-      <a href="/a/branch/<%= b.name %>">switch</a> &bull;
-      <a href="/a/merge_branch/<%= b.name %>">merge</a>
-      <!-- &bull; <a href="/a/delete_branch/<%= b.name %>">delete</a> -->
+      <li><%= b.full %></li>
+      <li><a href="/a/branch/<%= b.name %>">switch</a></li>
+      <li><a href="/a/merge_branch/<%= b.name %>">merge</a></li>
+      <!-- <li><a href="/a/delete_branch/<%= b.name %>">delete</a></li> -->
     <% end %>
-    <br />
   <% end %>
-</div>
+</ul>
 
 <div class="content">
   <h2>New Branch</h2>

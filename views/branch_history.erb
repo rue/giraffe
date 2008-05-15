@@ -1,9 +1,9 @@
 <h1>Branch History</h1>
 
-<div class="sub_nav">
-  <a href="/a/branches" class="nav_link"><%= $repo.current_branch %> branch</a><br />
-  <span class="sub_nav details"><%= @history.size %> commits</span>
-</div>
+<ul class="sub_nav">
+  <li><a href="/a/branches" class="nav_link"><%= $repo.current_branch %> branch</a></li>
+  <li class="sub_nav details"><%= @history.size %> commits</li>
+</ul>
 
 <div class="content">
   <br />
