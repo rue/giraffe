@@ -1,8 +1,14 @@
 #!/usr/bin/env ruby
 
-require 'fileutils'
 require 'environment'
-require 'sinatra/lib/sinatra'
+
+before do
+  unless CONFIG['username'].nil? && CONFIG['password'].nil?
+    authenticate_or_request_with_http_basic "git-wiki" do
+      |user, pass| user == CONFIG['username'] && pass == CONFIG['password']
+    end
+  end
+end
 
 get('/') { redirect "/#{HOMEPAGE}" }
 
