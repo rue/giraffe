@@ -1,0 +1,37 @@
+<h1>Editing <a href="/<%= @page.name %>"><%= @page.name %></a></h1>
+
+<div class="sub_nav">
+  <a href="/<%= @page.name %>" class="nav_link">back</a>
+  &bull; <a href="/a/file/upload/<%= @page.name %>" class="nav_link">attach</a>  
+  
+  <% if @page.tracked? %>
+    &bull; <a href="/h/<%= @page.name %>" class="nav_link">history</a> 
+  <% end %>
+  
+  <% if files = @page.attachments %>
+    <h3>Attachments</h3>
+    <% files.each do |file| %>
+      <li><a href="<%= file.link_path %>"><%= file.name %></a> 
+        <span class="detail">(<%= file.size %>)</span>
+        <div class="attach-options">
+          <a href="<%= file.delete_path %>">delete</a>
+          &bull; <a href="<%= file.link_path %>">download</a>
+          <% if file.image? %>
+          &bull; <a href="#" onClick="$(edit_textarea).html($(edit_textarea).html() + '!<%= file.link_path %>!');">insert &#187;</a>
+          <% else %>
+          &bull; <a href="#" onClick="$(edit_textarea).html($(edit_textarea).html() + '[<%= file.name %>](<%= file.link_path %>)');">insert &#187;</a>
+          <% end %>
+        </div>
+      </span>
+    <% end %>
+  <% end %>
+</div>
+
+<div class="content">
+  <form method="post" action="/e/<%= @page.name %>">
+    <textarea name="body" id="edit_textarea"><%= @page.raw_body %></textarea>
+    Message:
+    <textarea name="message" rows="4" id="message_textarea"></textarea>
+    <p class="right"><input type="submit" value="Save" class="submit" /></p>
+  </form>
+</div>

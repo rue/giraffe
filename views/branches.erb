@@ -1,0 +1,57 @@
+<h1>Branches</h1>
+
+<div class="sub_nav">
+  <% @branches.each do |b| %>
+    <% next if b.full == 'origin/master' %>
+    <% if b.current %>
+      <strong><%= b.full %></strong>
+    <% else %>
+      <%= b.full %>
+      <a href="/a/branch/<%= b.name %>">switch</a> &bull;
+      <a href="/a/merge_branch/<%= b.name %>">merge</a>
+      <!-- &bull; <a href="/a/delete_branch/<%= b.name %>">delete</a> -->
+    <% end %>
+    <br />
+  <% end %>
+</div>
+
+<div class="content">
+  <h2>New Branch</h2>
+  <form method="post" action="/a/new_branch" class="niceform">
+    <label for="name">name</label>
+    <input type="text" name="branch" />
+    <br />
+
+    <input type="hidden" name="type" value="derive" />
+    
+    <!--
+    <label for="derive_radio">copy this branch</label>
+    <input type="radio" name="type" value="derive" />
+    <br />
+    
+    <label for="blank_radio">empty branch</label>
+    <input type="radio" name="type" value="blank" /> 
+    <br />
+    -->
+  
+    <label for="submit"></label>
+    <input type="submit" value="create" class="submit" />
+  </form>
+  
+  <p class="clearer">
+
+  <h2>New Remote Branch</h2>
+  <form method="post" action="/a/new_remote" class="niceform">
+    <label for="branch_name">name</label>
+    <input type="text" name="branch_name">
+    <br />
+    
+    <label for="branch_url">url</label>
+    <input type="text" name="branch_url">
+    <br />
+
+    <label for="submit"></label>
+    <input type="submit" value="create" class="submit" />
+  </form>
+</div>
+

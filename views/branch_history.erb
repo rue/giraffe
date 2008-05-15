@@ -1,0 +1,30 @@
+<h1>Branch History</h1>
+
+<div class="sub_nav">
+  <a href="/a/branches" class="nav_link"><%= $repo.current_branch %> branch</a><br />
+  <span class="sub_nav details"><%= @history.size %> commits</span>
+</div>
+
+<div class="content">
+  <br />
+  <ul>
+  <% @history.each do |commit| %>
+    <li>
+      <% if commit != @history.first %>
+        <a href="/a/revert_branch/<%= commit.sha %>" title="Click to revert to this revision." onclick="return confirm('Are you sure you want to revert to this revision?');">
+          <script type="text/javascript">
+          document.write(time_ago_in_words(<%= commit.date.for_time_ago_in_words %>) + ' ago');
+          </script>
+        </a>
+      <% else %>
+        <script type="text/javascript">
+        document.write(time_ago_in_words(<%= commit.date.for_time_ago_in_words %>) + ' ago');
+        </script>
+      <% end %>
+      &mdash;
+      <%= commit.message %> 
+    </li>
+  <% end %>
+  </ul>
+</div>
+

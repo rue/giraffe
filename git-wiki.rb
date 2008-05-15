@@ -1,327 +1,190 @@
 #!/usr/bin/env ruby
-%w(sinatra haml sass rubygems git redcloth yaml).each do |dependency|
-  begin
-    $: << File.expand_path(File.dirname(__FILE__) + "/vendor/#{dependency}/lib")
-    require dependency
-  rescue LoadError
-    abort "Unable to load #{dependency}. Did you run 'git submodule init' ? If so install #{dependency}"
-  end
-end
 
-#included until http://sinatra.lighthouseapp.com/projects/9779/tickets/16-patch-http-authentication is in a released version
-require File.dirname(__FILE__) + '/sinatra_http_auth'
+require 'fileutils'
+require 'environment'
+require 'sinatra/lib/sinatra'
 
-begin
-  config = YAML.load(File.read(ENV['CONFIG']))
-rescue
-  config = {
-    'username' =>  nil,
-    'password' =>  nil
-  }
-end
+get('/') { redirect "/#{HOMEPAGE}" }
 
-class Page
-  class << self
-    attr_accessor :repo
-  end
-
-  def self.find_all
-    return [] if (Page.repo.log.size rescue 0) == 0
-    Page.repo.log.first.gtree.children.map { |name, blob| Page.new(name) }.sort_by { |p| p.name }
-  end
-
-  attr_reader :name
-
-  def initialize(name)
-    @name = name
-    @filename = File.join(GIT_REPOSITORY, @name)
-  end
-
-  def body
-    RedCloth.new(raw_body).to_html.
-      gsub(/\b((?:[A-Z]\w+){2,})/) do |page|
-        "<a class='#{Page.new(page).tracked? ? 'exists' : 'unknown'}' href='#{page}'>#{page}</a>"
-      end
-  end
-
-  def raw_body
-    File.exists?(@filename) ? File.read(@filename) : ''
-  end
-
-  def body=(content)
-    return if content == raw_body
-    File.open(@filename, 'w') { |f| f << content }
-    message = tracked? ? "Edited #{@name}" : "Created #{@name}"
-    Page.repo.add(@name)
-    Page.repo.commit(message)
-  end
-
-  def tracked?
-    Page.repo.ls_files.keys.include?(@name)
-  end
-
-  def to_s
-    @name
-  end
-end
-
-use_in_file_templates!
-
-configure do
-  GIT_REPOSITORY = ENV['WIKI'] || File.join(ENV['HOME'], 'wiki')
-  HOMEPAGE = 'Home'
-  set_option :haml, :format => :html4
-
-  unless File.exists?(GIT_REPOSITORY) && File.directory?(GIT_REPOSITORY)
-    puts "Initializing repository in #{GIT_REPOSITORY}"
-    Git.init(GIT_REPOSITORY)
-    File.open(File.join(GIT_REPOSITORY, HOMEPAGE), 'w') do |f|
-      f.write(<<-EOF)
-## Welcome on git-wiki
-Congratulation, you managed to successfuly run git-wiki!   
-Feel free to edit this page (double-clik it) and start to use your wiki.  
-To access the page listing, hit <kbd>CTRL+L</kbd> and <kbd>CTRL+H</kbd> to go to the homepage.
-EOF
-    end
-
-    repository = Git.open(GIT_REPOSITORY)
-    repository.add(HOMEPAGE)
-    repository.commit('Initial commit')
-  end
-
-  Page.repo = repository || Git.open(GIT_REPOSITORY)
-end
-
-
-helpers do
-  def title(title=nil)
-    @title = title unless title.nil?
-    @title
-  end
-
-  def list_item(page)
-    "<a class='page_name' href='/#{page}'>#{page}</a>&nbsp;<a class='edit' href='/e/#{page}'>edit</a>"
-  end
-end
-
-before do
-  # unless config['username'].nil? && config['password'].nil?
-    authenticate_or_request_with_http_basic "GitWiki" do
-      |user, pass| user == config['username'] && pass == config['password']
-    end
-  # end
-  content_type 'text/html', :charset => 'utf-8'
-end
-
-get('/') { redirect '/' + HOMEPAGE }
-
-get('/_stylesheet.css') do
-  content_type 'text/css', :charset => 'utf-8'
-  sass :stylesheet
-end
-
-get '/_list' do
-  @pages = Page.find_all
-  haml :list
-end
+# page paths
 
 get '/:page' do
   @page = Page.new(params[:page])
-  @page.tracked? ? haml(:show) : redirect("/e/#{@page.name}")
+  @page.tracked? ? show(:show, @page.name) : redirect('/e/' + @page.name)
 end
 
-# Waiting for Black's new awesome route system
 get '/:page.txt' do
-  @page = Page.new(params[:page])
-  throw :halt, [404, "Unknown page #{params[:page]}"] unless @page.tracked?
   content_type 'text/plain', :charset => 'utf-8'
+  @page = Page.new(params[:page])
   @page.raw_body
+end
+
+get '/:page/append' do
+  @page = Page.new(params[:page])
+  @page.body = @page.raw_body + "\n\n" + params[:text]
+  redirect '/' + @page.name
 end
 
 get '/e/:page' do
   @page = Page.new(params[:page])
-  haml :edit
+  show :edit, "Editing #{@page.name}"
 end
 
 post '/e/:page' do
   @page = Page.new(params[:page])
-  @page.body = params[:body]
-  request.xhr? ? @page.body : redirect("/#{@page.name}")
+  @page.update(params[:body], params[:message])
+  redirect '/' + @page.name
 end
 
-__END__
-@@ layout
-!!! strict
-%html
-  %head
-    %title= title
-    %link{:rel => 'stylesheet', :href => '/_stylesheet.css', :type => 'text/css'}
-    %script{:src => '/jquery-1.2.3.min.js', :type => 'text/javascript'}
-    %script{:src => '/jquery.jeditable.js', :type => 'text/javascript'}
-    %script{:src => '/jquery.autogrow.js', :type => 'text/javascript'}
-    %script{:src => '/jquery.hotkeys.js', :type => 'text/javascript'}
-    :javascript
-      $(document).ready(function() {
-        $('#navigation').hide();
-        $('#edit_link').hide();
-        $.hotkeys.add('Ctrl+h', function() { document.location = '/#{HOMEPAGE}' })
-        $.hotkeys.add('Ctrl+l', function() { document.location = '/_list' })
-      })
-  %body
-    %ul#navigation
-      %li
-        %a{:href => '/'} Home
-      %li
-        %a{:href => '/_list'} List
-    #content= yield
+post '/eip/:page' do
+  @page = Page.new(params[:page])
+  @page.update(params[:body])
+  @page.body
+end
 
-@@ show
-- title @page.name
-:javascript
-  $(document).ready(function() {
-    $.editable.addInputType('autogrow', {
-      element : function(settings, original) {
-        var textarea = $('<textarea>');
-        if (settings.rows) {
-          textarea.attr('rows', settings.rows);
-        } else {
-          textarea.height(settings.height);
-        }
-        if (settings.cols) {
-          textarea.attr('cols', settings.cols);
-        } else {
-          textarea.width(settings.width);
-        }
-        $(this).append(textarea);
-        return(textarea);
-      },
-      plugin : function(settings, original) {
-        $('textarea', this).autogrow(settings.autogrow);
-      }
-    });
+get '/h/:page' do
+  @page = Page.new(params[:page])
+  show :history, "History of #{@page.name}"
+end
 
-    $('#page_content').editable('/e/#{@page}', {
-      loadurl: '/#{@page}.txt',
-      submit: '<button class="submit" type="submit">Save as the newest version</button>',
-      cancel: '<a class="cancel" href="" style="margin-left: 5px;">cancel</a>',
-      event: 'dblclick',
-      type: 'autogrow',
-      cols: 84,
-      rows: 20,
-      name: 'body',
-      onblur: 'ignore',
-      tooltip: ' ',
-      indicator: 'Saving...',
-      loadtext: '',
-      cssclass: 'edit_form',
-      callback: function(v, s) {
-        /**notice = $('<p id="notice">New version successfuly saved!</p>').fadeOut('slow')
-        $('#content').prepend(notice.html())*/
-      }
-    })
-  })
-%a#edit_link{:href => "/e/#{@page}"} edit this page
-%h1= title
-#page_content= @page.body
+get '/h/:page/:rev' do
+  @page = Page.new(params[:page], params[:rev])
+  show :show, "#{@page.name} (version #{params[:rev]})"
+end
 
-@@ edit
-- title "Editing #{@page}"
+get '/d/:page/:rev' do
+  @page = Page.new(params[:page])
+  show :delta, "Diff of #{@page.name}"
+end
 
-%h1= title
-%form{:method => 'POST', :action => "/e/#{@page}"}
-  %p
-    %textarea{:name => 'body', :rows => 16, :cols => 60}= @page.raw_body
-  %p
-    %input.submit{:type => :submit, :value => 'Save as the newest version'}
-    or
-    %a.cancel{:href=>"/#{@page}"} cancel
+# application paths (/a/ namespace)
 
-@@ list
-- title "Listing pages"
+get '/a/list' do
+  pages = $repo.log.first.gtree.children
+  @pages = pages.select { |f,bl| f[0,1] != '_'}.sort.map { |name, blob| Page.new(name) } rescue []
+  show(:list, 'Listing pages')  
+end
 
-%h1 All pages
-- if @pages.empty?
-%p No pages found.
-- else
-  %ul#pages_list
-  - @pages.each_with_index do |page, index|
-    - if (index % 2) == 0
-      %li.odd= list_item(page)
-    - else
-      %li.even= list_item(page)
-  - end
+get '/a/patch/:page/:rev' do
+  @page = Page.new(params[:page])
+  header 'Content-Type' => 'text/x-diff'
+  header 'Content-Disposition' => 'filename=patch.diff'
+  @page.delta(params[:rev])
+end
 
-@@ stylesheet
-body
-  :font
-    family: "Lucida Grande", Verdana, Arial, Bitstream Vera Sans, Helvetica, sans-serif
-    size: 14px
-    color: black
-  line-height: 160%
-  background-color: white
-  margin: 0
-  padding: 0
+get '/a/tarball' do
+  header 'Content-Type' => 'application/x-gzip'
+  header 'Content-Disposition' => 'filename=archive.tgz'
+  archive = $repo.archive('HEAD', nil, :format => 'tgz', :prefix => 'wiki/')
+  File.open(archive).read
+end
 
-#navigation
-  padding-left: 2em
-  margin: 0
-  li
-    list-style-type: none
-    display: inline
+get '/a/branches' do
+  @branches = $repo.branches
+  show :branches, "Branches List"
+end
 
-#content
-  padding: 2em
-.notice
-  background-color: #ffc
-  padding: 6px
+get '/a/branch/:branch' do
+  $repo.checkout(params[:branch])
+  redirect '/' + HOMEPAGE
+end
 
-a
-  padding: 2px
-  color: blue
-  &.exists
-    &:hover
-      background-color: blue
-      text-decoration: none
-      color: white
-  &.unknown
-    color: gray
-    &:hover
-      background-color: gray
-      color: white
-      text-decoration: none
+get '/a/history' do
+  @history = $repo.log
+  show :branch_history, "Branch History"
+end
 
-textarea
-  font-family: courrier
-  padding: 5px
-  font-size: 14px
-  line-height: 18px
+get '/a/revert_branch/:sha' do
+  $repo.with_temp_index do 
+    $repo.read_tree params[:sha]
+    $repo.checkout_index
+    $repo.commit('reverted branch')
+  end
+  redirect '/a/history'
+end
 
-.edit_link
-  display: block
-  background-color: #ffc
-  font-weight: bold
-  text-decoration: none
-  color: black
-  &:hover
-    color: white
-    background-color: red
+get '/a/merge_branch/:branch' do
+  $repo.merge(params[:branch])
+  redirect '/' + HOMEPAGE
+end
 
-.submit
-  font-weight: bold
+get '/a/delete_branch/:branch' do
+  $repo.branch(params[:branch]).delete
+  redirect '/a/branches'
+end
 
-.cancel
-  color: red
-  &:hover
-    text-decoration: none
-    background-color: red
-    color: white
-ul#pages_list
-  list-style-type: none
-  margin: 0
-  padding: 0
-  li
-    padding: 5px
-    a.edit
-      display: none 
-    &.odd
-      background-color: #D3D3D3
+post '/a/new_branch' do
+  $repo.branch(params[:branch]).create
+  $repo.checkout(params[:branch])
+  if params[:type] == 'blank'
+    # clear out the branch
+    $repo.chdir do 
+      Dir.glob("*").each do |f|
+        File.unlink(f)
+        $repo.remove(f)
+      end
+      touchfile
+      $repo.commit('clean branch start')
+    end
+  end
+  redirect '/a/branches'
+end
+
+post '/a/new_remote' do
+  $repo.add_remote(params[:branch_name], params[:branch_url])
+  $repo.fetch(params[:branch_name])
+  redirect '/a/branches'
+end
+
+get '/a/search' do
+  @search = params[:search]
+  @grep = $repo.grep(@search)
+  show :search, 'Search Results'
+end
+
+# file upload attachments
+
+get '/a/file/upload/:page' do
+  @page = Page.new(params[:page])
+  show :attach, 'Attach File for ' + @page.name
+end
+
+post '/a/file/upload/:page' do
+  @page = Page.new(params[:page])
+  @page.save_file(params[:file], params[:name])
+  redirect '/e/' + @page.name
+end
+
+get '/a/file/delete/:page/:file.:ext' do
+  @page = Page.new(params[:page])
+  @page.delete_file(params[:file] + '.' + params[:ext])
+  redirect '/e/' + @page.name
+end
+
+get '/_attachment/:page/:file.:ext' do
+  @page = Page.new(params[:page])
+  send_file(File.join(@page.attach_dir, params[:file] + '.' + params[:ext]))
+end
+
+# support methods
+
+def page_url(page)
+  "#{request.env["rack.url_scheme"]}://#{request.env["HTTP_HOST"]}/#{page}"
+end
+
+private
+
+  def show(template, title)
+    @title = title
+    erb(template)
+  end
+
+  def touchfile
+    # adds meta file to repo so we have somthing to commit initially
+    $repo.chdir do
+      f = File.new(".meta",  "w+")
+      f.puts($repo.current_branch)
+      f.close
+      $repo.add('.meta')
+    end
+  end

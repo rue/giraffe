@@ -1,0 +1,19 @@
+<script language="javascript" type="text/javascript" src="/sh_main.min.js"></script>
+<script language="javascript" type="text/javascript" src="/sh_diff.min.js"></script>
+<link rel="stylesheet" href="/sh_style.css" type="text/css" media="screen" />
+
+<h1>Diff of <a href="/<%= @page.name %>"><%= @page.name %></a></h1>
+
+<div class="sub_nav">
+  <a href="/a/patch/<%= @page.name %>/<%= params[:rev] %>" class="nav_link">patch file</a> &bull;
+  <a href="/h/<%= @page.name %>" class="nav_link">history</a> &bull;
+  <a href="/e/<%= @page.name %>" class="nav_link">edit</a> 
+</div>
+
+<div class="content">
+  <pre class="sh_diff"><%= @page.delta(params[:rev]) %></pre>
+</div>
+
+<script type="text/javascript">
+  sh_highlightDocument();
+</script>

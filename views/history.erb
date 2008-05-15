@@ -1,0 +1,23 @@
+<h1>History of <a href="/<%= @page.name %>"><%= @page.name %></a></h1>
+
+<div class="sub_nav">
+  <a href="/<%= @page.name %>" class="nav_link">current</a> &bull;
+  <a href="/e/<%= @page.name %>" class="nav_link">edit</a> 
+</div>
+
+<div class="content">
+  <ul>
+    <% @page.history.each do |c| %>
+      <li>
+        <script type="text/javascript">
+        document.write(time_ago_in_words(<%= c.committer_date.for_time_ago_in_words %>) + ' ago');
+        </script>
+        &mdash;
+        <a href="/h/<%= @page.name %>/<%= c.sha %>"><%= c.message %></a>
+        <% unless @page.history.first == c %>
+         &bull; <a href="/d/<%= @page.name %>/<%= c.sha %>">diff</a>
+        <% end %>
+      </li>
+    <% end %>
+  </ul>
+</div>

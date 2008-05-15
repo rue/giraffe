@@ -1,0 +1,16 @@
+h1. git-wiki
+
+A wiki engine that uses a Git repository as its data store.
+
+h2. Status
+
+Alex Payne (see AUTHORS file) is no longer actively developing this branch.
+Please fork from here and continue development!
+
+h2. Requirements
+
+* rubygems
+* sinatra
+* grit
+* redcloth
+* rubypants
