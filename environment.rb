@@ -7,7 +7,7 @@ require 'page'
 end
 
 GIT_REPO = ENV['HOME'] + '/wiki'
-HOMEPAGE = 'home'
+HOMEPAGE = 'Home'
 
 unless File.exists?(GIT_REPO) && File.directory?(GIT_REPO)
   puts "Initializing repository in #{GIT_REPO}..."

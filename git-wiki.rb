@@ -13,7 +13,8 @@ get '/:page' do
   @page.tracked? ? show(:show, @page.name) : redirect('/e/' + @page.name)
 end
 
-get '/:page/raw' do
+get '/:page.txt' do
+  content_type 'text/plain', :charset => 'utf-8'
   @page = Page.new(params[:page])
   @page.raw_body
 end
