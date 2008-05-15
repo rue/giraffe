@@ -57,6 +57,11 @@ get '/h/:page/:rev' do
   show :show, "#{@page.name} (version #{params[:rev]})"
 end
 
+get '/h/:page/:rev.txt' do
+  @page = Page.new(params[:page], params[:rev])
+  send_data @page.raw_body, :type => 'text/plain', :disposition => 'inline'
+end
+
 get '/d/:page/:rev' do
   @page = Page.new(params[:page])
   show :delta, "Diff of #{@page.name}"
