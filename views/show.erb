@@ -32,6 +32,7 @@
   <% end %>
 
   <li><a href="/h/<%= @page.name %>" class="nav_link">history</a></li>
+  <li><a href="/a/search?search=<%= @page.name %>" class="nav_link">backlinks</a></li>
   
   <% if @page.previous_commit %>
     <li><a href="/h/<%= @page.name %>/<%= @page.previous_commit %>" class="nav_link">older</a></li>
