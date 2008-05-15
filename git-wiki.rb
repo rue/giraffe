@@ -26,7 +26,7 @@ end
 
 get '/:page/append' do
   @page = Page.new(params[:page])
-  @page.body = @page.raw_body + "\n\n" + params[:text]
+  @page.update(@page.raw_body + "\n\n" + params[:text], params[:message])
   redirect '/' + @page.name
 end
 
