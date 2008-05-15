@@ -20,9 +20,8 @@ get '/:page' do
 end
 
 get '/:page.txt' do
-  content_type 'text/plain', :charset => 'utf-8'
   @page = Page.new(params[:page])
-  @page.raw_body
+  send_data @page.raw_body, :type => 'text/plain', :disposition => 'inline'
 end
 
 get '/:page/append' do
