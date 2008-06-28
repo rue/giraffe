@@ -31,6 +31,10 @@ class Page
       @raw_body ||= File.exists?(@filename) ? File.read(@filename) : ''
     end
   end
+  
+  def escaped_raw_body
+    self.raw_body.gsub(/[<,>]/) { |matched| (matched == '<' ? '&lt;' : '&gt;') }
+  end
 
   def update(content, message=nil)
     File.open(@filename, 'w') { |f| f << content }
@@ -174,5 +178,4 @@ class Page
       end.sub(/([0-9])\.?0+ /, '\1 ' )
     end
   end
-  
 end
