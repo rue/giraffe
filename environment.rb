@@ -2,7 +2,7 @@ require 'rubygems'
 require 'extensions'
 require 'page'
 
-%w(git redcloth rubypants).each do |gem| 
+%w(git rdiscount rubypants).each do |gem| 
   require_gem_with_feedback gem
 end
 

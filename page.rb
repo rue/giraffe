@@ -13,7 +13,7 @@ class Page
   end
 
   def body
-    @body ||= RubyPants.new(RedCloth.new(raw_body).to_html).to_html.wiki_linked
+    @body ||= RubyPants.new(RDiscount.new(raw_body).to_html).to_html.wiki_linked
   end
   
   def branch_name
@@ -83,7 +83,7 @@ class Page
 
   def version(rev)
     data = blob.contents
-    RubyPants.new(RedCloth.new(data).to_html).to_html.wiki_linked
+    RubyPants.new(RDiscount.new(data).to_html).to_html.wiki_linked
   end
 
   def blob
