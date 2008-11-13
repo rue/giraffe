@@ -156,13 +156,13 @@ end
 
 get '/a/file/delete/:page/:file.:ext' do
   @page = Page.new(params[:page])
-  @page.delete_file(params[:file] + '.' + params[:ext])
+  @page.delete_file(CGI::unescape(params[:file]) + '.' + params[:ext])
   redirect '/e/' + @page.name
 end
 
 get '/_attachment/:page/:file.:ext' do
   @page = Page.new(params[:page])
-  send_file(File.join(@page.attach_dir, params[:file] + '.' + params[:ext]))
+  send_file(File.join(@page.attach_dir, CGI::unescape(params[:file]) + '.' + params[:ext]))
 end
 
 # support methods
