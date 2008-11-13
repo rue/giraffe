@@ -14,6 +14,7 @@ get '/:page' do
 end
 
 get '/:page/raw' do
+  headers 'Content-Type' => 'text/plain;charset=utf-8'
   @page = Page.new(params[:page])
   @page.raw_body
 end
