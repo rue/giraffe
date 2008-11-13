@@ -148,12 +148,16 @@ class Page
       File.basename(@path)
     end
 
+    def name_uri_escaped
+      name.grep(/^(.*)\.(\w.+?)$/) { |m| e = $2; CGI::escape($1).gsub(/\./, '%2E') + '.' + e }
+    end
+
     def link_path
-      File.join('/_attachment', @page_name, name)
+      File.join('/_attachment', @page_name, name_uri_escaped)
     end
 
     def delete_path
-      File.join('/a/file/delete', @page_name, name)
+      File.join('/a/file/delete', @page_name, name_uri_escaped)
     end
 
     def image?
