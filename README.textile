@@ -4,8 +4,8 @@ A wiki engine that uses a Git repository as its data store.
 
 h2. Status
 
-Alex Payne (see AUTHORS file) is no longer actively developing this branch.
-Please fork from here and continue development!
+Alex Brem (see AUTHORS file) just forked this thingy on github.
+Let's see what he can do for this promising wiki. ;)
 
 h2. Requirements
 
