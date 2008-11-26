@@ -4,7 +4,7 @@ require 'sinatra/lib/sinatra'
 require 'extensions'
 require 'page'
 
-%w(git redcloth rubypants yaml).each do |gem| 
+%w(git rdiscount rubypants).each do |gem| 
   require_gem_with_feedback gem
 end
 

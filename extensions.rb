@@ -9,11 +9,11 @@ end
 class String
   def wiki_linked
     self.gsub!(/(?!<nowiki>)(?>\b((?:[A-Z]\w+){2,}))(?!<\/nowiki>)/) { |m| "<a href=\"/#{m}\">#{m}</a>" }
-    self.gsub!(/\[(\w+){2,}\]/) { |m|
-      m.gsub!(/(\[|\])/, '')
-      "<a href=\"/#{m}\">#{m}</a>"
-    }
     self.gsub!(/<\/?nowiki>/,'')
+    # matches [Page] or [[Page]] or even [[a page]]
+    self.gsub!(/\[{1,2}(\w*?)\]{1,2}/, '<a href="/\1">\1</a>')
+    # matches WikiWords, e.g. LaLa, FooBar but not Foo, FBar or FB
+    self.gsub!(%r#((?:[A-Z][a-z_]+){2,})(?=(?:(?!</a>).)*(?:<a|$))#, '<a href="/\1">\1</a>')
     self
   end
 end

@@ -19,7 +19,8 @@ get '/:page' do
   @page.tracked? ? show(:show, @page.name) : redirect('/e/' + @page.name)
 end
 
-get '/:page.txt' do
+get '/:page/raw' do
+  headers 'Content-Type' => 'text/plain;charset=utf-8'
   @page = Page.new(params[:page])
   send_data @page.raw_body, :type => 'text/plain', :disposition => 'inline'
 end
@@ -167,13 +168,13 @@ end
 
 get '/a/file/delete/:page/:file.:ext' do
   @page = Page.new(params[:page])
-  @page.delete_file(params[:file] + '.' + params[:ext])
+  @page.delete_file(CGI::unescape(params[:file]) + '.' + params[:ext])
   redirect '/e/' + @page.name
 end
 
 get '/_attachment/:page/:file.:ext' do
   @page = Page.new(params[:page])
-  send_file(File.join(@page.attach_dir, params[:file] + '.' + params[:ext]))
+  send_file(File.join(@page.attach_dir, CGI::unescape(params[:file]) + '.' + params[:ext]))
 end
 
 # support methods
