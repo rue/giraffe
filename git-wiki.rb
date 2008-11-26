@@ -19,7 +19,10 @@ get '/:page' do
   @page.tracked? ? show(:show, @page.name) : redirect('/e/' + @page.name)
 end
 
-get '/:page/raw' do
+
+get('/:page/raw') { redirect "/#{params[:page]}.txt" }
+
+get "/:page.txt" do
   headers 'Content-Type' => 'text/plain;charset=utf-8'
   @page = Page.new(params[:page])
   send_data @page.raw_body, :type => 'text/plain', :disposition => 'inline'

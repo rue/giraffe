@@ -28,4 +28,9 @@ rescue
   }
 end
 
+# Generate some type of a link to the current git-wiki project
+GITWEB_HOME = config["gitweb-home"] ||
+              `git remote -v` =~ (/origin\s+git@(.+?)\.git/) && "http://#{$1.sub ":", "/"}/" ||
+              "http://github.com/jnewland/git-wiki/"
+
 CONFIG = config
