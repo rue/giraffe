@@ -16,7 +16,7 @@ config =  begin
               "username"    =>  nil,
               "password"    =>  nil,
               "repository"  => (ENV["GITWEB_REPO"] or "#{ENV["HOME"]}/wiki"),
-              "homepage"    => "Home",
+              "home"        => "Home",
               # Try provide some reasonable "powered by"
               "gitweb_home" => (`git remote -v` =~ (/origin\s+git@(.+?)\.git/) && "http://#{$1.sub ":", "/"}/" ||
                                 "http://github.com/jnewland/git-wiki/")
@@ -27,7 +27,7 @@ config =  begin
 GITWEB_HOME = config["gitweb_home"]
 
 GIT_REPO    = config["repository"]
-HOMEPAGE    = config["homepage"]
+HOMEPAGE    = config["home"]
 
 CONFIG      = config
 
