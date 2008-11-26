@@ -8,29 +8,33 @@ require 'page'
   require_gem_with_feedback gem
 end
 
-GIT_REPO = ENV['HOME'] + '/wiki'
-HOMEPAGE = 'Home'
+config =  begin
+            YAML.load_file ENV["GITWEB_CONFIG"]
 
-unless File.exists?(GIT_REPO) && File.directory?(GIT_REPO)
-  puts "Initializing repository in #{GIT_REPO}..."
-  Git.init(GIT_REPO)
-end
-
-$repo = Git.open(GIT_REPO)
-
-config = nil
-begin
-  config = YAML.load(File.read(ENV['CONFIG']))
-rescue
-  config = {
-    'username' =>  nil,
-    'password' =>  nil
-  }
-end
+          rescue
+            {
+              "username"    =>  nil,
+              "password"    =>  nil,
+              "repository"  => (ENV["GITWEB_REPO"] or "#{ENV["HOME"]}/wiki"),
+              "homepage"    => "Home",
+              # Try provide some reasonable "powered by"
+              "gitweb_home" => (`git remote -v` =~ (/origin\s+git@(.+?)\.git/) && "http://#{$1.sub ":", "/"}/" ||
+                                "http://github.com/jnewland/git-wiki/")
+            }
+          end
 
 # Generate some type of a link to the current git-wiki project
-GITWEB_HOME = config["gitweb-home"] ||
-              `git remote -v` =~ (/origin\s+git@(.+?)\.git/) && "http://#{$1.sub ":", "/"}/" ||
-              "http://github.com/jnewland/git-wiki/"
+GITWEB_HOME = config["gitweb_home"]
 
-CONFIG = config
+GIT_REPO    = config["repository"]
+HOMEPAGE    = config["homepage"]
+
+CONFIG      = config
+
+unless File.directory? GIT_REPO
+  puts "Initializing repository in #{GIT_REPO}..."
+  Git.init GIT_REPO
+end
+
+$repo = Git.open GIT_REPO
+
