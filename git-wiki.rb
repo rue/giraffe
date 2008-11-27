@@ -85,9 +85,8 @@ end
 # application paths (/a/ namespace)
 
 get '/a/list' do
-  pages = GitWiki.repo.log.first.gtree.children
-  @pages = pages.select { |f,bl| f[0,1] != '_'}.sort.map { |name, blob| Page.new(name) } rescue []
-  show(:list, 'Listing pages')
+  @pages = GitWiki.repo.working.children.sort.map {|name, data| Page.new name } rescue []
+  show :list, 'Listing pages'
 end
 
 get '/a/patch/:page/:rev' do

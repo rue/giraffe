@@ -1,8 +1,9 @@
 class Page
   attr_reader :name, :attach_dir
 
-  def initialize(name, rev=nil)
+  def initialize(name, rev = nil)
     @name = name
+    @relative_name = File.join GitWiki.relative, @name
     @rev = rev
     @filename = File.join(GitWiki.wikiroot, @name)
     @attach_dir = File.join(GitWiki.wikiroot, '_attachments', unwiki(@name))
@@ -41,7 +42,7 @@ class Page
     commit_message = tracked? ? "edited #{@name}" : "created #{@name}"
     commit_message += ' : ' + message if message && message.length > 0
     begin
-      GitWiki.repo.add(@name)
+      GitWiki.repo.add(@relative_name)
       GitWiki.repo.commit(commit_message)
     rescue
       nil
@@ -51,24 +52,24 @@ class Page
   end
 
   def tracked?
-    GitWiki.repo.ls_files.keys.include?(@name)
+    GitWiki.repo.ls_files.keys.include?(@relative_name)
   end
 
   def history
     return nil unless tracked?
-    @history ||= GitWiki.repo.log.path(@name)
+    @history ||= GitWiki.repo.log.path(@relative_name)
   end
 
   def delta(rev)
-    GitWiki.repo.diff(previous_commit, rev).path(@name).patch
+    GitWiki.repo.diff(previous_commit, rev).path(@relative_name).patch
   end
 
   def commit
-    @commit ||= GitWiki.repo.log.object(@rev || 'master').path(@name).first
+    @commit ||= GitWiki.repo.log.object(@rev || 'master').path(@relative_name).first
   end
 
   def previous_commit
-    @previous_commit ||= GitWiki.repo.log(2).object(@rev || 'master').path(@name).to_a[1]
+    @previous_commit ||= GitWiki.repo.log(2).object(@rev || 'master').path(@relative_name).to_a[1]
   end
 
   def next_commit
@@ -91,7 +92,7 @@ class Page
   end
 
   def blob
-    @blob ||= (GitWiki.repo.gblob(@rev + ':' + @name))
+    @blob ||= (GitWiki.repo.gblob(@rev + ':' + @relative_name))
   end
 
   # save a file into the _attachments directory

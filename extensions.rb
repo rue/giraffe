@@ -74,3 +74,13 @@ module Sinatra
     include HttpAuthentication::Basic
   end
 end
+
+# Work around stupid directory handling
+def (GitWiki.repo).working()
+  unless GitWiki.relative.empty?
+    self.gtree("HEAD").trees[GitWiki.relative]
+  else
+    self.gtree "HEAD"
+  end
+end
+

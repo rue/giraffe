@@ -1,4 +1,5 @@
 require "ostruct"
+require "pathname"
 require "yaml"
 
 require "rubygems"
@@ -14,11 +15,28 @@ GitWiki = OpenStruct.new unless defined? GitWiki
 GitWiki.users     = user_config["users"]
 
 # Repository location
-GitWiki.repo_path = user_config["repo_path"] || ENV["GITWEB_REPO"] || "#{ENV["HOME"]}/wiki"
+GitWiki.wikiroot  = File.expand_path(user_config["wikiroot"]  ||
+                                     ENV["GITWIKI_ROOT"]      ||
+                                     "#{ENV["HOME"]}/wiki")
 
-GitWiki.wikiroot  = user_config["wikiroot"] || ENV["GITWEB_WIKIROOT"] || GitWiki.repo_path
-GitWiki.gitdir    = user_config["git_dir"] || "#{GitWiki.repo_path}/.git"
-GitWiki.index     = user_config["git_index"] || "#{GitWiki.gitdir}/index"
+GitWiki.repo_path = File.expand_path(user_config["repo_path"] ||
+                                     ENV["GITWIKI_REPO"]      ||
+                                     GitWiki.wikiroot)
+
+GitWiki.gitdir    = File.expand_path "#{GitWiki.repo_path}/.git"
+GitWiki.index     = File.expand_path "#{GitWiki.gitdir}/index"
+
+# ruby-git needs a relative path to work with (apparently the working dir is useless.)
+GitWiki.relative  = if GitWiki.wikiroot != GitWiki.repo_path
+                      wiki = Pathname.new GitWiki.wikiroot
+                      repo = Pathname.new GitWiki.repo_path
+
+                      # TODO: Check that wiki is a child of repo
+                      wiki.relative_path_from(repo).to_s
+                    else
+                      ""
+                    end
+
 
 # Wiki setup
 GitWiki.home      = user_config["home"] || "/Home"
@@ -32,11 +50,11 @@ GitWiki.itself    = user_config["gitwiki_page"] ||
 require "fileutils"
 
 begin
-  GitWiki.repo = Git.open GitWiki.wikiroot,
+  GitWiki.repo = Git.open GitWiki.repo_path,
                           :repository => GitWiki.gitdir,
                           :index => GitWiki.index
 rescue
-  GitWiki.repo = Git.init GitWiki.wikiroot, :repository => GitWiki.gitdir
+  GitWiki.repo = Git.init GitWiki.repo_path, :repository => GitWiki.gitdir
   puts "Initialized repository for #{GitWiki.wikiroot}."
   puts "Git directory is in #{GitWiki.repo_path}!" if GitWiki.wikiroot != GitWiki.repo_path
 end
