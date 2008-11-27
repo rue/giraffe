@@ -1,10 +1,3 @@
-def require_gem_with_feedback(gem)
-  begin
-    require gem
-  rescue LoadError
-    puts "You need to 'sudo gem install #{gem}' before we can proceed"
-  end
-end
 
 class String
   def wiki_linked
@@ -26,6 +19,10 @@ end
 
 module HttpAuthentication
   module Basic
+
+    def authenticate(&login_procedure)
+      authenticate_or_request_with_http_basic "git-wiki", &login_procedure
+    end
 
     def authenticate_or_request_with_http_basic(realm = "Application", &login_procedure)
       authenticate_with_http_basic(&login_procedure) || request_http_basic_authentication(realm)

@@ -1,38 +1,36 @@
-require 'fileutils'
-require 'rubygems'
-require 'sinatra/lib/sinatra'
-require 'extensions'
-require 'page'
+require "ostruct"
+require "yaml"
 
-%w(git rdiscount rubypants).each do |gem| 
-  require_gem_with_feedback gem
+require "rubygems"
+  require "git"
+
+user_config = YAML.load_file(ENV["GITWEB_CONF"]) rescue {}
+
+
+GitWiki = OpenStruct.new unless defined? GitWiki
+
+# Authentication
+GitWiki.users      = user_config["users"]
+
+# Repository location
+GitWiki.repo_path  = user_config["repo_path"] || ENV["GITWEB_REPO"] || "#{ENV["HOME"]}/wiki"
+GitWiki.wikiroot   = user_config["wikiroot"] || ENV["GITWEB_WIKIROOT"] || GitWiki.repository
+
+# Wiki setup
+GitWiki.home       = user_config["home"] || "/Home"
+
+# Some type of a link to git-wiki version used
+GitWiki.itself     = user_config["gitwiki_page"] ||
+                    `git remote -v` =~ (/origin\s+git@(.+?)\.git/) && "http://#{$1.sub ":", "/"}/" ||
+                    "http://github.com/rue/git-wiki/"
+
+# Git needs this.
+require "fileutils"
+
+begin
+  GitWiki.repo = Git.open GitWiki.wikiroot, :repository => GitWiki.repo_path
+rescue
+  puts "Initializing repository in #{GitWiki.repo_path}."
+  GitWiki.repo = Git.init GitWiki.repo_path
 end
-
-config = {
-          "username"    =>  nil,
-          "password"    =>  nil,
-          "repository"  => (ENV["GITWEB_REPO"] or "#{ENV["HOME"]}/wiki"),
-          "home"        => "Home",
-          # Try provide some reasonable "powered by"
-          "gitweb_home" => (`git remote -v` =~ (/origin\s+git@(.+?)\.git/) && "http://#{$1.sub ":", "/"}/" ||
-                            "http://github.com/jnewland/git-wiki/")
-         }
-
-config.merge! YAML.load_file(ENV["GITWEB_CONF"]) rescue nil
-
-
-# Generate some type of a link to the current git-wiki project
-GITWEB_HOME = config["gitweb_home"]
-
-GIT_REPO    = config["repository"]
-HOMEPAGE    = config["home"]
-
-CONFIG      = config
-
-unless File.directory? GIT_REPO
-  puts "Initializing repository in #{GIT_REPO}..."
-  Git.init GIT_REPO
-end
-
-$repo = Git.open GIT_REPO
 

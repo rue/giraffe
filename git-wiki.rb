@@ -1,25 +1,36 @@
 #!/usr/bin/env ruby
 
-require 'environment'
+require "environment"
 
+require "sinatra/lib/sinatra"
+
+require "extensions"
+require "page"
+
+require "rubygems"
+  require "rdiscount"
+  require "rubypants"
+
+
+# Authentication used if there are any users to authenticate against..
 before do
-  unless CONFIG['username'].nil? && CONFIG['password'].nil?
-    authenticate_or_request_with_http_basic "git-wiki" do
-      |user, pass| user == CONFIG['username'] && pass == CONFIG['password']
-    end
-  end
+  authenticate {|user, pass| GitWiki.users[user] == pass } if GitWiki.users
 end
 
-get('/') { redirect "/#{CONFIG["home"]}" }
+# Resource mapping
 
-# page paths
 
+# Default
+get('/') { redirect GitWiki.home }
+
+
+# Pages
 get '/:page' do
   @page = Page.new(params[:page])
   @page.tracked? ? show(:show, @page.name) : redirect('/e/' + @page.name)
 end
 
-
+# Raw page text
 get('/:page/raw') { redirect "/#{params[:page]}.txt" }
 
 get "/:page.txt" do
@@ -34,6 +45,7 @@ get '/:page/append' do
   redirect '/' + @page.name
 end
 
+# Page editing
 get '/e/:page' do
   @page = Page.new(params[:page])
   show :edit, "Editing #{@page.name}"
@@ -74,9 +86,9 @@ end
 # application paths (/a/ namespace)
 
 get '/a/list' do
-  pages = $repo.log.first.gtree.children
+  pages = GitWiki.repo.log.first.gtree.children
   @pages = pages.select { |f,bl| f[0,1] != '_'}.sort.map { |name, blob| Page.new(name) } rescue []
-  show(:list, 'Listing pages')  
+  show(:list, 'Listing pages')
 end
 
 get '/a/patch/:page/:rev' do
@@ -89,70 +101,70 @@ end
 get '/a/tarball' do
   header 'Content-Type' => 'application/x-gzip'
   header 'Content-Disposition' => 'filename=archive.tgz'
-  archive = $repo.archive('HEAD', nil, :format => 'tgz', :prefix => 'wiki/')
+  archive = GitWiki.repo.archive('HEAD', nil, :format => 'tgz', :prefix => 'wiki/')
   File.open(archive).read
 end
 
 get '/a/branches' do
-  @branches = $repo.branches
+  @branches = GitWiki.repo.branches
   show :branches, "Branches List"
 end
 
 get '/a/branch/:branch' do
-  $repo.checkout(params[:branch])
-  redirect '/' + HOMEPAGE
+  GitWiki.repo.checkout(params[:branch])
+  redirect '/' + GitWiki.home
 end
 
 get '/a/history' do
-  @history = $repo.log
+  @history = GitWiki.repo.log
   show :branch_history, "Branch History"
 end
 
 get '/a/revert_branch/:sha' do
-  $repo.with_temp_index do 
-    $repo.read_tree params[:sha]
-    $repo.checkout_index
-    $repo.commit('reverted branch')
+  GitWiki.repo.with_temp_index do
+    GitWiki.repo.read_tree params[:sha]
+    GitWiki.repo.checkout_index
+    GitWiki.repo.commit('reverted branch')
   end
   redirect '/a/history'
 end
 
 get '/a/merge_branch/:branch' do
-  $repo.merge(params[:branch])
-  redirect '/' + HOMEPAGE
+  GitWiki.repo.merge(params[:branch])
+  redirect '/' + GitWiki.home
 end
 
 get '/a/delete_branch/:branch' do
-  $repo.branch(params[:branch]).delete
+  GitWiki.repo.branch(params[:branch]).delete
   redirect '/a/branches'
 end
 
 post '/a/new_branch' do
-  $repo.branch(params[:branch]).create
-  $repo.checkout(params[:branch])
+  GitWiki.repo.branch(params[:branch]).create
+  GitWiki.repo.checkout(params[:branch])
   if params[:type] == 'blank'
     # clear out the branch
-    $repo.chdir do 
+    GitWiki.repo.chdir do
       Dir.glob("*").each do |f|
         File.unlink(f)
-        $repo.remove(f)
+        GitWiki.repo.remove(f)
       end
       touchfile
-      $repo.commit('clean branch start')
+      GitWiki.repo.commit('clean branch start')
     end
   end
   redirect '/a/branches'
 end
 
 post '/a/new_remote' do
-  $repo.add_remote(params[:branch_name], params[:branch_url])
-  $repo.fetch(params[:branch_name])
+  GitWiki.repo.add_remote(params[:branch_name], params[:branch_url])
+  GitWiki.repo.fetch(params[:branch_name])
   redirect '/a/branches'
 end
 
 get '/a/search' do
   @search = params[:search]
-  @grep = $repo.object("HEAD").grep @search, nil, :ignore_case => true
+  @grep = GitWiki.repo.object("HEAD").grep @search, nil, :ignore_case => true
   show :search, 'Search Results'
 end
 
@@ -195,10 +207,10 @@ private
 
   def touchfile
     # adds meta file to repo so we have somthing to commit initially
-    $repo.chdir do
+    GitWiki.repo.chdir do
       f = File.new(".meta",  "w+")
-      f.puts($repo.current_branch)
+      f.puts(GitWiki.repo.current_branch)
       f.close
-      $repo.add('.meta')
+      GitWiki.repo.add('.meta')
     end
   end

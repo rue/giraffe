@@ -4,8 +4,8 @@ class Page
   def initialize(name, rev=nil)
     @name = name
     @rev = rev
-    @filename = File.join(GIT_REPO, @name)
-    @attach_dir = File.join(GIT_REPO, '_attachments', unwiki(@name))
+    @filename = File.join(GitWiki.repo_path, @name)
+    @attach_dir = File.join(GitWiki.repo_path, '_attachments', unwiki(@name))
   end
 
   def unwiki(string)
@@ -17,7 +17,7 @@ class Page
   end
 
   def branch_name
-    $repo.current_branch
+    GitWiki.repo.current_branch
   end
 
   def updated_at
@@ -41,8 +41,8 @@ class Page
     commit_message = tracked? ? "edited #{@name}" : "created #{@name}"
     commit_message += ' : ' + message if message && message.length > 0
     begin
-      $repo.add(@name)
-      $repo.commit(commit_message)
+      GitWiki.repo.add(@name)
+      GitWiki.repo.commit(commit_message)
     rescue
       nil
     end
@@ -51,24 +51,24 @@ class Page
   end
 
   def tracked?
-    $repo.ls_files.keys.include?(@name)
+    GitWiki.repo.ls_files.keys.include?(@name)
   end
 
   def history
     return nil unless tracked?
-    @history ||= $repo.log.path(@name)
+    @history ||= GitWiki.repo.log.path(@name)
   end
 
   def delta(rev)
-    $repo.diff(previous_commit, rev).path(@name).patch
+    GitWiki.repo.diff(previous_commit, rev).path(@name).patch
   end
 
   def commit
-    @commit ||= $repo.log.object(@rev || 'master').path(@name).first
+    @commit ||= GitWiki.repo.log.object(@rev || 'master').path(@name).first
   end
 
   def previous_commit
-    @previous_commit ||= $repo.log(2).object(@rev || 'master').path(@name).to_a[1]
+    @previous_commit ||= GitWiki.repo.log(2).object(@rev || 'master').path(@name).to_a[1]
   end
 
   def next_commit
@@ -91,7 +91,7 @@ class Page
   end
 
   def blob
-    @blob ||= ($repo.gblob(@rev + ':' + @name))
+    @blob ||= (GitWiki.repo.gblob(@rev + ':' + @name))
   end
 
   # save a file into the _attachments directory
@@ -110,8 +110,8 @@ class Page
 
     commit_message = "uploaded #{filename} for #{@name}"
     begin
-      $repo.add(new_file)
-      $repo.commit(commit_message)
+      GitWiki.repo.add(new_file)
+      GitWiki.repo.commit(commit_message)
     rescue
       nil
     end
@@ -124,8 +124,8 @@ class Page
 
       commit_message = "removed #{file} for #{@name}"
       begin
-        $repo.remove(file_path)
-        $repo.commit(commit_message)
+        GitWiki.repo.remove(file_path)
+        GitWiki.repo.commit(commit_message)
       rescue
         nil
       end
