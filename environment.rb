@@ -4,7 +4,8 @@ require "yaml"
 require "rubygems"
   require "git"
 
-user_config = YAML.load_file(ENV["GITWEB_CONF"]) rescue {}
+user_config = {}
+user_config = YAML.load_file ENV["GITWIKI_CONF"] rescue nil
 
 
 GitWiki = OpenStruct.new unless defined? GitWiki

@@ -12,7 +12,6 @@ require "rubygems"
   require "rubypants"
 
 
-# Authentication used if there are any users to authenticate against..
 before do
   authenticate {|user, pass| GitWiki.users[user] == pass } if GitWiki.users
 end
