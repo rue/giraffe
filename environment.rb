@@ -36,7 +36,8 @@ begin
                           :repository => GitWiki.gitdir,
                           :index => GitWiki.index
 rescue
-  puts "Initializing repository in #{GitWiki.repo_path}."
-  GitWiki.repo = Git.init GitWiki.repo_path
+  GitWiki.repo = Git.init GitWiki.wikiroot, :repository => GitWiki.gitdir
+  puts "Initialized repository for #{GitWiki.wikiroot}."
+  puts "Git directory is in #{GitWiki.repo_path}!" if GitWiki.wikiroot != GitWiki.repo_path
 end
 

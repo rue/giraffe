@@ -4,8 +4,8 @@ class Page
   def initialize(name, rev=nil)
     @name = name
     @rev = rev
-    @filename = File.join(GitWiki.repo_path, @name)
-    @attach_dir = File.join(GitWiki.repo_path, '_attachments', unwiki(@name))
+    @filename = File.join(GitWiki.wikiroot, @name)
+    @attach_dir = File.join(GitWiki.wikiroot, '_attachments', unwiki(@name))
   end
 
   def unwiki(string)

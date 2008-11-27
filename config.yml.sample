@@ -3,14 +3,8 @@ users:
   nil
 
 # Directory in which the wiki pages live
-wikiroot:   nil   # Defaults to whatever repo_path is
+wikiroot:   nil   # Defaults to $HOME/wiki
 
-# Directory in which the .git directory can be found
-repo_path:  nil   # Defaults to $HOME/wiki
-
-# Full path to the .git directory (ADVANCED)
-gitdir:     nil   # Defaults to repo_path/.git
-
-# Full path to the git index file (ADVANCED)
-index:      nil   # Defaults to gitdir/index
+# Directory in which .git can be found, in case of e.g. subdirectories
+repo_path:  nil   # Defaults to wikiroot
 
