@@ -200,84 +200,146 @@ div.attach-options {
 }
 
 /* Page list */
+
 ul.page_list {
-  list-style:     none;
+  list-style:       none;
+}
+
+
+/* Remove some spacing by default */
+
+ul.page_list ul {
+  list-style:       none;
 }
 
 ul.page_list li {
-  margin-top:     0.2em;
+  list-style:       none;
+
+  padding:          0em;
+  border:           none;
+
+  margin:           0.3em 0em 0em 0em;
 }
 
-/* Page entry in page list consists of name and list of additional actions */
-ul.page_in_list {
-  list-style:     none;
-  display:        inline;
-}
 
-ul.page_in_list li {
-  display:        inline;
-}
+  /* Directories */
 
-ul.page_in_list .name {
-  font-weight:    bold;
-  font-style:     normal;
+  ul.page_list ul.directory {
+    display: block;
 
-  padding-right:  0.2em;
-  margin-right:   0em;
-}
+    margin-bottom:    0em;
+    margin-top:       0em;
+  }
 
-li.actions {
-  font-weight:    normal;
-  font-style:     italic;
-  font-size:      0.8em;
+    ul.page_list ul.directory li {
+      display:  block;
 
-  padding-left:   0.2em;
-  margin-left:    0em;
-}
+      margin-bottom:    0em;
+      margin-top:       0em;
+    }
 
-li.actions ul {
-  display:        inline;
 
-  padding-top:    0.1em;
-  padding-bottom: 0.1em;
+    /* Directory labels in page list */
 
-  padding-left:   0.2em;
-  margin-left:    0em;
-}
+    ul.page_list ul.directory li.directory_label {
+      color:            #aaa;
 
-li.actions li {
-  display:        inline;
+      font-weight:      bold;
+      font-size:        1em;
 
-  margin-left:    0.5em;
-}
+      text-decoration:  none;
+    }
 
-li.actions a:link     { color: #aaa; border-bottom: 1px dotted #aaa; }
-li.actions a:visited  { color: #aaa; border-bottom: 1px dotted #aaa; }
-li.actions a:active   { color: #aaa; border-bottom: 1px dotted #aaa; }
-li.actions a:hover    { color: #444; border-bottom: 1px solid #444; }
+      ul.page_list ul.directory li.empty_directory {
+        color:            #ccc;
+
+        font-weight:      normal;
+        font-style:       italic;
+        font-size:        0.8em;
+
+        margin-left:      1em;
+        margin-bottom:    0em;
+        margin-top:       0em;
+      }
+
+
+  /* Pages */
+
+
+  ul.page_list ul.page {
+    display:    inline;
+  }
+
+    ul.page_list ul.page li {
+      display:    inline;
+    }
+
+    ul.page_list ul.page li.name {
+      font-weight:      bold;
+      font-style:       normal;
+    }
+
+    /* Page actions */
+
+    ul.page_list ul.page li.actions {
+      font-weight:    normal;
+      font-style:     italic;
+      font-size:      0.8em;
+    }
+
+    ul.page_list ul.page li.actions ul {
+      display:        inline;
+    }
+
+    ul.page_list ul.page li.actions ul li {
+      display:        inline;
+
+      margin-right:   1em;
+    }
+
+    /* Page action links */
+
+    ul.page_list ul.page li.actions a:link     { color: #aaa; border-bottom: 1px dotted #aaa; }
+    ul.page_list ul.page li.actions a:visited  { color: #aaa; border-bottom: 1px dotted #aaa; }
+    ul.page_list ul.page li.actions a:active   { color: #aaa; border-bottom: 1px dotted #aaa; }
+    ul.page_list ul.page li.actions a:hover    { color: #444; border-bottom: 1px solid #444; }
+
 
 /* ids */
 
 #container {
- clear: both;
- margin: auto;
- width: 70%;
+ clear:         both;
+ margin:        auto;
+
+ width:         70%;
 }
 
 #edit_textarea {
-  height: 35em;
-  margin-top: 1.5em;
-  width: 100%;
+  height:       35em;
+  width:        100%;
+
+  margin-top:   1.5em;
+  margin-right: 0em;
 }
 #message_textarea {
-  height: 4em;
-  width: 100%;
+  height:       2em;
+  width:        100%;
+
+  margin-top:   0.5em;
+  margin-right: 0em;
 }
 
+
 #footer { clear: both; }
-#footer a, #footer a:visited { color: #666; }
 
 #search_field {
-  border: 1px solid #ccc;
-  color: #999;
+  color:        #444;
+  background:   #eee;
+
+  font-style:   italic;
+  font-size:    0.8em;
+
+  padding:      0.3em 0.2em 0.2em 0.2em;
+  border:       1px solid #aaa;
+  margin-right: 0em;
 }
