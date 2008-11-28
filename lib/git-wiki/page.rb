@@ -19,12 +19,14 @@ class Page
     @rev = rev
   end
 
+  # TODO: Get rid of this.
   def unwiki(string)
     string.downcase
   end
 
   def body
-    @body ||= RubyPants.new(RDiscount.new(raw_body).to_html).to_html.wiki_linked
+    # Just say no to wiki linking. You have Markdown, use it.
+    @body ||= RubyPants.new(RDiscount.new(raw_body).to_html).to_html
   end
 
   def branch_name
