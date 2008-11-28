@@ -18,6 +18,12 @@
 - Refine XHTML, easier "branding" through configuration.
 
 
+ Probably
+----------
+
+- Add branching support back.
+
+
  Maybe
 -------
 

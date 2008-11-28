@@ -107,63 +107,6 @@ get '/a/tarball' do
   File.open(archive).read
 end
 
-get '/a/branches' do
-  @branches = GitWiki.repo.branches
-  show :branches, "Branches List"
-end
-
-get '/a/branch/:branch' do
-  GitWiki.repo.checkout(params[:branch])
-  redirect '/' + GitWiki.home
-end
-
-get '/a/history' do
-  @history = GitWiki.repo.log
-  show :branch_history, "Branch History"
-end
-
-get '/a/revert_branch/:sha' do
-  GitWiki.repo.with_temp_index do
-    GitWiki.repo.read_tree params[:sha]
-    GitWiki.repo.checkout_index
-    GitWiki.repo.commit('reverted branch')
-  end
-  redirect '/a/history'
-end
-
-get '/a/merge_branch/:branch' do
-  GitWiki.repo.merge(params[:branch])
-  redirect '/' + GitWiki.home
-end
-
-get '/a/delete_branch/:branch' do
-  GitWiki.repo.branch(params[:branch]).delete
-  redirect '/a/branches'
-end
-
-post '/a/new_branch' do
-  GitWiki.repo.branch(params[:branch]).create
-  GitWiki.repo.checkout(params[:branch])
-  if params[:type] == 'blank'
-    # clear out the branch
-    GitWiki.repo.chdir do
-      Dir.glob("*").each do |f|
-        File.unlink(f)
-        GitWiki.repo.remove(f)
-      end
-      touchfile
-      GitWiki.repo.commit('clean branch start')
-    end
-  end
-  redirect '/a/branches'
-end
-
-post '/a/new_remote' do
-  GitWiki.repo.add_remote(params[:branch_name], params[:branch_url])
-  GitWiki.repo.fetch(params[:branch_name])
-  redirect '/a/branches'
-end
-
 get '/a/search' do
   @search = params[:search]
   @grep = GitWiki.repo.object("HEAD").grep @search, nil, :ignore_case => true
@@ -200,6 +143,7 @@ def page_url(page)
   "#{request.env["rack.url_scheme"]}://#{request.env["HTTP_HOST"]}/#{page}"
 end
 
+
 private
 
   def show(template, title)
@@ -207,12 +151,3 @@ private
     erb(template)
   end
 
-  def touchfile
-    # adds meta file to repo so we have somthing to commit initially
-    GitWiki.repo.chdir do
-      f = File.new(".meta",  "w+")
-      f.puts(GitWiki.repo.current_branch)
-      f.close
-      GitWiki.repo.add('.meta')
-    end
-  end
