@@ -4,18 +4,17 @@
  In Process
 ------------
 
-- Removing the various bizarre functionality links.
+- Reverting commits.
+- Disallow creating pages that would shadow directories.
 
 
  Definitely
 ------------
 
+- Incorporate ditz or other Git-based ticket system.
 - TESTS!! (Probably incorporating Aslak Hellesoy's first.)
-- Reverting commits.
-- Deleting and renaming pages.
 - Use user info when committing if authentication enabled.
 - Refine XHTML, easier "branding" through configuration.
-- Creating subdirectories.
 - Customise commit messages etc.
 - Restricting log output e.g. to start from some defined commit.
 
@@ -23,12 +22,15 @@
  Probably
 ----------
 
+- Helpers to link to tickets and source code.
 - Add branching support back.
+- Deleting and renaming pages.
 
 
  Maybe
 -------
 
+- Creating subdirectories.
 - More options for mapping URLs to the filesystem.
 - Rethink the URL resource "namespacing."
 - Real user accounts, possibly even somehow discerned from Git.
