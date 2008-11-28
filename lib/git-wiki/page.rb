@@ -19,6 +19,17 @@ class Page
     @rev = rev
   end
 
+  # Slightly more humane file path.
+  #
+  # The base filename is humanized, i.e. "important_doc" => "Important Doc".
+  # In addition, all path components of the possible prefix path are given.
+  # The method returns ["some", "path", "to", "Important Doc"].
+  #
+  def pretty_name()
+    prettified = @name.split(/\s+|_/).map {|word| word.capitalize }.join " "
+    GitWiki.relative.split("/") <<  prettified
+  end
+
   # TODO: Get rid of this.
   def unwiki(string)
     string.downcase

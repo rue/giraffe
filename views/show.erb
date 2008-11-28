@@ -14,7 +14,8 @@
   });
 </script>
 
-<h1><%= @page.name %></h1>
+<% pretty_dir, pretty_name = @page.pretty_name %>
+<h1 id="pagenamebanner"><span class="pretty_dir"><%= File.join pretty_dir %>/</span><span class="pretty_name"><%= pretty_name %></h1>
 
 <%= @env %>
 

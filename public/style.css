@@ -43,6 +43,25 @@ body {
 .content h3 { font-size: 1.6em; }
 .content h4 { font-size: 1.4em; }
 
+
+/* Prettified page name and path display */
+
+  span.pretty_dir {
+    color:              #b77;
+
+    font-style:         italic;
+    font-size:          1em;
+
+    letter-spacing:     0.2em;
+
+    margin-right:       0.2em;
+  }
+
+  span.pretty_name {
+    letter-spacing:     0.2em;
+  }
+
+
 /* Link  defaults */
 a, a:link, a:visited, a:active {
   color:              #e5e5e5;
