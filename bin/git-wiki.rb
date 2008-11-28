@@ -31,72 +31,61 @@ end
 get('/') { redirect GitWiki.home }
 
 
-# Show page or send to edit if it does not exist.
-#
-get '/:page' do
-  @page = Page.new params[:page]
-  if @page.tracked? then show(:show, @page.name) else redirect('/e/' + @page.name) end
-end
+# Pages handled at bottom due to wildcarding
 
-# Give user the raw source text of the page.
-#
-get "/:page/raw" do
-  headers 'Content-Type' => 'text/plain;charset=utf-8'
-  @page = Page.new(params[:page])
-  send_data @page.raw_body, :type => 'text/plain', :disposition => 'inline'
-end
 
 # Page editor.
 #
-get '/e/:page' do
-  @page = Page.new(params[:page])
+get "/e/*:page" do
+  @page = Page.new(params[:splats].first + params[:page])
   show :edit, "Editing #{@page.name}"
 end
 
 # Process edit.
 #
-post '/e/:page' do
-  @page = Page.new(params[:page])
+post "/e/*:page" do
+  @page = Page.new(params[:splats].first + params[:page])
   @page.update(params[:body], params[:message])
+
   redirect '/' + @page.name
 end
 
-# Process in-place edit.
+# In-place edit.
 #
-post '/eip/:page' do
-  @page = Page.new(params[:page])
-  @page.update(params[:body])
+post '/eip/*/:page' do
+  @page = Page.new(params[:splats].first + params[:page])
+
+  @page.update params[:body]
   @page.body
 end
 
 # Show page history.
 #
-get '/h/:page' do
-  @page = Page.new(params[:page])
+get '/h/*:page' do
+  @page = Page.new(params[:splats].first + params[:page])
   show :page_history, "History of #{@page.name}"
 end
 
 # Show page history for given revision.
 #
-get '/h/:page/:rev' do
-  @page = Page.new(params[:page], params[:rev])
+get '/h/*:page/:rev' do
+  @page = Page.new(params[:splats].first + params[:page])
   show :show, "#{@page.name} (version #{params[:rev]})"
 end
 
 # Raw history for given revision.
 #
-get '/h/:page/:rev.txt' do
-  @page = Page.new(params[:page], params[:rev])
+get '/h/*:page/:rev.txt' do
+  @page = Page.new(params[:splats].first + params[:page])
   send_data @page.raw_body, :type => 'text/plain', :disposition => 'inline'
 end
 
 # Show diff of page revisions
 #
-get '/d/:page/:rev' do
-  @page = Page.new(params[:page])
+get '/d/*:page/:rev' do
+  @page = Page.new(params[:splats].first + params[:page])
   show :delta, "Diff of #{@page.name}"
 end
-
 
 # Wiki history
 #
@@ -127,11 +116,11 @@ end
 
 # Generate patchfile for diff
 #
-get "/a/patch/:page/:rev" do
+get "/a/patch/*:page/:rev" do
   header "Content-Type"         => "text/x-diff"
   header "Content-Disposition"  => "filename=patch.diff"
 
-  Page.new(params[:page]).delta params[:rev]
+  Page.new(params[:splats].first + params[:page]).delta params[:rev]
 end
 
 # Generate a .tgz of wiki pages for user
@@ -146,27 +135,48 @@ end
 
 # file upload attachments
 
-get '/a/file/upload/:page' do
-  @page = Page.new(params[:page])
+get '/a/file/upload/*:page' do
+  @page = Page.new(params[:splats].first + params[:page])
   show :attach, 'Attach File for ' + @page.name
 end
 
-post '/a/file/upload/:page' do
-  @page = Page.new(params[:page])
+post '/a/file/upload/*:page' do
+  @page = Page.new(params[:splats].first + params[:page])
   @page.save_file(params[:file], params[:name])
+
   redirect '/e/' + @page.name
 end
 
-get '/a/file/delete/:page/:file.:ext' do
-  @page = Page.new(params[:page])
+get '/a/file/delete/*:page/:file.:ext' do
+  @page = Page.new(params[:splats].first + params[:page])
   @page.delete_file(CGI::unescape(params[:file]) + '.' + params[:ext])
+
   redirect '/e/' + @page.name
 end
 
-get '/_attachment/:page/:file.:ext' do
-  @page = Page.new(params[:page])
+get '/_attachment/*:page/:file.:ext' do
+  @page = Page.new(params[:splats].first + params[:page])
   send_file(File.join(@page.attach_dir, CGI::unescape(params[:file]) + '.' + params[:ext]))
 end
+
+  # These come last since they could match anything
+
+# Show page in or send to create.
+#
+get "/*:page" do
+  @page = Page.new(params[:splats].first + params[:page])
+  if @page.tracked? then show :show, @page.name else redirect "/e/" + @page.name end
+end
+
+# Give user the raw source text of the page.
+#
+get "/*:page/raw" do
+  headers 'Content-Type' => 'text/plain;charset=utf-8'
+
+  @page = Page.new(params[:splats].first + params[:page])
+  send_data @page.raw_body, :type => 'text/plain', :disposition => 'inline'
+end
+
 
 # support methods
 

@@ -1,6 +1,8 @@
 class Page
   attr_reader :name, :attach_dir
 
+  # Create a Page object--the file may or may not exist.
+  #
   def initialize(name, rev = nil)
     @name     = name.chomp GitWiki.extension
     @extended = @name + GitWiki.extension
@@ -11,6 +13,8 @@ class Page
     @attach_dir = File.join(GitWiki.wikiroot, '_attachments', unwiki(@name))
 
     @rev = rev
+
+    p :page, @name, @extended, @relative_name, @filename
   end
 
   def unwiki(string)
