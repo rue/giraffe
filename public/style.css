@@ -51,6 +51,7 @@ body {
 
     font-style:         italic;
     font-size:          1em;
+    font-weight:        normal;
 
     letter-spacing:     0.2em;
 
@@ -58,6 +59,8 @@ body {
   }
 
   span.pretty_name {
+    font-weight:        normal;
+
     letter-spacing:     0.2em;
   }
 

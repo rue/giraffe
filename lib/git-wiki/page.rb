@@ -26,8 +26,9 @@ class Page
   # The method returns ["some", "path", "to", "Important Doc"].
   #
   def pretty_name()
-    prettified = @name.split(/\s+|_/).map {|word| word.capitalize }.join " "
-    GitWiki.relative.split("/") <<  prettified
+    prettified = @name.split "/"
+    prettified[-1] = prettified[-1].split(/\s+|_/).map {|word| word.sub(/^(\w)/) { $1.capitalize } }.join " "
+    pf = if prettified.size == 1 then prettified.unshift ""  else prettified end
   end
 
   # TODO: Get rid of this.

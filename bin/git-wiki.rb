@@ -64,14 +64,14 @@ end
 #
 get '/h/*:page' do
   @page = Page.new(params[:splats].first + params[:page])
-  show :page_history, "History of #{@page.name}"
+  show :page_history, "History of #{@page.pretty_name.last}"
 end
 
 # Show page history for given revision.
 #
 get '/h/*:page/:rev' do
   @page = Page.new(params[:splats].first + params[:page])
-  show :show, "#{@page.name} (version #{params[:rev]})"
+  show :show, "#{@page.pretty_name.last} (version #{params[:rev]})"
 end
 
 # Raw history for given revision.
@@ -85,7 +85,7 @@ end
 #
 get '/d/*:page/:rev' do
   @page = Page.new(params[:splats].first + params[:page])
-  show :delta, "Diff of #{@page.name}"
+  show :delta, "Diff of #{@page.pretty_name.last}"
 end
 
 # Wiki history
@@ -107,13 +107,9 @@ get '/a/list' do
   recursor =  lambda {|tree, path, continuation|
                 tree.children.sort.map {|name, obj|
                   if obj.kind_of? Git::Object::Tree
-                    a = [File.join(path + [name]), continuation.call(obj, (path + [name]), continuation)]
-                    puts "Dir > #{a.first} : #{a.last.inspect}"
-                    a
+                    [File.join(path + [name]), continuation.call(obj, (path + [name]), continuation)]
                   elsif name =~ /#{Regexp.escape GitWiki.extension}\Z/
-                    pg = Page.new File.join(path + [name])
-                    puts "Pg  > #{pg.name}"
-                    pg
+                    Page.new File.join(path + [name])
                   end
                 }.compact
               }
