@@ -70,12 +70,55 @@ module HttpAuthentication
 end
 
 module Sinatra
+
+  # Slightly modified copied from Sinatra
+  #
+  class Event
+
+    # Work around splat issue.
+    #
+    def initialize(path, options = {}, &b)
+      @path = path
+      @block = b
+      @param_keys = []
+      @options = options
+
+      regex = @path.to_s.gsub(/(:(#{URI_CHAR}+))|(\*)/) do
+        if $2
+          @param_keys << $2.intern
+          "(#{URI_CHAR}+)"
+        elsif $3
+          @param_keys << "splat"
+          "(.*?)"
+        end
+      end
+
+      @pattern = /^#{regex}$/
+    end
+
+    # Work around splat issue.
+    #
+    def invoke(request)
+      puts "ours #{request.path_info.inspect}"
+      return unless pattern =~ request.path_info.squeeze('/')
+
+      raw = param_keys.zip $~.captures.map(&:from_param)
+
+      splats, named = raw.partition {|key, capture| key == "splat" }
+      splats.map! {|key, capture| capture }
+
+      Result.new block, Hash["splats", splats, *named.flatten], 200
+    end
+  end
+
   class EventContext
     include HttpAuthentication::Basic
   end
 end
 
+
 # Work around stupid directory handling
+#
 def (GitWiki.repo).working()
   unless GitWiki.relative.empty?
     self.gtree("HEAD").trees[GitWiki.relative]
