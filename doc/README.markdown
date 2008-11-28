@@ -21,7 +21,7 @@ These are all available through Gems.
 
 - git
 - metaid
-- mongrel
+- mongrel (or something, see Sinatra's help.)
 - rack
 - rdiscount
 - rubypants
@@ -40,20 +40,19 @@ Sinatra (the web framework) is included as a submodule:
   - History
   - Diffs
   - Searching
-
 - Allows exposing only a subdirectory of the Git repository.
   - Serve directly from $PROJECT/doc without exporting or submodules.
-
 - Minimal configuration.
-
 - User authentication through HTTP basic. (See Configuration.)
+- Restrict pages to files with a given extension.
+- Pages may reside in subdirectories of the wiki root.
 
 
  Configuration
 ---------------
 
 See config.yml.sample for information. The configuration
-file to be used can be given using GITWIKI_CONF.
+file to be used can be given using the `-f` option.
 
 
  Running
@@ -61,10 +60,10 @@ file to be used can be given using GITWIKI_CONF.
 
 Run at port 8080:
 
-    $ ./bin/git-wiki.rb -p 8080
+    $ ./bin/git-wiki.rb -f config.yml -p 8080
 
 Use production environment (development by default):
 
-    $ ./bin/git-wiki.rb -e production
+    $ ./bin/git-wiki.rb -f config.yml -e production
 
 
