@@ -1,51 +1,49 @@
 body {
-  background-color: #fff;
-  color: #333;
-  font-family: Helvetica, Arial, "Deja Vu Sans", "Bitstream Vera Sans", sans-serif;
-  font-size: .95em;
-  line-height: 1.6em;
-  margin: 2em;
+  background-color:   #888;
+  color:              #f5f5f5;
+
+  font-size:          0.8em;
+  font-weight:        normal;
+  font-family:        "Bitstream Vera Sans", Verdana, Arial, sans-serif;
+
+  line-height:        1.2em;
+  margin:             2em;
 }
 
 /* Link  defaults */
-a {
-  color: #777;
-  text-decoration: none;
-  border-bottom: 1px dotted #777;
-}
+a, a:link, a:visited, a:active {
+  color:              #e5e5e5;
 
-a:visited {
-  color: #777;
-  text-decoration: none;
-  border-bottom: 1px dotted #777;
-}
+  text-decoration:    none;
 
-a:active {
-  color: #777;
-  text-decoration: none;
-  border-bottom: 1px dotted #777;
+  padding:            0em;
+  border-bottom:      1px dotted #ccc;
+  margin:             0em 0em 0.2em 0em;
 }
 
 a:hover {
-  color: #444;
-  text-decoration: none;
-  border-bottom: 1px solid #444;
+  color:              #fff;
+  border-bottom:      1px solid #fff;
+}
+
+/* Navigation linkage. */
+
+/* Link  defaults */
+a.nav_link, a.nav_link:link, a.nav_link:visited, a.nav_link:active, a.nav_link:hover {
+  font-size:          1em; 
+  margin-bottom:      0.2em;
 }
 
 code, pre {
-  font-family: "Deja Vu Sans Mono", "Bitstream Vera Sans Mono", "Inconsolata", "Consolas", monospace;
+  font-family: "SGIScreen", "Consolas", "Deja Vu Sans Mono", "Bitstream Vera Sans Mono", monospace;
 }
 
-h1 {
-  color: #333;
-  font-size: 3.5em;
-  margin: 24px 0 8px 0;
-}
+h1 { font-size: 2.5em; }
 
 input[type=text] {
   border: 1px solid #ccc;
-  font-family: Helvetica, Arial, "Deja Vu Sans", "Bitstream Vera Sans", sans-serif;
-  font-size: 0.875em;
+  font-family: "SGIScreen", "Consolas", "Deja Vu Sans Mono", "Bitstream Vera Sans Mono", monospace;
+  font-size: 0.9em;
 }
 
 label { font-size: .9em; }
@@ -57,14 +55,9 @@ table {
 
 textarea {
   border: 1px solid #ccc;
-  font-family: "Deja Vu Sans Mono", "Bitstream Vera Sans Mono", "Inconsolata", "Consolas", monospace;
-  font-size: .9em;
+  font-family: "SGIScreen", "Consolas", "Deja Vu Sans Mono", "Bitstream Vera Sans Mono", monospace;
+  font-size: 0.9em;
   padding: 5px;
-}
-
-ul {
-  list-style-type: square;
-  padding: 0 0 1em 1.4em;
 }
 
 /* classes */
@@ -82,18 +75,24 @@ ul {
 .content {
   padding:      1em;
 
-  margin-left:  2em;
+  background:   #555;
+
+  padding:        2em;
+  border-left:    1px solid #da2;
+  border-top:     none;
+  border-right:   1px solid #da2;
+  border-bottom:  1px solid #da2;
 }
 
 .content h1, .content h2, .content h3, .content h4 {
-  padding: 0 0 .4em 0;
-  margin: 0 0 0 0;
+  padding: 0 0 0 0;
+  margin: 0.2em;
 }
 
-.content h1 { font-size: 2.6em; }
-.content h2 { font-size: 2em; }
-.content h3 { font-size: 1.8em; }
-.content h4 { font-size: 1.6em; }
+.content h1 { font-size: 2.0em; }
+.content h2 { font-size: 1.8em; }
+.content h3 { font-size: 1.6em; }
+.content h4 { font-size: 1.4em; }
 
 .delta {
   font-size: 1.1em;
@@ -107,24 +106,22 @@ ul {
   min-width: 100%;
 }
 
-.nav_link, .nav_link:visited {
-  display: inline;
-  padding: 3px;
-  color: #666;
+
+.nav_list {
+  background:       #700;
+
+  list-style-type:  none;
+  text-align:       right;
+
+  padding-top:      0.3em;
+  padding-bottom:   0.3em;
 }
 
-.nav_link:hover {
-  background-color: #d1ccdb;
-  color: #333;
-  text-decoration: none;
-}
+#footer {
+  list-style-type:  none;
+  text-align:       right;
 
-.nav_list, #footer {
-  border-top: 1px solid #ccc;
-  border-bottom: 1px solid #ccc;
-  list-style-type: none;
-  padding: 4px;
-  text-align: right;
+  margin-top:   1em;
 }
 
 .nav_list li {
@@ -166,26 +163,44 @@ ul {
 }
 
 .sub_nav {
-  float: left;
-  list-style-type:none;
-  padding: 8px 0 0 0;
-  margin: 0;
-  width:200px;
+  background:       #4a4a4a;
+
+  list-style-type:  none;
+
+  text-align:       center;
+
+
+  padding:          1.2em 1em 1.2em 1em;
+
+  border-top:       1px solid #da2;
+  border-left:      1px solid #da2;
+  border-bottom:    1px solid #444;
+  border-right:     1px solid #da2;
+
+  margin:           0em 0em 0em 0em;
 }
 
+.sub_nav ul { display: inline; }
+
 .sub_nav li {
-  padding:0;
+  display:          inline;
+
+  padding:          0.5em;
+  border:           none;
 }
 
 .sub_nav .details {
-  color: #888;
+  display:          inline;
+
+  color:            #ccc;
   font-size: .85em;
   margin: 0 0 0.3em 0.3em;
+  border:           none;
 }
 
 .sub_nav .details a {
   color: #666;
-  text-decoration: underline;
+  text-decoration: none;
 }
 
 span.detail {
@@ -217,8 +232,7 @@ ul.page_list li {
 
   padding:          0em;
   border:           none;
-
-  margin:           0.3em 0em 0em 0em;
+  margin-bottom:    0.3em;
 }
 
 
@@ -227,15 +241,15 @@ ul.page_list li {
   ul.page_list ul.directory {
     display: block;
 
-    margin-bottom:    0em;
-    margin-top:       0em;
+    padding-top:    0em;
+    padding-bottom: 0em;
+
+    margin-top:     0.5em;
+    margin-bottom:  0em;
   }
 
     ul.page_list ul.directory li {
       display:  block;
-
-      margin-bottom:    0em;
-      margin-top:       0em;
     }
 
 
@@ -243,11 +257,6 @@ ul.page_list li {
 
     ul.page_list ul.directory li.directory_label {
       color:            #aaa;
-
-      font-weight:      bold;
-      font-size:        1em;
-
-      text-decoration:  none;
     }
 
       ul.page_list ul.directory li.empty_directory {
@@ -258,8 +267,6 @@ ul.page_list li {
         font-size:        0.8em;
 
         margin-left:      1em;
-        margin-bottom:    0em;
-        margin-top:       0em;
       }
 
 
@@ -267,7 +274,7 @@ ul.page_list li {
 
 
   ul.page_list ul.page {
-    display:    inline;
+    display:        inline;
   }
 
     ul.page_list ul.page li {
@@ -275,7 +282,7 @@ ul.page_list li {
     }
 
     ul.page_list ul.page li.name {
-      font-weight:      bold;
+      font-size:        1.2em;
       font-style:       normal;
     }
 
@@ -289,20 +296,20 @@ ul.page_list li {
 
     ul.page_list ul.page li.actions ul {
       display:        inline;
+
+      padding-left:   0em;
+      margin-left:    0em;
     }
 
     ul.page_list ul.page li.actions ul li {
       display:        inline;
 
-      margin-right:   1em;
+      margin-right:   0.5em;
     }
 
-    /* Page action links */
-
-    ul.page_list ul.page li.actions a:link     { color: #aaa; border-bottom: 1px dotted #aaa; }
-    ul.page_list ul.page li.actions a:visited  { color: #aaa; border-bottom: 1px dotted #aaa; }
-    ul.page_list ul.page li.actions a:active   { color: #aaa; border-bottom: 1px dotted #aaa; }
-    ul.page_list ul.page li.actions a:hover    { color: #444; border-bottom: 1px solid #444; }
+    ul.page_list ul.page li.actions a {
+      color:          #bababa;
+    }
 
 
 /* ids */
@@ -312,6 +319,12 @@ ul.page_list li {
  margin:        auto;
 
  width:         70%;
+
+ background:    #800;
+
+ padding:       2em;
+
+ border:        1px solid #da2;
 }
 
 #edit_textarea {
@@ -321,6 +334,7 @@ ul.page_list li {
   margin-top:   1.5em;
   margin-right: 0em;
 }
+
 #message_textarea {
   height:       2em;
   width:        100%;
@@ -339,7 +353,7 @@ ul.page_list li {
   font-style:   italic;
   font-size:    0.8em;
 
-  padding:      0.3em 0.2em 0.2em 0.2em;
+  padding:      0.2em 0em 0em 0em;
   border:       1px solid #aaa;
   margin-right: 0em;
 }
