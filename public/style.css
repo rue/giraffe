@@ -8,7 +8,40 @@ body {
 
   line-height:        1.2em;
   margin:             2em;
+
+  border:             0.5em solid #aaa;
+  margin:             0em;
+  padding:            2em;
 }
+
+#container {
+ width:         70%;
+
+ background:    #700;
+
+ padding:       3em;
+ border:        1px solid #da2;
+ margin:        auto;
+}
+
+.content {
+  background:         #555;
+
+  padding-top:        2em;
+  padding-bottom:     2em;
+  padding-left:       5em;
+  padding-right:      5em;
+
+  border-left:        1px solid #da2;
+  border-top:         4px solid #404040;
+  border-right:       1px solid #da2;
+  border-bottom:      1px solid #da2;
+}
+
+.content h1 { font-size: 2.0em; }
+.content h2 { font-size: 1.8em; }
+.content h3 { font-size: 1.6em; }
+.content h4 { font-size: 1.4em; }
 
 /* Link  defaults */
 a, a:link, a:visited, a:active {
@@ -30,7 +63,7 @@ a:hover {
 
 /* Link  defaults */
 a.nav_link, a.nav_link:link, a.nav_link:visited, a.nav_link:active, a.nav_link:hover {
-  font-size:          1em; 
+  font-size:          1em;
   margin-bottom:      0.2em;
 }
 
@@ -46,21 +79,12 @@ input[type=text] {
   font-size: 0.9em;
 }
 
-label { font-size: .9em; }
-
-table {
-  font-size: 0.9em;
-  width: 100%;
-}
-
 textarea {
   border: 1px solid #ccc;
   font-family: "SGIScreen", "Consolas", "Deja Vu Sans Mono", "Bitstream Vera Sans Mono", monospace;
   font-size: 0.9em;
   padding: 5px;
 }
-
-/* classes */
 
 .cancel {
   font-weight: normal;
@@ -72,44 +96,22 @@ textarea {
 
 .clearer { clear: both; }
 
-.content {
-  padding:      1em;
-
-  background:   #555;
-
-  padding:        2em;
-  border-left:    1px solid #da2;
-  border-top:     none;
-  border-right:   1px solid #da2;
-  border-bottom:  1px solid #da2;
-}
-
-.content h1, .content h2, .content h3, .content h4 {
-  padding: 0 0 0 0;
-  margin: 0.2em;
-}
-
-.content h1 { font-size: 2.0em; }
-.content h2 { font-size: 1.8em; }
-.content h3 { font-size: 1.6em; }
-.content h4 { font-size: 1.4em; }
-
 .delta {
   font-size: 1.1em;
   padding: 0;
 }
 
 .edit textarea {
-  display: block;
-  margin-bottom: 5px;
-  max-height: 300px;
-  min-width: 100%;
+  display:        block;
+
+  max-height:     20em;
+  min-width:      100%;
+
+  margin-bottom:  1em;
 }
 
 
 .nav_list {
-  background:       #700;
-
   list-style-type:  none;
   text-align:       right;
 
@@ -125,8 +127,8 @@ textarea {
 }
 
 .nav_list li {
-  display: inline;
-  padding-right: 10px;
+  display:          inline;
+  padding-right:    1em;
 }
 
 .niceform label, .niceform input[type=text] {
@@ -155,29 +157,27 @@ textarea {
   margin-bottom: 15px;
 }
 
-.search_term { color: #999; }
+.search_term { color: #0aa; }
 
 .submit {
-  font-size: 1.2em;
-  font-weight: bold;
+  font-size: 1.1em;
 }
 
 .sub_nav {
-  background:       #4a4a4a;
+  background:       #424242;
 
   list-style-type:  none;
 
   text-align:       center;
 
-
   padding:          1.2em 1em 1.2em 1em;
 
   border-top:       1px solid #da2;
   border-left:      1px solid #da2;
-  border-bottom:    1px solid #444;
+  border-bottom:    1px solid #404040;
   border-right:     1px solid #da2;
 
-  margin:           0em 0em 0em 0em;
+  margin:           0em;
 }
 
 .sub_nav ul { display: inline; }
@@ -207,6 +207,7 @@ span.detail {
 	color: #888;
 	font-size: .85em;
 }
+
 div.attach-options {
 	margin-left: 30px;
 	margin-bottom: 10px;
@@ -314,19 +315,6 @@ ul.page_list li {
 
 /* ids */
 
-#container {
- clear:         both;
- margin:        auto;
-
- width:         70%;
-
- background:    #800;
-
- padding:       2em;
-
- border:        1px solid #da2;
-}
-
 #edit_textarea {
   height:       35em;
   width:        100%;
@@ -336,7 +324,7 @@ ul.page_list li {
 }
 
 #message_textarea {
-  height:       2em;
+  height:       3em;
   width:        100%;
 
   margin-top:   0.5em;
