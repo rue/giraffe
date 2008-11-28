@@ -18,54 +18,56 @@
 
 <%= @env %>
 
-<ul class="sub_nav">
-  <% if params[:rev] %>
-    <li><a href="/<%= @page.name %>" class="nav_link">current</a></li>
-  <% else %>
-    <li><a href="/e/<%= @page.name %>" class="nav_link">edit</a></li>
-  <% end %>
-
-  <% if params[:rev] %>
-    <li><a href="/h/<%= @page.name %>/<%= @page.commit %>.txt" class="nav_link">raw</a></li>
-  <% else %>
-    <li><a href="<%= @page.name %>.txt" class="nav_link">raw</a></li>
-  <% end %>
-
-  <li><a href="/h/<%= @page.name %>" class="nav_link">history</a></li>
-  <li><a href="/a/search?search=<%= @page.name %>" class="nav_link">backlinks</a></li>
-
-  <% if @page.previous_commit %>
-    <li><a href="/h/<%= @page.name %>/<%= @page.previous_commit %>" class="nav_link">older</a></li>
-  <% end %>
-
-  <% if @page.next_commit %>
-    <li><a href="/h/<%= @page.name %>/<%= @page.next_commit %>" class="nav_link">newer</a></li>
-  <% end %>
-
-  <% if files = @page.attachments %>
-  <li>
-    <h3>Attachments</h3>
-    <ul>
-    <% files.each do |file| %>
-      <li><a href="<%= file.link_path %>"><%= file.name %></a></li>
+<div>
+  <ul class="sub_nav">
+    <% if params[:rev] %>
+      <li><a href="/<%= @page.name %>" class="nav_link">current</a></li>
+    <% else %>
+      <li><a href="/e/<%= @page.name %>" class="nav_link">edit</a></li>
     <% end %>
-    </ul>
-  </li>
-  <% end %>
 
-  <li>
-    <ul class="sub_nav details">
-      <li>updated
-        <script type="text/javascript">
-          document.write(time_ago_in_words(<%= @page.updated_at.for_time_ago_in_words %>) + ' ago');
-        </script>
-      </li>
-      <li>
-        <%= GitWiki.repo.current_branch %>
-      </li>
-    </ul>
-  </li>
+    <% if params[:rev] %>
+      <li><a href="/h/<%= @page.name %>/<%= @page.commit %>.txt" class="nav_link">raw</a></li>
+    <% else %>
+      <li><a href="<%= @page.name %>.txt" class="nav_link">raw</a></li>
+    <% end %>
 
-</ul>
+    <li><a href="/h/<%= @page.name %>" class="nav_link">history</a></li>
+    <li><a href="/a/search?search=<%= @page.name %>" class="nav_link">backlinks</a></li>
+
+    <% if @page.previous_commit %>
+      <li><a href="/h/<%= @page.name %>/<%= @page.previous_commit %>" class="nav_link">older</a></li>
+    <% end %>
+
+    <% if @page.next_commit %>
+      <li><a href="/h/<%= @page.name %>/<%= @page.next_commit %>" class="nav_link">newer</a></li>
+    <% end %>
+
+    <% if files = @page.attachments %>
+    <li>
+      <h3>Attachments</h3>
+      <ul>
+      <% files.each do |file| %>
+        <li><a href="<%= file.link_path %>"><%= file.name %></a></li>
+      <% end %>
+      </ul>
+    </li>
+    <% end %>
+
+    <li>
+      <ul class="sub_nav details">
+        <li>updated
+          <script type="text/javascript">
+            document.write(time_ago_in_words(<%= @page.updated_at.for_time_ago_in_words %>) + ' ago');
+          </script>
+        </li>
+        <li>
+          <%= GitWiki.repo.current_branch %>
+        </li>
+      </ul>
+    </li>
+
+  </ul>
+</div
 
 <div class="content edit_area"><%= @page.body %></div>

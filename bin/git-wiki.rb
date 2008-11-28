@@ -42,12 +42,6 @@ get "/:page.txt" do
   send_data @page.raw_body, :type => 'text/plain', :disposition => 'inline'
 end
 
-get '/:page/append' do
-  @page = Page.new(params[:page])
-  @page.update(@page.raw_body + "\n\n" + params[:text], params[:message])
-  redirect '/' + @page.name
-end
-
 # Page editing
 get '/e/:page' do
   @page = Page.new(params[:page])

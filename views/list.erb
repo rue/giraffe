@@ -2,17 +2,28 @@
   <h1>No pages yet</h1>
 <% else %>
   <h1>All pages</h1>
-  
+
   <div class="content">
-    <ul>
+    <ul class="page_list">
+
       <% @pages.each do |page| %>
+
         <li>
-          <strong><a href="/<%= page.name %>"><%= page.name %></a></strong> &mdash; 
-          <a href="/e/<%= page.name %>">edit</a> &bull;
-          <a href="/h/<%= page.name %>">history</a> &bull;
-          <a href="javascript:var q; if (window.getSelection) q=window.getSelection(); else if (document.selection) q=document.selection.createRange().text; if (q != '') location.href='<%= page_url(page.name) %>/append?text='+encodeURIComponent(q+' (from &quot;'+document.title+'&quot;:'+location.href+')'); else location.href='<%= page_url(page.name) %>/append?text='+encodeURIComponent('&quot;'+document.title+'&quot;:'+location.href);" title="Click to save current page in browser to '<%= page.name %>' page.  Select text to save it along with the link.">bookmarklet</a>
-        </li>  
+          <ul class="page_in_list">
+            <li class="name">
+              <a href="/<%= page.name %>"><%= page.name %></a>
+            </li>
+            <li class="actions">
+              <ul>
+                <li><a href="/e/<%= page.name %>">edit</a></li>
+                <li><a href="/h/<%= page.name %>">history</a></li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+
       <% end %>
+
     </ul>
   </div>
 <% end %>
