@@ -5,8 +5,11 @@ require "yaml"
 require "rubygems"
   require "git"
 
-user_config = {}
-user_config = YAML.load_file ENV["GITWIKI_CONF"] rescue nil
+user_config = if ARGV.first == "-f"
+                YAML.load_file ARGV.slice!(0, 2).last
+              else
+                {}
+              end
 
 
 GitWiki = OpenStruct.new unless defined? GitWiki
@@ -39,7 +42,7 @@ GitWiki.relative  = if GitWiki.wikiroot != GitWiki.repo_path
 
 
 # Wiki setup
-GitWiki.home      = "/" + user_config["home"] || "Home"
+GitWiki.home      = "/" + (user_config["home"] || "Home")
 
 # Some type of a link to git-wiki version used
 GitWiki.itself    = (`git remote -v` =~ (/origin\s+git@(.+?)\.git/) && "http://#{$1.sub ":", "/"}/") ||

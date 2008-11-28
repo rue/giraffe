@@ -1,11 +1,15 @@
 #!/usr/bin/env ruby
 
-require "environment"
+libdir = File.join File.dirname(__FILE__), "..", "lib"
+$LOAD_PATH.unshift libdir if File.directory? libdir
+
+
+require "git-wiki/environment"
 
 require "sinatra/lib/sinatra"
 
-require "extensions"
-require "page"
+require "git-wiki/extensions"
+require "git-wiki/page"
 
 require "rubygems"
   require "rdiscount"
