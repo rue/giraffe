@@ -10,7 +10,7 @@
 
 # Directory in which the wiki pages live.
 #
-#wikiroot:   nil     # Defaults to ~/wiki
+#wikiroot:   nil       # Defaults to ~/wiki
 
 # Directory in which .git can be found. Only use if /not/ the
 # same as `wikiroot`. This is most often the case if you are
@@ -25,14 +25,16 @@
 #
 # git-wiki will do the right thing.
 #
-#repo_path:  nil     # Defaults to wikiroot
+#repo_path:  nil       # Defaults to wikiroot
 
+# Extension to *always* apply to page names
+#file_extension:  .txt # Defaults to no extension
 
   # Wiki parameters
 
 # Default- or "index" page of the wiki.
 #
-#home:       Home    # Defaults to this
+#home:       Home      # Defaults to this
 
 
   # User accounts

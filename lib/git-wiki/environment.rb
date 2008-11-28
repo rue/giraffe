@@ -40,6 +40,8 @@ GitWiki.relative  = if GitWiki.wikiroot != GitWiki.repo_path
                       ""
                     end
 
+GitWiki.extension = user_config["file_extension"] || ""
+
 
 # Wiki setup
 GitWiki.home      = "/" + (user_config["home"] || "Home")

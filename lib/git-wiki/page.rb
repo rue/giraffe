@@ -2,11 +2,15 @@ class Page
   attr_reader :name, :attach_dir
 
   def initialize(name, rev = nil)
-    @name = name
-    @relative_name = File.join GitWiki.relative, @name
-    @rev = rev
-    @filename = File.join(GitWiki.wikiroot, @name)
+    @name     = name.chomp GitWiki.extension
+    @extended = @name + GitWiki.extension
+
+    @relative_name = File.join GitWiki.relative, @extended
+    @filename = File.join GitWiki.wikiroot, @extended
+
     @attach_dir = File.join(GitWiki.wikiroot, '_attachments', unwiki(@name))
+
+    @rev = rev
   end
 
   def unwiki(string)

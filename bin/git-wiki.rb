@@ -108,7 +108,12 @@ end
 # Page listing
 #
 get '/a/list' do
-  @pages = GitWiki.repo.working.children.sort.map {|name, data| Page.new name } rescue []
+  @pages =  GitWiki.repo.working.children.sort.select {|name, data|
+              name =~ /#{Regexp.escape GitWiki.extension}\Z/
+            }.map {|name, data|
+              Page.new name
+            } rescue []
+
   show :list, 'Listing Pages'
 end
 
