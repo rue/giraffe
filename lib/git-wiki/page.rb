@@ -13,8 +13,6 @@ class Page
     @attach_dir = File.join(GitWiki.wikiroot, '_attachments', unwiki(@name))
 
     @rev = rev
-
-    p :page, @name, @extended, @relative_name, @filename
   end
 
   def unwiki(string)

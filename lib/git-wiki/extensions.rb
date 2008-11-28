@@ -99,7 +99,6 @@ module Sinatra
     # Work around splat issue.
     #
     def invoke(request)
-      puts "ours #{request.path_info.inspect}"
       return unless pattern =~ request.path_info.squeeze('/')
 
       raw = param_keys.zip $~.captures.map(&:from_param)
