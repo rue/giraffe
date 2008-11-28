@@ -97,12 +97,27 @@ end
 # Page listing
 #
 get '/a/list' do
-  @pages =  GitWiki.repo.working.children.sort.select {|name, data|
-              name =~ /#{Regexp.escape GitWiki.extension}\Z/
-            }.map {|name, data|
-              Page.new name
-            } rescue []
+  #
+  # We keep the path prefix by hand and ensure that no extra slashes get in
+  # This produces a structure like:
+  #
+  # [#<Page "foo">, ["subdir", [#<Page "subdir/bar">, ...]], #<Page "baz">, ...]
+  #
+  recursor =  lambda {|tree, path, continuation|
+                tree.children.sort.map {|name, obj|
+                  if obj.kind_of? Git::Object::Tree
+                    a = [File.join(path + [name]), continuation.call(obj, (path + [name]), continuation)]
+                    puts "Dir > #{a.first} : #{a.last.inspect}"
+                    a
+                  elsif name =~ /#{Regexp.escape GitWiki.extension}\Z/
+                    pg = Page.new File.join(path + [name])
+                    puts "Pg  > #{pg.name}"
+                    pg
+                  end
+                }.compact
+              }
 
+  @pages = recursor.call GitWiki.repo.working, [], recursor
   show :list, 'Listing Pages'
 end
 

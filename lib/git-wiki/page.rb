@@ -1,11 +1,15 @@
 class Page
-  attr_reader :name, :attach_dir
+  # The basename is just a hack to display trees better.
+  #
+  attr_reader :name, :basename, :attach_dir
 
   # Create a Page object--the file may or may not exist.
   #
   def initialize(name, rev = nil)
     @name     = name.chomp GitWiki.extension
     @extended = @name + GitWiki.extension
+
+    @basename = File.basename @name
 
     @relative_name = File.join GitWiki.relative, @extended
     @filename = File.join GitWiki.wikiroot, @extended

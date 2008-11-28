@@ -1,28 +1,40 @@
 <% if @pages.empty? %>
-  <h1>No pages yet</h1>
+  <h1>There are no pages yet!</h1>
 <% else %>
-  <h1>All pages</h1>
+  <h1>Pages</h1>
 
   <div class="content">
     <ul class="page_list">
 
-      <% @pages.each do |page| %>
-
+      <% @recursor = lambda do |page, continuation| %>
         <li>
-          <ul class="page_in_list">
-            <li class="name">
-              <a href="/<%= page.name %>"><%= page.name %></a>
-            </li>
-            <li class="actions">
-              <ul>
-                <li><a href="/e/<%= page.name %>">edit</a></li>
-                <li><a href="/h/<%= page.name %>">history</a></li>
-              </ul>
-            </li>
-          </ul>
+          <% if page.kind_of? Array %>
+            <ul class="directory">
+              <li class="directory_label"><%= File.basename page.first %>/
+                <% unless page.last.empty? %>
+                  <% page.last.each {|child| continuation.call child, continuation } %>
+                <% else %>
+                  <li class="empty_directory">&lt;empty&gt;</li>
+                <% end %>
+              </li>
+            </ul>
+          <% else %>
+            <ul class="page">
+              <li class="name">
+                <a href="/<%= page.name %>"><%= page.basename %></a>
+              </li>
+              <li class="actions">
+                <ul>
+                  <li><a href="/e/<%= page.name %>">.edit</a></li>
+                  <li><a href="/h/<%= page.name %>">.history</a></li>
+                </ul>
+              </li>
+            </ul>
+          <% end %>
         </li>
-
       <% end %>
+
+      <% @pages.each {|page| @recursor.call page, @recursor } %>
 
     </ul>
   </div>
