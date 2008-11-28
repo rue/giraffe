@@ -1,10 +1,44 @@
-# Hash of user: password if authentication is wanted (HTTP Basic auth)
-users:
-  nil
+#  Example configuration file for git-wiki
+# =========================================
+#
+# Currently none of the configuration options is required.
+# In most cases, however, you will want to set the `wikiroot`
+# option to some better location than ~/wiki.
 
-# Directory in which the wiki pages live
-wikiroot:   nil   # Defaults to $HOME/wiki
 
-# Directory in which .git can be found, in case of e.g. subdirectories
-repo_path:  nil   # Defaults to wikiroot
+  # Repository and filesystem information.
+
+# Directory in which the wiki pages live.
+#
+#wikiroot:   nil     # Defaults to ~/wiki
+
+# Directory in which .git can be found. Only use if /not/ the
+# same as `wikiroot`. This is most often the case if you are
+# using a subdirectory of a repository as the wiki directory.
+#
+# E.g. if `/home/bob/code/cool_project` is the project's Git
+# repository but you want to use the `wiki/` subdirectory for
+# the pages, you would configure thus:
+#
+# wikiroot:   /home/bob/code/cool_project/wiki
+# repo_path:  /home/bob/code/cool_project
+#
+# git-wiki will do the right thing.
+#
+#repo_path:  nil     # Defaults to wikiroot
+
+
+  # Wiki parameters
+
+# Default- or "index" page of the wiki.
+#
+#home:       Home    # Defaults to this
+
+
+  # User accounts
+
+# user: password pairs if authentication is wanted (HTTP Basic auth)
+#
+#users:
+#  username:   password
 

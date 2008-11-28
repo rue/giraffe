@@ -12,7 +12,7 @@ user_config = YAML.load_file ENV["GITWIKI_CONF"] rescue nil
 GitWiki = OpenStruct.new unless defined? GitWiki
 
 # Authentication
-GitWiki.users     = user_config["users"]
+GitWiki.users     = user_config["users"] || {}
 
 # Repository location
 GitWiki.wikiroot  = File.expand_path(user_config["wikiroot"]  ||
@@ -39,12 +39,11 @@ GitWiki.relative  = if GitWiki.wikiroot != GitWiki.repo_path
 
 
 # Wiki setup
-GitWiki.home      = user_config["home"] || "/Home"
+GitWiki.home      = "/" + user_config["home"] || "Home"
 
 # Some type of a link to git-wiki version used
-GitWiki.itself    = user_config["gitwiki_page"] ||
-                   `git remote -v` =~ (/origin\s+git@(.+?)\.git/) && "http://#{$1.sub ":", "/"}/" ||
-                   "http://github.com/rue/git-wiki/"
+GitWiki.itself    = (`git remote -v` =~ (/origin\s+git@(.+?)\.git/) && "http://#{$1.sub ":", "/"}/") ||
+                    "http://github.com/rue/git-wiki/"
 
 # Git needs this.
 require "fileutils"
