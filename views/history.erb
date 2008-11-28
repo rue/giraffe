@@ -1,23 +1,30 @@
-<h1>History of <a href="/<%= @page.name %>"><%= @page.name %></a></h1>
+<h1>Branch History</h1>
 
 <ul class="sub_nav">
-  <li><a href="/<%= @page.name %>" class="nav_link">current</a></li>
-  <li><a href="/e/<%= @page.name %>" class="nav_link">edit</a></li>
+  <li>Branch <%= GitWiki.repo.current_branch %></li>
+  <li class="sub_nav details">Showing <%= @history.size %> commits</li>
 </ul>
 
 <div class="content">
+  <br />
   <ul>
-    <% @page.history.each do |c| %>
-      <li>
+  <% @history.each do |commit| %>
+    <li>
+      <% if commit != @history.first %>
+        <a href="/a/revert_branch/<%= commit.sha %>" title="Click to revert to this revision." onclick="return confirm('Are you sure you want to revert to this revision?');">
+          <script type="text/javascript">
+          document.write(time_ago_in_words(<%= commit.date.for_time_ago_in_words %>) + ' ago');
+          </script>
+        </a>
+      <% else %>
         <script type="text/javascript">
-        document.write(time_ago_in_words(<%= c.committer_date.for_time_ago_in_words %>) + ' ago');
+        document.write(time_ago_in_words(<%= commit.date.for_time_ago_in_words %>) + ' ago');
         </script>
-        &mdash;
-        <a href="/h/<%= @page.name %>/<%= c.sha %>"><%= c.message %></a>
-        <% unless @page.history.first == c %>
-         &bull; <a href="/d/<%= @page.name %>/<%= c.sha %>">diff</a>
-        <% end %>
-      </li>
-    <% end %>
+      <% end %>
+      &mdash;
+      <%= commit.message %> 
+    </li>
+  <% end %>
   </ul>
 </div>
+

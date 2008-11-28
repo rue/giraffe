@@ -68,7 +68,7 @@ end
 
 get '/h/:page' do
   @page = Page.new(params[:page])
-  show :history, "History of #{@page.name}"
+  show :page_history, "History of #{@page.name}"
 end
 
 get '/h/:page/:rev' do
@@ -88,9 +88,14 @@ end
 
 # application paths (/a/ namespace)
 
+get '/a/history' do
+  @history = GitWiki.repo.log.path GitWiki.relative
+  show :history, "Wiki History"
+end
+
 get '/a/list' do
   @pages = GitWiki.repo.working.children.sort.map {|name, data| Page.new name } rescue []
-  show :list, 'Listing pages'
+  show :list, 'Listing Pages'
 end
 
 get '/a/patch/:page/:rev' do
