@@ -81,42 +81,54 @@ get '/h/:page/:rev.txt' do
   send_data @page.raw_body, :type => 'text/plain', :disposition => 'inline'
 end
 
+# Show diff of page revisions
+#
 get '/d/:page/:rev' do
   @page = Page.new(params[:page])
   show :delta, "Diff of #{@page.name}"
 end
 
-# application paths (/a/ namespace)
 
+# Wiki history
+#
 get '/a/history' do
   @history = GitWiki.repo.log.path GitWiki.relative
   show :history, "Wiki History"
 end
 
+# Page listing
+#
 get '/a/list' do
   @pages = GitWiki.repo.working.children.sort.map {|name, data| Page.new name } rescue []
   show :list, 'Listing Pages'
 end
 
-get '/a/patch/:page/:rev' do
-  @page = Page.new(params[:page])
-  header 'Content-Type' => 'text/x-diff'
-  header 'Content-Disposition' => 'filename=patch.diff'
-  @page.delta(params[:rev])
-end
-
-get '/a/tarball' do
-  header 'Content-Type' => 'application/x-gzip'
-  header 'Content-Disposition' => 'filename=archive.tgz'
-  archive = GitWiki.repo.archive('HEAD', nil, :format => 'tgz', :prefix => 'wiki/')
-  File.open(archive).read
-end
-
+# Search
+#
 get '/a/search' do
   @search = params[:search]
   @grep = GitWiki.repo.object("HEAD").grep @search, nil, :ignore_case => true
   show :search, 'Search Results'
 end
+
+# Generate patchfile for diff
+#
+get "/a/patch/:page/:rev" do
+  header "Content-Type"         => "text/x-diff"
+  header "Content-Disposition"  => "filename=patch.diff"
+
+  Page.new(params[:page]).delta params[:rev]
+end
+
+# Generate a .tgz of wiki pages for user
+#
+get "/a/tarball" do
+  header "Content-Type"         => "application/x-gzip"
+  header "Content-Disposition"  => "filename=archive.tgz"
+
+  File.read GitWiki.repo.archive("HEAD", nil, :format => "tgz", :prefix => "wiki/")
+end
+
 
 # file upload attachments
 
