@@ -1,11 +1,7 @@
- git-wiki
-==========
+ Giraffe
+=========
 
-Simple wiki engine that uses a Git repository as its data store.
-
-
- The rue Version of git-wiki
------------------------------
+Simple wiki engine and eventually issue tracker using Git for storage.
 
 All the changes made to the codebase in this particular fork of
 the original excellent idea and various people's previous work
@@ -26,9 +22,9 @@ These are all available through Gems.
 - rdiscount
 - rubypants
 
-Sinatra (the web framework) is included as a submodule:
+Sinatra (the web framework) is included as a submodule. To set it
+up, issue the following from the project root:
 
-    $ cd $GITWIKIDIR
     $ git submodule init
     $ git submodule update
 
@@ -51,7 +47,7 @@ Sinatra (the web framework) is included as a submodule:
  Configuration
 ---------------
 
-See config.yml.sample for information. The configuration
+See doc/config.yml.sample for information. The configuration
 file to be used can be given using the `-f` option.
 
 
@@ -60,10 +56,9 @@ file to be used can be given using the `-f` option.
 
 Run at port 8080:
 
-    $ ./bin/git-wiki.rb -f config.yml -p 8080
+    $ bin/giraffe -f config.yml -p 8080
 
 Use production environment (development by default):
 
-    $ ./bin/git-wiki.rb -f config.yml -e production
-
+    $ bin/giraffe -f config.yml -e production
 

@@ -1,5 +1,5 @@
-#  Example configuration file for git-wiki
-# =========================================
+#  Example configuration file for giraffe
+# ========================================
 #
 # Currently none of the configuration options is required.
 # In most cases, however, you will want to set the `wikiroot`
@@ -22,8 +22,6 @@
 #
 # wikiroot:   /home/bob/code/cool_project/wiki
 # repo_path:  /home/bob/code/cool_project
-#
-# git-wiki will do the right thing.
 #
 #repo_path:  nil       # Defaults to wikiroot
 

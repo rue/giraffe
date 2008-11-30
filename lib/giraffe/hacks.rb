@@ -9,7 +9,7 @@ module HttpAuthentication
   module Basic
 
     def authenticate(&login_procedure)
-      authenticate_or_request_with_http_basic "git-wiki", &login_procedure
+      authenticate_or_request_with_http_basic "Giraffe wiki", &login_procedure
     end
 
     def authenticate_or_request_with_http_basic(realm = "Application", &login_procedure)
@@ -106,9 +106,9 @@ end
 
 # Work around stupid directory handling
 #
-def (GitWiki.repo).working()
-  unless GitWiki.relative.empty?
-    self.gtree("HEAD").trees[GitWiki.relative]
+def (Giraffe.repo).working()
+  unless Giraffe.relative.empty?
+    self.gtree("HEAD").trees[Giraffe.relative]
   else
     self.gtree "HEAD"
   end

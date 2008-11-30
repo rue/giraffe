@@ -5,12 +5,12 @@ $LOAD_PATH.unshift(File.dirname(__FILE__), "..")
 $LOAD_PATH.unshift libdir if File.directory? libdir
 
 
-require "git-wiki/environment"
+require "giraffe/environment"
 
 require "sinatra/lib/sinatra"
 
-require "git-wiki/extensions"
-require "git-wiki/page"
+require "giraffe/hacks"
+require "giraffe/page"
 
 require "rubygems"
   require "rdiscount"
@@ -20,7 +20,7 @@ require "rubygems"
 # Authentication.
 #
 before do
-  authenticate {|user, pass| GitWiki.users[user] == pass } if GitWiki.users
+  authenticate {|user, pass| Giraffe.users[user] == pass } if Giraffe.users
 end
 
 
@@ -29,7 +29,7 @@ end
 
 # Default page.
 #
-get('/') { redirect GitWiki.home }
+get('/') { redirect Giraffe.home }
 
 
 # Pages handled at bottom due to wildcarding
@@ -91,38 +91,49 @@ end
 # Wiki history
 #
 get '/a/history' do
-  @history = GitWiki.repo.log.path GitWiki.relative
+  @history = Giraffe.repo.log.path Giraffe.relative
   show :history, "Wiki History"
 end
 
-# Page listing
+# Recursive tree searcher used for page listings.
 #
-get '/a/list' do
-  #
-  # We keep the path prefix by hand and ensure that no extra slashes get in
-  # This produces a structure like:
-  #
-  # [#<Page "foo">, ["subdir", [#<Page "subdir/bar">, ...]], #<Page "baz">, ...]
-  #
-  recursor =  lambda {|tree, path, continuation|
-                tree.children.sort.map {|name, obj|
-                  if obj.kind_of? Git::Object::Tree
-                    [File.join(path + [name]), continuation.call(obj, (path + [name]), continuation)]
-                  elsif name =~ /#{Regexp.escape GitWiki.extension}\Z/
-                    Page.new File.join(path + [name])
-                  end
-                }.compact
-              }
+# We keep the path prefix by hand and ensure that no extra slashes get in
+# This produces a structure like:
+#
+# [#<Page "foo">, ["subdir", [#<Page "subdir/bar">, ...]], #<Page "baz">, ...]
+#
+recursor =  lambda {|tree, path, continuation|
+              tree.children.sort.map {|name, obj|
+                if obj.kind_of? Git::Object::Tree
+                  [File.join(path + [name]), continuation.call(obj, (path + [name]), continuation)]
+                elsif name =~ /#{Regexp.escape Giraffe.extension}\Z/
+                  Page.new File.join(path + [name])
+                end
+              }.compact
+            }
 
-  @pages = recursor.call GitWiki.repo.working, [], recursor
-  show :list, 'Listing Pages'
+# Toplevel page listing
+#
+get "/a/list" do
+  @pages = recursor.call Giraffe.repo.working, [], recursor
+  show :list, "All pages"
+end
+
+# Subdirectory page listing
+#
+get "/a/list/*" do
+  tree =  params[:splats].split("/").inject(Giraffe.repo.working) {|dir|
+
+          }
+
+  @pages = recursor.call tree, [], recursor
 end
 
 # Search
 #
 get '/a/search' do
   @search = params[:search]
-  @grep = GitWiki.repo.object("HEAD").grep @search, nil, :ignore_case => true
+  @grep = Giraffe.repo.object("HEAD").grep @search, nil, :ignore_case => true
   show :search, 'Search Results'
 end
 
@@ -141,7 +152,7 @@ get "/a/tarball" do
   header "Content-Type"         => "application/x-gzip"
   header "Content-Disposition"  => "filename=archive.tgz"
 
-  File.read GitWiki.repo.archive("HEAD", nil, :format => "tgz", :prefix => "wiki/")
+  File.read Giraffe.repo.archive("HEAD", nil, :format => "tgz", :prefix => "wiki/")
 end
 
 

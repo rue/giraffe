@@ -18,9 +18,8 @@ Simon Rozet (http://atonie.org/2008/02/git-wiki)
 - Scott Chacon (http://jointheconversation.org) - ruby-git migration
 
 
- rue/git-wiki
---------------
+ Giraffe
+---------
 
 - "rue" is: Eero Saynatkari <projects@kittensoft.org>
-  - Various enhancements to enable using for Rubinius' documentation.
 

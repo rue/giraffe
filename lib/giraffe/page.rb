@@ -6,15 +6,15 @@ class Page
   # Create a Page object--the file may or may not exist.
   #
   def initialize(name, rev = nil)
-    @name     = name.chomp GitWiki.extension
-    @extended = @name + GitWiki.extension
+    @name     = name.chomp Giraffe.extension
+    @extended = @name + Giraffe.extension
 
     @basename = File.basename @name
 
-    @relative_name = File.join GitWiki.relative, @extended
-    @filename = File.join GitWiki.wikiroot, @extended
+    @relative_name = File.join Giraffe.relative, @extended
+    @filename = File.join Giraffe.wikiroot, @extended
 
-    @attach_dir = File.join(GitWiki.wikiroot, '_attachments', unwiki(@name))
+    @attach_dir = File.join(Giraffe.wikiroot, '_attachments', unwiki(@name))
 
     @rev = rev
   end
@@ -42,7 +42,7 @@ class Page
   end
 
   def branch_name
-    GitWiki.repo.current_branch
+    Giraffe.repo.current_branch
   end
 
   def updated_at
@@ -66,8 +66,8 @@ class Page
     commit_message = tracked? ? "edited #{@name}" : "created #{@name}"
     commit_message += ' : ' + message if message && message.length > 0
     begin
-      GitWiki.repo.add(@relative_name)
-      GitWiki.repo.commit(commit_message)
+      Giraffe.repo.add(@relative_name)
+      Giraffe.repo.commit(commit_message)
     rescue
       nil
     end
@@ -76,24 +76,24 @@ class Page
   end
 
   def tracked?
-    GitWiki.repo.ls_files.keys.include?(@relative_name)
+    Giraffe.repo.ls_files.keys.include?(@relative_name)
   end
 
   def history
     return nil unless tracked?
-    @history ||= GitWiki.repo.log.path(@relative_name)
+    @history ||= Giraffe.repo.log.path(@relative_name)
   end
 
   def delta(rev)
-    GitWiki.repo.diff(previous_commit, rev).path(@relative_name).patch
+    Giraffe.repo.diff(previous_commit, rev).path(@relative_name).patch
   end
 
   def commit
-    @commit ||= GitWiki.repo.log.object(@rev || 'master').path(@relative_name).first
+    @commit ||= Giraffe.repo.log.object(@rev || 'master').path(@relative_name).first
   end
 
   def previous_commit
-    @previous_commit ||= GitWiki.repo.log(2).object(@rev || 'master').path(@relative_name).to_a[1]
+    @previous_commit ||= Giraffe.repo.log(2).object(@rev || 'master').path(@relative_name).to_a[1]
   end
 
   def next_commit
@@ -116,7 +116,7 @@ class Page
   end
 
   def blob
-    @blob ||= (GitWiki.repo.gblob(@rev + ':' + @relative_name))
+    @blob ||= (Giraffe.repo.gblob(@rev + ':' + @relative_name))
   end
 
   # save a file into the _attachments directory
@@ -135,8 +135,8 @@ class Page
 
     commit_message = "uploaded #{filename} for #{@name}"
     begin
-      GitWiki.repo.add(new_file)
-      GitWiki.repo.commit(commit_message)
+      Giraffe.repo.add(new_file)
+      Giraffe.repo.commit(commit_message)
     rescue
       nil
     end
@@ -149,8 +149,8 @@ class Page
 
       commit_message = "removed #{file} for #{@name}"
       begin
-        GitWiki.repo.remove(file_path)
-        GitWiki.repo.commit(commit_message)
+        Giraffe.repo.remove(file_path)
+        Giraffe.repo.commit(commit_message)
       rescue
         nil
       end

@@ -19,7 +19,7 @@
           <div class="match">
             <tt><%= match %></tt>
             <br />
-            &mdash; <a href="/<%= file %>"><%= file %></a>, line <%= line %> (<%= GitWiki.repo.object(sha).name %>)
+            &mdash; <a href="/<%= file %>"><%= file %></a>, line <%= line %> (<%= Giraffe.repo.object(sha).name %>)
           </div>
         <% end %>
     </div>
