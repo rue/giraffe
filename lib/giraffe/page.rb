@@ -31,6 +31,12 @@ class Page
     pf = if prettified.size == 1 then prettified.unshift ""  else prettified end
   end
 
+  # Whether this entity is actually a directory
+  #
+  def directory?()
+    File.directory? @filename.chomp(Giraffe.extension)
+  end
+
   # TODO: Get rid of this.
   def unwiki(string)
     string.downcase

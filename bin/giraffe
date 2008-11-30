@@ -191,6 +191,9 @@ end
 #
 get "/*:page" do
   @page = Page.new(params[:splats].first + params[:page])
+
+  redirect "/a/list/#{@page.name}" if @page.directory?
+
   if @page.tracked? then show :show, @page.name else redirect "/e/" + @page.name end
 end
 
