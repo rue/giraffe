@@ -1,7 +1,8 @@
 <% if @pages.empty? %>
   <h1>There are no pages yet!</h1>
+  <p><a href="/e/<%= Giraffe.home %>" title="Create your home page">Go to create your first page.</a></p>
 <% else %>
-  <h1>Pages</h1>
+  <h1>Pages<%= " Under <span class=\"pretty_dir\">#{@subdir}/</span>" if @subdir %></h1>
 
   <div class="content">
     <ul class="page_list">

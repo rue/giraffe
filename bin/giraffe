@@ -122,11 +122,14 @@ end
 # Subdirectory page listing
 #
 get "/a/list/*" do
-  tree =  params[:splats].split("/").inject(Giraffe.repo.working) {|dir|
+  @subdir = params[:splats].first.chomp "/"
 
+  tree =  @subdir.split("/").inject(Giraffe.repo.working) {|current, dir|
+            current.trees[dir]
           }
 
-  @pages = recursor.call tree, [], recursor
+  @pages = recursor.call tree, [@subdir], recursor
+  show :list, "Pages Under #{@subdir}/"
 end
 
 # Search
