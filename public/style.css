@@ -14,6 +14,35 @@ body {
   padding:            2em;
 }
 
+#logo {
+  padding:        0em;
+  border:         0em;
+}
+
+  #logo a {
+    text-decoration:  none;
+    padding:          0em;
+    border:           0em;
+    margin:           0em;
+  }
+
+  #logo img {
+    float:            left;
+    clear:            right;
+
+    padding:          0em;
+    border:           0em;
+    margin:           0em;
+  }
+
+div.top {
+  display: block;
+}
+
+.top form {
+  float:              right;
+}
+
 #container {
  width:         70%;
 
@@ -45,6 +74,22 @@ body {
 
 
 /* Prettified page name and path display */
+
+#pagenamebanner {
+  clear: both;
+}
+
+#pagelistbanner {
+  clear: both;
+}
+
+#historybanner {
+  clear: both;
+}
+
+#editbanner {
+  clear: both;
+}
 
   span.pretty_dir {
     color:              #b77;
@@ -141,12 +186,28 @@ textarea {
   padding-bottom:   0.3em;
 }
 
+/* Page footer section */
+
 #footer {
   list-style-type:  none;
-  text-align:       right;
+  text-align:       center;
 
   margin-top:   1em;
 }
+
+  #footer a {
+    text-decoration:  none;
+
+    padding:          0em;
+    border:           0em;
+    margin:           0em;
+  }
+
+  #footer img {
+    padding:          0em;
+    border:           0em;
+    margin:           0em;
+  }
 
 .nav_list li {
   display:          inline;
