@@ -125,7 +125,7 @@ get "/a/list/*" do
   @subdir = params[:splats].first.chomp "/"
 
   tree =  @subdir.split("/").inject(Giraffe.repo.working) {|current, dir|
-            current.trees[dir]
+            current.trees[dir] or throw :halt, [404, "#{@subdir} does not exist!"]
           }
 
   @pages = recursor.call tree, [@subdir], recursor
