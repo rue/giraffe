@@ -136,7 +136,10 @@ end
 #
 get '/a/search' do
   @search = params[:search]
-  @grep = Giraffe.repo.object("HEAD").grep @search, nil, :ignore_case => true
+  @grep = Giraffe.repo.object("HEAD").grep @search, nil, :ignore_case => true,
+                                                         :word_regexp => true
+  p @grep
+  @grep.each {|k,v| p Giraffe.repo.object k.split(":").first }
   show :search, 'Search Results'
 end
 
