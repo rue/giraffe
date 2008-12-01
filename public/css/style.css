@@ -2,7 +2,7 @@
 
 body {
   background-color:   #fff;
-  color:              #000;
+  color:              #555;
 
   font-size:          0.9em;
   font-weight:        normal;
@@ -60,44 +60,30 @@ body {
 
     /* Logo section */
 
-    #logo {
+    #site_logo {
       display:          inline;
+      float:            left;
     }
 
-    #logo img {
-      display:          inline;
-      clear:            none;
-
-      padding:          0em;
-      border:           0em;
-      margin:           0em;
-    }
-
-    #logo a {
-      display:          inline;
-      padding:          0em;
-      border:           0em;
-      margin:           0em;
-    }
+      #site_logo img {
+        clear:          none;
+      }
 
 
     /* Main navigation */
 
     #navigation {
-      display:          inline;
-      clear:            right;
-
-      text-align:       right;
+      text-align: right;
     }
 
       #navigation ul {
-        display:          inline;
-
         list-style-type:  none;
       }
 
         #navigation ul li {
           display:          inline;
+
+          margin-right:   1em;
         }
 
       #navigation form {
@@ -111,18 +97,51 @@ body {
 
 
     /* Site section display (i.e. name of page or something similar.) */
+
     #section_info {
       display:            block;
-      clear:              both;
+      clear:              none;
+
+      text-align:         right;
     }
 
+      span.pretty_dir {
+        color:              #ccc;
+
+        font-style:         italic;
+        font-size:          1em;
+        font-weight:        normal;
+
+        letter-spacing:     0.2em;
+
+        margin-right:       0.2em;
+      }
+
+      span.pretty_name {
+        font-weight:        normal;
+
+        letter-spacing:     0.2em;
+      }
+
+
+    /* Content stuff further down */
+
+    #content {
+      clear:                both;
+
+      margin-top:           1em;
+    }
 
     /* Footer information at the bottom */
 
     #footer {
-      display:            inline;
+      display:            block;
+      clear:              both;
 
       text-align:         center;
+      font-size:          0.6em;
+
+      margin-top:         2em;
     }
 
       #footer ul {
@@ -151,6 +170,71 @@ body {
         border:             0em;
         margin:             0em;
       }
+
+
+    /* Single page */
+
+    #page_view {
+    }
+
+      #page_actions {
+        display:            inline;
+        float:              left;
+        clear:              none;
+
+        text-align:         right;
+        line-height:        2em;
+
+        padding-right:      1em;
+        border-right:       1px solid #bcf;
+      }
+
+        #page_actions ul {
+          list-style-type:    none;
+        }
+
+        #page_view_details {
+          clear:              both;
+
+          color:              #777;
+
+          text-align:         right;
+          font-size:          0.7em;
+        }
+
+          #page_view_details p {
+            display:            inline;
+          }
+
+          #page_view_details ul {
+            display:            inline;
+
+            list-style-type:    none;
+          }
+
+            #page_view_details ul li {
+              display:            inline;
+            }
+
+          #page_view_details .branch_name {
+            font-style:         italic;
+          }
+
+
+      #page_view div.page_content, #page_viev div.page_edit_area {
+        display:            block;
+        float:              right;
+        clear:              none;
+      }
+
+      #page_view div.page_content {
+        min-height:         10em;
+        min-width:          75%;
+
+        margin-left:        2em;
+        margin-right:       2em;
+      }
+
 /*
 
 

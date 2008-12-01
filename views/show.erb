@@ -5,9 +5,10 @@
 
 <%= @env %>
 
-<div id="fancy">
-  <div>
-    <ul class="sub_nav">
+<div id="page_view">
+
+  <div id="page_actions">
+    <ul>
       <% if params[:rev] %>
         <li><a href="/<%= @page.name %>" class="nav_link">current</a></li>
       <% else %>
@@ -41,25 +42,23 @@
         </ul>
       </li>
       <% end %>
-
-      <li>
-        <ul class="sub_nav details">
-          <li>updated
-            <script type="text/javascript">
-              document.write(time_ago_in_words(<%= @page.updated_at.for_time_ago_in_words %>) + ' ago');
-            </script>
-          </li>
-          <li>
-            <%= Giraffe.repo.current_branch %>
-          </li>
-        </ul>
-      </li>
-
     </ul>
   </div>
 
-  <div class="content edit_area">
+  <div class="page_content page_edit_area">
     <%= @page.body %>
   </div>
 
-</div>
+  <div id="page_view_details">
+    <ul>
+      <li>
+        <p>updated
+          <script language="javascript" type="text/javascript">
+            document.write(time_ago_in_words(<%= @page.updated_at.for_time_ago_in_words %>) + ' ago');
+          </script>
+        </p>
+      </li>
+    </ul>
+  </div>
+
+</div>        <!-- Page view -->
