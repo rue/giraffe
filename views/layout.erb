@@ -1,31 +1,72 @@
-<html>
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+                      "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xml:lang="en" >
   <head>
+
+    <title><%= @html_title %></title>
+
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title><%= @title %></title>
-    <link rel="stylesheet" href="/style.css" type="text/css" media="screen" />
-    <link rel="stylesheet" href="/sh_style.css" type="text/css" media="screen" />
-    <script language="javascript" type="text/javascript" src="/app.js"></script>
-    <script language="javascript" type="text/javascript" src="/jquery.min.js"></script>
-    <script language="javascript" type="text/javascript" src="/jeditable.min.js"></script>
+
+    <link rel="stylesheet" href="/css/style.css" type="text/css" media="screen" />
+    <link rel="stylesheet" href="/css/sh_style.css" type="text/css" media="screen" />
+
+    <script language="javascript" type="text/javascript" src="/script/app.js"></script>
+    <script language="javascript" type="text/javascript" src="/script/jquery.min.js"></script>
+    <script language="javascript" type="text/javascript" src="/script/jeditable.min.js"></script>
+
   </head>
+
   <body>
-    <div id="container">
-      <div class="top">
-        <span id="logo"><a href="" title="Back to Rubinius documentation home"><img src="/images/wiki_doc_rubinius_logo.png" alt="Rubinius documentation home" /></a></span>
-        <form method="get" action="/a/search">
-          <ul class="nav_list" id="top_nav">
-            <li><a href="/" class="nav_link">home</a></li>
-            <li><a href="/a/history" class="nav_link">history</a></li>
-            <li><a href="/a/list" class="nav_link">pages</a></li>
-            <li><a href="/a/tarball" class="nav_link">export</a></li>
-            <li><input type="text" name="search" size="15" value="search" id="search_field" onfocus="clearField(this);" /></li>
+
+    <!-- Pseudo container for the whole screen -->
+    <div id="window">
+
+      <!-- All real elements -->
+      <div id="everything">
+
+        <!-- Logo or branding -->
+        <div id="logo">
+          <a href="/" title="Back to home page" class="imagelink"><img src="/images/giraffe_logo_full.png" alt="Rubinius documentation home" /></a>
+        </div>
+
+        <!-- Main navigation -->
+        <div id="navigation">
+          <ul>
+            <li><a href="/">home</a></li>
+            <li><a href="/a/history"  title="View wiki history">history</a></li>
+            <li><a href="/a/list"     title="List of pages">pages</a></li>
+            <li><a href="/a/tarball"  title="Download all pages">export</a></li>
+            <li>
+              <form method="get" action="/a/search" class="search">
+                <input type="text" name="search" size="15" value="search" onfocus="clearField(this);" />
+              </form>
+            </li>
           </ul>
-        </form>
-      </div>
-      <%= yield %>
-    </div>
-    <div id="footer">
-      <p><a href="<%= Giraffe.itself %>"><img src="/images/giraffe_logo_small.png" alt="Giraffe" /></a> power!</p>
-    </div>
+        </div>
+
+        <!-- Page content -->
+        <div id="content">
+          <%= yield %>
+        </div>
+
+        <!-- Footer with info -->
+        <div id="footer">
+          <ul>
+            <li><a href="http://validator.w3.org/check?uri=referer">Valid XHTML 1.1</a></li>
+            <li><a href="http://jigsaw.w3.org/css-validator/check/referer">Valid CSS 2.1</a></li>
+            <li><a href="http://www.section508.info/check_this.cfm?URLtest=http://http://cs.helsinki.fi/u/esaynatk&amp;s508=1&amp;CheckURL=0">508 OK</a></li>
+            <li><a href="<%= Giraffe.itself %>" title="Giraffe website" class="imagelink"><img src="/images/giraffe_logo_small.png" alt="Giraffe" /> power!</a></li>
+          </ul>
+        </div>    <!-- /footer -->
+
+      </div>      <!-- /everything -->
+
+    </div>        <!-- /window -->
+
   </body>
+
 </html>
+

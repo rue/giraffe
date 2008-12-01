@@ -1,80 +1,160 @@
+/* First, some defaults */
+
 body {
-  background-color:   #888;
-  color:              #f5f5f5;
+  background-color:   #fff;
+  color:              #000;
 
-  font-size:          0.8em;
+  font-size:          0.9em;
   font-weight:        normal;
-  font-family:        "Bitstream Vera Sans", Verdana, Arial, sans-serif;
+  font-family:        "Bitstream Vera Sans", Verdana, Arial, Helvetica, sans-serif;
 
-  line-height:        1.2em;
-  margin:             2em;
+  line-height:        1.3em;
 
-  border:             0.5em solid #aaa;
+  padding:            0em;
+  border:             0em;
   margin:             0em;
-  padding:            2em;
 }
 
-#logo {
-  padding:        0em;
-  border:         0em;
-}
+  /* Links */
 
-  #logo a {
-    text-decoration:  none;
-    padding:          0em;
-    border:           0em;
-    margin:           0em;
+  a {
+    display:            inline;
+
+    color:              #333;
+
+    text-decoration:    none;
+
+    font-style:         normal;
+    font-weight:        normal;
+    font-size:          1.1em;
+
+    padding:            0em;
+    border:             0em;
+    margin:             0em;
   }
 
-  #logo img {
-    float:            left;
-    clear:            right;
-
-    padding:          0em;
-    border:           0em;
-    margin:           0em;
+  a:link, a:active, a:visited {
+    border-bottom:      1px dotted #333;
   }
 
-div.top {
-  display: block;
-}
+  a:hover {
+    color:              #000;
+    border-bottom:      1px solid #000;
+  }
 
-.top form {
-  float:              right;
-}
-
-#container {
- width:         70%;
-
- background:    #700;
-
- padding:       3em;
- border:        1px solid #da2;
- margin:        auto;
-}
-
-.content {
-  background:         #555;
-
-  padding-top:        2em;
-  padding-bottom:     2em;
-  padding-left:       5em;
-  padding-right:      5em;
-
-  border-left:        1px solid #da2;
-  border-top:         4px solid #404040;
-  border-right:       1px solid #da2;
-  border-bottom:      1px solid #da2;
-}
-
-.content h1 { font-size: 2.0em; }
-.content h2 { font-size: 1.8em; }
-.content h3 { font-size: 1.6em; }
-.content h4 { font-size: 1.4em; }
+  a.imagelink {
+    border:             0em;
+  }
 
 
-/* Prettified page name and path display */
+  /* Main container */
 
+  #everything {
+    width:              70%;
+
+    padding:            2em;
+    border:             0em;
+    margin:             auto;
+  }
+
+
+    /* Logo section */
+
+    #logo {
+      display:          inline;
+    }
+
+    #logo img {
+      display:          inline;
+      clear:            none;
+
+      padding:          0em;
+      border:           0em;
+      margin:           0em;
+    }
+
+    #logo a {
+      display:          inline;
+      padding:          0em;
+      border:           0em;
+      margin:           0em;
+    }
+
+
+    /* Main navigation */
+
+    #navigation {
+      display:          inline;
+      clear:            right;
+
+      text-align:       right;
+    }
+
+      #navigation ul {
+        display:          inline;
+
+        list-style-type:  none;
+      }
+
+        #navigation ul li {
+          display:          inline;
+        }
+
+      #navigation form {
+        display:          inline;
+      }
+
+        #navigation form input {
+          display           inline;
+        }
+
+
+
+    /* Site section display (i.e. name of page or something similar.) */
+    #section_info {
+      display:            block;
+      clear:              both;
+    }
+
+
+    /* Footer information at the bottom */
+
+    #footer {
+      display:            inline;
+
+      text-align:         center;
+    }
+
+      #footer ul {
+        display:            inline;
+
+        text-align:         center;
+        vertical-align:     top;
+
+        list-style-type:    none;
+      }
+
+        #footer ul li {
+          display:            inline;
+
+          vertical-align:     top;
+
+          padding:            1em;
+        }
+
+      #footer img {
+        display:            inline;
+
+        vertical-align:     bottom;
+
+        padding:            0em;
+        border:             0em;
+        margin:             0em;
+      }
+/*
+
+
+/* Prettified page name and path display
 #pagenamebanner {
   clear: both;
 }
@@ -110,7 +190,7 @@ div.top {
   }
 
 
-/* Link  defaults */
+/* Link  defaults
 a, a:link, a:visited, a:active {
   color:              #e5e5e5;
 
@@ -126,9 +206,9 @@ a:hover {
   border-bottom:      1px solid #fff;
 }
 
-/* Navigation linkage. */
+/* Navigation linkage.
 
-/* Link  defaults */
+/* Link  defaults
 a.nav_link, a.nav_link:link, a.nav_link:visited, a.nav_link:active, a.nav_link:hover {
   font-size:          1em;
   margin-bottom:      0.2em;
@@ -186,7 +266,7 @@ textarea {
   padding-bottom:   0.3em;
 }
 
-/* Page footer section */
+/* Page footer section
 
 #footer {
   list-style-type:  none;
@@ -298,14 +378,14 @@ div.attach-options {
 	color: #888;
 }
 
-/* Page list */
+/* Page list
 
 ul.page_list {
   list-style:       none;
 }
 
 
-/* Remove some spacing by default */
+/* Remove some spacing by default
 
 ul.page_list ul {
   list-style:       none;
@@ -320,7 +400,7 @@ ul.page_list li {
 }
 
 
-  /* Directories */
+  /* Directories
 
   ul.page_list ul.directory {
     display: block;
@@ -337,7 +417,7 @@ ul.page_list li {
     }
 
 
-    /* Directory labels in page list */
+    /* Directory labels in page list
 
     ul.page_list ul.directory li.directory_label {
       color:            #aaa;
@@ -354,7 +434,7 @@ ul.page_list li {
       }
 
 
-  /* Pages */
+  /* Pages
 
 
   ul.page_list ul.page {
@@ -370,7 +450,7 @@ ul.page_list li {
       font-style:       normal;
     }
 
-    /* Page actions */
+    /* Page actions
 
     ul.page_list ul.page li.actions {
       font-weight:    normal;
@@ -396,10 +476,7 @@ ul.page_list li {
     }
 
 
-/* ids */
-
-#edit_textarea {
-  height:       35em;
+/* ids
   width:        100%;
 
   margin-top:   1.5em;
