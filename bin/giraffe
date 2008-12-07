@@ -124,11 +124,13 @@ end
 
 # Generate patchfile for diff
 #
-get "/a/patch/*:page/:rev" do
+get "/a/patch/*:page/:commit" do
+  diff = Page.from_uri(params[:splats].first, params[:page]).object.diff params[:commit]
+
   header "Content-Type"         => "text/x-diff"
   header "Content-Disposition"  => "filename=patch.diff"
 
-  Page.from_uri(params[:splats].first, params[:page]).delta params[:rev]
+  send_data diff, :type => "text/x-diff", :disposition => "inline"
 end
 
 
