@@ -229,3 +229,30 @@ describe Git::Tree, "direct object access" do
 end
 
 
+describe Git::Blob, "contents" do
+
+  before :all do
+    FileUtils.mkdir_p "/tmp/giraffe_repo/tracked/subdir"
+
+    File.open("/tmp/giraffe_repo/file0.txt", "w+") {|f| f.puts $$ }
+
+    Dir.chdir("/tmp/giraffe_repo") {
+      `git init`
+      `git add file0.txt`
+      `git commit -m "First"`
+    }
+
+    @repo = Git::Repository.open "/tmp/giraffe_repo"
+  end
+
+  after :all do
+    FileUtils.rm_r "/tmp/giraffe_repo"
+  end
+
+  it "returns its contents through #data" do
+    @repo.object_for("file0.txt").data.chomp.should == $$.to_s
+  end
+
+end
+
+

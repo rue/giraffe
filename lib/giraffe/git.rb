@@ -12,14 +12,15 @@ module Git
   # Object is a tree (directory) or a blob (file).
   #
   class Object
-    attr_reader :repo, :name, :path, :sha1, :mode
+    attr_reader :repo, :name, :path, :parent, :sha1, :mode
 
     # Lazily initialized objects.
     #
-    def initialize(repo, name, path, sha1, mode)
+    def initialize(repo, name, path, parent, sha1, mode)
       @repo = repo
       @name = name
       @path = path
+      @parent = parent
       @sha1 = sha1
       @mode = mode
     end
@@ -30,10 +31,10 @@ module Git
       there { `git #{command} 2>&1`.strip }
     end
 
-    # Use the path as the repo to work with.
+    # Work from the root.
     #
     def there(&block)
-      Dir.chdir File.join(@repo.dir, @path), &block
+      Dir.chdir @repo.dir, &block
     end
 
   end
@@ -46,7 +47,7 @@ module Git
 
     # Populate a tree from the given path.
     #
-    def initialize(repo, name, path, sha1, mode)
+    def initialize(repo, name, path, parent, sha1, mode)
       super
 
       @objects =  git("ls-tree #{@repo.commit}").split("\n").map {|entry|
@@ -55,7 +56,7 @@ module Git
                     path = if @path.empty? then name else File.join(@path, name) end
 
                     type = Git.const_get(type.capitalize)
-                    type.new repo, name, path, sha1, mode
+                    type.new repo, name, path, self, sha1, mode
                   }
     end
 
@@ -68,11 +69,24 @@ module Git
       }
     end
 
+    # Use the path as the repo to work with.
+    #
+    def there(&block)
+      Dir.chdir File.join(@repo.dir, @path), &block
+    end
+
   end
 
   # Blob is a file git knows about.
   #
   class Blob < Object
+
+    # Contents of file at whichever revision we are using.
+    #
+    def data()
+      git "show #{@sha1}"
+    end
+
   end
 
   # Commit information
@@ -105,7 +119,7 @@ module Git
 
       raise NoRepo if git("status") =~ /not a git repo/i
 
-      super(self, "", @path, @commit, File.stat(@dir).mode)
+      super(self, "", @path, nil, @commit, File.stat(@dir).mode)
 
     rescue Errno::ENOENT, Errno::EACCES, Errno::EPERM
       raise NoRepo
