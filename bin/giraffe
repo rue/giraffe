@@ -52,15 +52,6 @@ post "/e/*:page" do
   redirect '/' + @page.name
 end
 
-# In-place edit.
-#
-post '/eip/*/:page' do
-  @page = Page.from_uri params[:splats].first, params[:page]
-
-  @page.update params[:body]
-  @page.body
-end
-
 # Show page history.
 #
 get '/h/*:page' do
@@ -68,21 +59,14 @@ get '/h/*:page' do
   show :page_history, "History of #{@page.pretty_name.last}"
 end
 
-# Show page history for given revision.
+# Show page as it was in given revision.
 #
 get '/h/*:page/:rev' do
   @page = Page.from_uri params[:splats].first, params[:page], params[:rev]
   show :show, "#{@page.pretty_name.last} (version #{params[:rev]})"
 end
 
-# Raw history for given revision.
-#
-get '/h/*:page/:rev.txt' do
-  @page = Page.from_uri params[:splats].first, params[:page], params[:rev]
-  send_data @page.raw_body, :type => 'text/plain', :disposition => 'inline'
-end
-
-# Show diff of page revisions
+# Show diff of page revision to HEAD
 #
 get '/d/*:page/:rev' do
   @page = Page.from_uri params[:splats].first, params[:page], params[:rev]
