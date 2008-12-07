@@ -67,7 +67,7 @@ class Page
   # Escape < and > from the raw page content.
   #
   def escaped_raw_body()
-    raw_body.gsub(/[<,>]/) { |matched| (matched == '<' ? '&lt;' : '&gt;') }
+    raw_body.gsub(/[<>]/) { |matched| (matched == '<' ? '&lt;' : '&gt;') }
   end
 
   # Is page already in the repo?
