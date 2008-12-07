@@ -235,6 +235,13 @@ body {
         margin-right:       2em;
       }
 
+
+
+    /* Wiki history */
+
+    #history_view .sidebar ul.info {
+      list-style-type:    none;
+    }
 /*
 
 
