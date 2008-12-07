@@ -1,16 +1,27 @@
+#
 #  Example configuration file for giraffe
 # ========================================
+#
+# When the file is loaded, an OpenStruct object named `Giraffe`
+# exists. This object can be manipulated directly.
 #
 # Currently none of the configuration options is required.
 # In most cases, however, you will want to set the `wikiroot`
 # option to some better location than ~/wiki.
+#
+# All paths will be expanded once the file is loaded.
+#
+# The options list their defaults and give some example uses.
+#
 
 
   # Repository and filesystem information.
 
 # Directory in which the wiki pages live.
 #
-#wikiroot:   nil       # Defaults to ~/wiki
+# Defaults to ~/wiki/
+#
+#Giraffe.wikiroot = "/home/bob/code/cool_project"
 
 # Directory in which .git can be found. Only use if /not/ the
 # same as `wikiroot`. This is most often the case if you are
@@ -23,22 +34,56 @@
 # wikiroot:   /home/bob/code/cool_project/wiki
 # repo_path:  /home/bob/code/cool_project
 #
-#repo_path:  nil       # Defaults to wikiroot
+# Defaults to the same as #wikiroot.
+#
+#Giraffe.reporoot = Giraffe.wikiroot
 
-# Extension to *always* apply to page names
-#file_extension:  .txt # Defaults to no extension
+# Mapping from URI path to filesystem path and vice versa.
+# Often this is simply adding/removing an extension.
+#
+# You could for example convert from `WikiWord` style to a
+# `file_system_style` instead.
+#
+# This is _only_ the filename. Directories are resolved
+# elsewhere. Although usually implemented with lambdas,
+# anything that responds to #call, takes a String and
+# returns a String works.
+#
+# Both default to a no-op.
+#
+#Giraffe.to_filename = lambda {|uri| uri.downcase + ".markdown" }
+#Giraffe.to_uri      = lambda {|file| file.chomp ".markdown" }
+
+# Related to above, filter directory listings from git.
+#
+# You would want to e.g. make sure that any file extensions
+# expected/enforced by the mappers are taken into account here.
+#
+# Again any #call is alright, return true-ish to include.
+#
+# Default is to accept all.
+#
+#Giraffe.list_filter = lambda {|file| file =~ /\.markdown$/ }
+
 
   # Wiki parameters
 
-# Default- or "index" page of the wiki.
+# Default- or "index" page of the wiki. Requires leading slash.
 #
-#home:       Home      # Defaults to this
+# Defaults to "/Home".
+#
+#Giraffe.home        = "/Index"
 
 
   # User accounts
 
-# user: password pairs if authentication is wanted (HTTP Basic auth)
+# User authentication (through HTTP Basic only currently.)
 #
-#users:
-#  username:   password
+# If authentication is desired, an object responding to #call
+# can be given here. It is invoked with the username and password
+# given and should return `true`-ish if successful.
+#
+# Defaults to `nil`.
+#
+#Giraffe.authenticator = lambda {|user, pass| {"bob" => "abba4ever"}[user] == password }
 
