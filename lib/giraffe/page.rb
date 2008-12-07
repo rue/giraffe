@@ -20,7 +20,11 @@ class Page
     filename  = Giraffe.to_filename.call name
     relative  = if dir.empty? then filename else File.join(dir, filename) end
 
-    object    = Giraffe.wiki.object_for relative
+    begin
+      object    = Giraffe.wiki.object_for relative
+    rescue
+      raise ArgumentError, "Invalid path"
+    end
 
     attach_dir    = File.join Giraffe.wikiroot, '_attachments'
 

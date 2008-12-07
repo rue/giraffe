@@ -129,6 +129,16 @@ get "/a/list/*" do
   show :list, "Pages Under #{@subdir}/"
 end
 
+# Raw, unrendered text from the file.
+#
+get "/a/raw/*:page" do
+  @page = Page.from_uri params[:splats].first, params[:page]
+
+  headers 'Content-Type' => 'text/plain;charset=utf-8'
+
+  send_data @page.raw_body, :type => 'text/plain', :disposition => 'inline'
+end
+
 # Search
 #
 get '/a/search' do
@@ -188,7 +198,8 @@ end
 # Show page in or send to create.
 #
 get "/*:page" do
-  @page = Page.from_uri params[:splats].first, params[:page]
+  @page = Page.from_uri params[:splats].first, params[:page] rescue redirect "/a/list"
+
   redirect "/a/list/#{@page.name}" if @page.directory?
 
   if @page.exists? then show :show, @page.name else redirect "/e/" + @page.name end
