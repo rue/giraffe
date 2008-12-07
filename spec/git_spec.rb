@@ -229,28 +229,74 @@ describe Git::Tree, "direct object access" do
 end
 
 
-describe Git::Blob, "contents" do
+describe "blob" do
 
-  before :all do
+  before :each do
     FileUtils.mkdir_p "/tmp/giraffe_repo/tracked/subdir"
 
     File.open("/tmp/giraffe_repo/file0.txt", "w+") {|f| f.puts $$ }
+    File.open("/tmp/giraffe_repo/file1.txt", "w+") {|f| f.puts $$ }
 
     Dir.chdir("/tmp/giraffe_repo") {
       `git init`
       `git add file0.txt`
+      `git add file1.txt`
       `git commit -m "First"`
     }
 
     @repo = Git::Repository.open "/tmp/giraffe_repo"
   end
 
-  after :all do
+  after :each do
     FileUtils.rm_r "/tmp/giraffe_repo"
   end
 
-  it "returns its contents through #data" do
+  it "shows contents through #data" do
     @repo.object_for("file0.txt").data.chomp.should == $$.to_s
+  end
+
+  it "writes to the file with #data= but does not commit" do
+    o = @repo.object_for "file0.txt"
+    o.data = "Hi there"
+
+    File.read(o.full_path).should == "Hi there"
+    o.data.should == $$.to_s
+    @repo.object_for("file0.txt").data.should == $$.to_s
+  end
+
+  it "can be staged with #add!" do
+    Dir.chdir("/tmp/giraffe_repo") { `git status`.should =~ /nothing to commit/ }
+
+    @repo.object_for("file0.txt").data = "1"
+    @repo.object_for("file1.txt").data = "2"
+
+    @repo.object_for("file0.txt").add!
+
+    Dir.chdir("/tmp/giraffe_repo") {
+      `git status`.should =~ /changes to be committed.+?file0.txt.+?changed but not updated.+?file1.txt/mi
+    }
+  end
+
+  it "can be commit!ted if staged" do
+    o = @repo.object_for("file0.txt")
+    o.data = "1"
+    o.add!
+    o.commit! "message"
+
+    @repo = @repo.HEAD
+
+    o2 = @repo.object_for "file0.txt"
+    o2.sha1.should_not == o.sha1
+    o2.data.should == "1"
+  end
+
+  it "sets the commit message to given" do
+    o = @repo.object_for("file0.txt")
+    o.data = "1"
+    o.add!
+    o.commit! "Yay my message"
+
+    Dir.chdir("/tmp/giraffe_repo") { `git log -n 1`.should =~ /Yay my message/ }
   end
 
 end

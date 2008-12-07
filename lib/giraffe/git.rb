@@ -14,6 +14,8 @@ module Git
   class Object
     attr_reader :repo, :name, :path, :parent, :sha1, :mode
 
+    attr_reader :full_path
+
     # Lazily initialized objects.
     #
     def initialize(repo, name, path, parent, sha1, mode)
@@ -23,6 +25,8 @@ module Git
       @parent = parent
       @sha1 = sha1
       @mode = mode
+
+      @full_path = File.join @repo.dir, @path
     end
 
     # Shell out a command and capture all output.
@@ -81,10 +85,28 @@ module Git
   #
   class Blob < Object
 
+    # Stage to be committed.
+    #
+    def add!()
+      git "add #{@path}"
+    end
+
+    # Commit (whatever is in index)
+    #
+    def commit!(message)
+      git "commit -m \"#{message}\""
+    end
+
     # Contents of file at whichever revision we are using.
     #
     def data()
       git "show #{@sha1}"
+    end
+
+    # Write to the file (does not commit)
+    #
+    def data=(string)
+      File.open(@full_path, "w+") {|f| f << string }
     end
 
   end
@@ -123,6 +145,14 @@ module Git
 
     rescue Errno::ENOENT, Errno::EACCES, Errno::EPERM
       raise NoRepo
+    end
+
+    # Repository for current HEAD
+    #
+    # TODO: Add #head!
+    #
+    def HEAD()
+      self.class.open @dir, "HEAD"
     end
 
   end
