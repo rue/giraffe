@@ -56,6 +56,8 @@ end
 #
 get '/h/*:page' do
   @page = Page.from_uri params[:splats].first, params[:page]
+  @commits = @page.object.commits 30
+
   show :page_history, "History of #{@page.pretty_name.last}"
 end
 

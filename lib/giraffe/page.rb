@@ -2,6 +2,7 @@ class Page
   # The basename is just a hack to display trees better.
   #
   attr_reader :name, :dir, :uri, :filename, :relative_path, :full_path
+  attr_reader :object
   attr_reader :attach_dir
 
   def self.from_git(object)
