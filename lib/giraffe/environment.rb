@@ -1,65 +1,45 @@
 require "ostruct"
 require "pathname"
-require "yaml"
-
-require "rubygems"
-  require "git"
-
-user_config = if ARGV.first == "-f"
-                YAML.load_file ARGV.slice!(0, 2).last
-              else
-                {}
-              end
 
 
 Giraffe = OpenStruct.new unless defined? Giraffe
 
-# Authentication
-Giraffe.users     = user_config["users"] || {}
+# No authentication by default.
+Giraffe.authenticator = nil
 
-# Repository location
-Giraffe.wikiroot  = File.expand_path(user_config["wikiroot"]  ||
-                                     ENV["GIRAFFE_ROOT"]      ||
-                                     "#{ENV["HOME"]}/wiki")
+# Root of wiki pages and root of the repository if needed.
+Giraffe.wikiroot      = File.join ENV["HOME"], "wiki"
+Giraffe.reporoot      = Giraffe.wikiroot
 
-Giraffe.repo_path = File.expand_path(user_config["repo_path"] ||
-                                     ENV["GIRAFFE_REPO"]      ||
-                                     Giraffe.wikiroot)
+# Page name <-> filesystem mapping (none by default).
+Giraffe.to_filename   = lambda {|uri| uri }
+Giraffe.to_uri        = lambda {|file| file }
 
-Giraffe.gitdir    = File.expand_path "#{Giraffe.repo_path}/.git"
-Giraffe.index     = File.expand_path "#{Giraffe.gitdir}/index"
+# Wiki setup.
+Giraffe.home          = "/Home"
 
-# ruby-git needs a relative path to work with (apparently the working dir is useless.)
-Giraffe.relative  = if Giraffe.wikiroot != Giraffe.repo_path
-                      wiki = Pathname.new Giraffe.wikiroot
-                      repo = Pathname.new Giraffe.repo_path
+# Some type of a link to software version used.
+Giraffe.itself        = (`git remote -v` =~ (/origin\s+git@(.+?)\.git/) && "http://#{$1.sub ":", "/"}/") ||
+                        "http://github.com/rue/giraffe/"
 
-                      # TODO: Check that wiki is a child of repo
-                      wiki.relative_path_from(repo).to_s
-                    else
-                      ""
-                    end
-
-Giraffe.extension = user_config["file_extension"] || ""
+# Load user config overrides if any, rest of ARGV goes unchanged.
+load ARGV.slice!(0, 2).last if ARGV.first == "-f"
 
 
-# Wiki setup
-Giraffe.home      = "/" + (user_config["home"] || "Home")
+# Expand all paths just in case.
+Giraffe.wikiroot      = File.expand_path Giraffe.wikiroot
+Giraffe.reporoot      = File.expand_path Giraffe.reporoot
 
-# Some type of a link to software version used
-Giraffe.itself    = (`git remote -v` =~ (/origin\s+git@(.+?)\.git/) && "http://#{$1.sub ":", "/"}/") ||
-                    "http://github.com/rue/giraffe/"
+# Compute relative path to wiki root if necessary.
+Giraffe.relative      = if Giraffe.wikiroot != Giraffe.reporoot
+                          wiki = Pathname.new Giraffe.wikiroot
+                          repo = Pathname.new Giraffe.reporoot
 
-# Git needs this.
-require "fileutils"
+                          # TODO: Check that wiki is a child of repo
+                          wiki.relative_path_from(repo).to_s
+                        else
+                          ""
+                        end
 
-begin
-  Giraffe.repo = Git.open Giraffe.repo_path,
-                          :repository => Giraffe.gitdir,
-                          :index => Giraffe.index
-rescue
-  Giraffe.repo = Git.init Giraffe.repo_path, :repository => Giraffe.gitdir
-  puts "Initialized repository for #{Giraffe.wikiroot}."
-  puts "Git directory is in #{Giraffe.repo_path}!" if Giraffe.wikiroot != Giraffe.repo_path
-end
+Giraffe.wiki = Git::Repository.open Giraffe.wikiroot
 
