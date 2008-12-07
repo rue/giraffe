@@ -44,14 +44,18 @@ module Git
 
     attr_reader :objects
 
-    # Populate a tree from the given path
+    # Populate a tree from the given path.
     #
     def initialize(repo, name, path, sha1, mode)
       super
 
       @objects =  git("ls-tree #{@sha1}").split("\n").map {|entry|
                     mode, type, sha1, name = entry.split /\s+/, 4
-                    Git.const_get(type.capitalize).new repo, name, File.join(@path, name), sha1, mode
+
+                    path = if @name.empty? then name else File.join @name, name end
+
+                    type = Git.const_get(type.capitalize)
+                    type.new repo, name, path, sha1, mode
                   }
     end
 
