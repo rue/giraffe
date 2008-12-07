@@ -133,33 +133,6 @@ get "/a/patch/*:page/:commit" do
   send_data diff, :type => "text/x-diff", :disposition => "inline"
 end
 
-
-# file upload attachments -- DISABLED
-
-get '/a/file/upload/*:page' do
-  @page = Page.from_uri params[:splats].first, params[:page]
-  show :attach, 'Attach File for ' + @page.name
-end
-
-post '/a/file/upload/*:page' do
-  @page = Page.from_uri params[:splats].first, params[:page]
-  @page.save_file(params[:file], params[:name])
-
-  redirect '/e/' + @page.name
-end
-
-get '/a/file/delete/*:page/:file.:ext' do
-  @page = Page.from_uri params[:splats].first, params[:page]
-  @page.delete_file(CGI::unescape(params[:file]) + '.' + params[:ext])
-
-  redirect '/e/' + @page.name
-end
-
-get '/_attachment/*:page/:file.:ext' do
-  @page = Page.from_uri params[:splats].first, params[:page]
-  send_file(File.join(@page.attach_dir, CGI::unescape(params[:file]) + '.' + params[:ext]))
-end
-
   # These come last since they could match anything
 
 # Show page in or send to create.

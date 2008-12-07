@@ -2,31 +2,8 @@
 
 <ul class="sub_nav">
   <li><a href="/<%= @page.uri %>" class="nav_link">back</a></li>
-  <li><a href="/a/file/upload/<%= @page.uri %>" class="nav_link">attach</a></li>
   <% if @page.exists? %>
     <li><a href="/h/<%= @page.uri %>" class="nav_link">history</a></li>
-  <% end %>
-  
-  <% if files = @page.attachments %>
-  <li>
-    <h3>Attachments</h3>
-    <ul>
-    <% files.each do |file| %>
-      <li><a href="<%= file.link_path %>"><%= file.name %></a> 
-        <span class="detail">(<%= file.size %>)</span>
-        <ul class="attach-options">
-          <li><a href="<%= file.delete_path %>">delete</a></li>
-          <li><a href="<%= file.link_path %>">download</a></li>
-          <% if file.image? %>
-          <li><a href="#" onClick="$(edit_textarea).html($(edit_textarea).html() + '!<%= file.link_path %>!');">insert &#187;</a></li>
-          <% else %>
-          <li><a href="#" onClick="$(edit_textarea).html($(edit_textarea).html() + '[<%= file.name %>](<%= file.link_path %>)');">insert &#187;</a></li>
-          <% end %>
-        </ul>
-      </li>
-    <% end %>
-    </ul>
-  </li>
   <% end %>
 </ul>
 

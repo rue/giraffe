@@ -7,35 +7,15 @@
 
   <div id="page_actions">
     <ul>
-      <% if params[:rev] %>
+      <% if params[:commit] %>
         <li><a href="/<%= @page.uri %>" class="nav_link">current</a></li>
-      <% else %>
-        <li><a href="/e/<%= @page.uri %>" class="nav_link">edit</a></li>
       <% end %>
+      <li><a href="/e/<%= @page.uri %>" class="nav_link">edit</a></li>
 
       <li><a href="/a/raw/<%= @page.uri %>" class="nav_link">raw</a></li>
 
       <li><a href="/h/<%= @page.uri %>" class="nav_link">history</a></li>
       <li><a href="/a/search?search=<%= @page.uri %>" class="nav_link">backlinks</a></li>
-
-      <% if @page.older %>
-        <li><a href="/h/<%= @page.uri %>/<%= @page.older %>" class="nav_link">older</a></li>
-      <% end %>
-
-      <% if @page.newer %>
-        <li><a href="/h/<%= @page.uri %>/<%= @page.newer %>" class="nav_link">newer</a></li>
-      <% end %>
-
-      <% if files = @page.attachments %>
-      <li>
-        <h3>Attachments</h3>
-        <ul>
-        <% files.each do |file| %>
-          <li><a href="<%= file.link_path %>"><%= file.name %></a></li>
-        <% end %>
-        </ul>
-      </li>
-      <% end %>
     </ul>
   </div>
 
