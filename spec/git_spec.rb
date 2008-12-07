@@ -142,6 +142,50 @@ describe Git::Tree, "object list" do
 
 end
 
+describe Git::Object, "name and path info" do
+
+  before :all do
+    FileUtils.mkdir_p "/tmp/giraffe_repo/tracked/subdir"
+
+    FileUtils.touch   "/tmp/giraffe_repo/file0.txt"
+    FileUtils.touch   "/tmp/giraffe_repo/tracked/file1.txt"
+    FileUtils.touch   "/tmp/giraffe_repo/tracked/subdir/file2.txt"
+    FileUtils.touch   "/tmp/giraffe_repo/tracked/no_file.txt"
+
+    FileUtils.mkdir_p "/tmp/giraffe_repo/not_tracked"
+    FileUtils.touch   "/tmp/giraffe_repo/not_tracked/no_file.txt"
+
+    Dir.chdir("/tmp/giraffe_repo") {
+      `git init`
+      `git add file0.txt tracked/file1.txt`
+      `git commit -m "First"`
+      `git add tracked/subdir`
+      `git commit -m "Second"`
+    }
+
+    @repo = Git::Repository.open "/tmp/giraffe_repo"
+    @repo2 = Git::Repository.open "/tmp/giraffe_repo/tracked"
+
+    @obj = @repo.object_for("tracked/subdir/file2.txt")
+    @obj2 = @repo2.object_for("subdir/file2.txt")
+  end
+
+  after :all do
+    FileUtils.rm_r "/tmp/giraffe_repo"
+  end
+
+  it "name is always just object name" do
+    @obj.name.should == "file2.txt"
+    @obj2.name.should == "file2.txt"
+  end
+
+  it "path is always full name relative to the repository" do
+    @obj.path.should == "tracked/subdir/file2.txt"
+    @obj2.path.should == "subdir/file2.txt"
+  end
+
+end
+
 describe Git::Tree, "direct object access" do
 
   before :all do
@@ -171,15 +215,15 @@ describe Git::Tree, "direct object access" do
   end
 
   it "returns an object for a given path" do
-    @repo.object_for("tracked/subdir/file2.txt").path.should == "tracked/subdir/file2.txt"  
+    @repo.object_for("tracked/subdir/file2.txt").path.should == "tracked/subdir/file2.txt"
   end
 
   it "returns nil if path is not valid" do
-    fail
+    @repo.object_for("tracked/file2.txt").should == nil
   end
 
   it "returns nil if path is untracked" do
-    fail
+    @repo.object_for("tracked/no_file.txt").should == nil
   end
 
 end

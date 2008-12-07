@@ -33,7 +33,7 @@ module Git
     # Use the path as the repo to work with.
     #
     def there(&block)
-      Dir.chdir @repo.path, &block
+      Dir.chdir File.join(@repo.dir, @path), &block
     end
 
   end
@@ -49,20 +49,23 @@ module Git
     def initialize(repo, name, path, sha1, mode)
       super
 
-      @objects =  git("ls-tree #{@sha1}").split("\n").map {|entry|
+      @objects =  git("ls-tree #{@repo.commit}").split("\n").map {|entry|
                     mode, type, sha1, name = entry.split /\s+/, 4
 
-                    path = if @name.empty? then name else File.join @name, name end
+                    path = if @path.empty? then name else File.join(@path, name) end
 
                     type = Git.const_get(type.capitalize)
                     type.new repo, name, path, sha1, mode
                   }
     end
 
-
-    # Locate object directly by path.
+    # Locate object directly by path or return nil.
     #
     def object_for(path)
+      # We do the traversal so that the user does not need to.
+      path.split("/").inject(self) {|tree, name|
+        tree.objects.find {|obj| obj.name == name }
+      }
     end
 
   end
@@ -87,7 +90,7 @@ module Git
       new path, commit
     end
 
-    attr_reader :path, :commit
+    attr_reader :dir, :commit
 
 
     # Set up repo that refers to given path.
@@ -95,14 +98,14 @@ module Git
     # Raises if the path does not seem to be a git repo.
     #
     def initialize(path, commit)
-      # Cheat a little bit.
       @repo = self
-      @path = path
+      @dir = path
+      @path = ""
       @commit = commit
 
       raise NoRepo if git("status") =~ /not a git repo/i
 
-      super(self, "", @path, @commit, File.stat(@path).mode)
+      super(self, "", @path, @commit, File.stat(@dir).mode)
 
     rescue Errno::ENOENT, Errno::EACCES, Errno::EPERM
       raise NoRepo
