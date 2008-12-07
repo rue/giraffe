@@ -211,7 +211,8 @@ body {
     #page_edit #edit_textarea {
       width:              100%;
 
-      min-height:         20em;
+      min-height:         30em;
+      max-height:         50em;
 
       padding:            0.2em 0 0.2em 0.2em;
       margin-top:         1em;

@@ -15,7 +15,13 @@
 
     <div id="page_path">
       <h1>
-        Editing <a href="/<%= @page.uri %>" title="Go to page unedited" class="pretty_name"><%= @page.pretty_name.last %></a>
+        <% pretty_dir, pretty_name = @page.pretty_name %>
+        <span class="pretty_dir">
+          <%= File.join pretty_dir %>/
+        </span>
+        <span class="pretty_name">
+          <%= pretty_name %>
+        </span>
       </h1>
     </div>
 
