@@ -1,7 +1,3 @@
-<div id="section_info">
-  <% pretty_dir, pretty_name = @page.pretty_name %>
-  <h1><span class="pretty_dir"><%= File.join pretty_dir %>/</span><span class="pretty_name"><%= pretty_name %></h1>
-</div>
 
 <div id="page_view">
 
@@ -19,20 +15,28 @@
     </ul>
   </div>
 
-  <div class="page_content page_edit_area">
-    <%= @page.body %>
-  </div>
+  <div id="page_content">
+    <div id="page_path">
+      <% pretty_dir, pretty_name = @page.pretty_name %>
+      <h1><span class="pretty_dir"><%= File.join pretty_dir %>/</span><span class="pretty_name"><%= pretty_name %></h1>
+    </div>
 
-  <div id="page_view_details">
-    <ul>
-      <li>
-        <p>updated
-          <script language="javascript" type="text/javascript">
-            document.write(time_ago_in_words(<%= @page.updated_at.for_time_ago_in_words %>) + ' ago');
-          </script>
-        </p>
-      </li>
-    </ul>
+    <div id="body">
+      <%= @page.body %>
+    </div>
+
+    <div id="page_view_details">
+      <ul>
+        <li>
+          <p>updated
+            <script language="javascript" type="text/javascript">
+              document.write(time_ago_in_words(<%= @page.updated_at.for_time_ago_in_words %>) + ' ago');
+            </script>
+          </p>
+        </li>
+      </ul>
+    </div>
+
   </div>
 
 </div>        <!-- Page view -->

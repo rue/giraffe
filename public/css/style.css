@@ -1,7 +1,10 @@
 /* First, some defaults */
 
 body {
+  min-width:          800px;
+
   background-color:   #fff;
+  background:         url(/images/giraffe_logo_full.png) no-repeat fixed;
   color:              #555;
 
   font-size:          0.9em;
@@ -9,10 +12,6 @@ body {
   font-family:        "Bitstream Vera Sans", Verdana, Arial, Helvetica, sans-serif;
 
   line-height:        1.3em;
-
-  padding:            0em;
-  border:             0em;
-  margin:             0em;
 }
 
   /* Links */
@@ -50,10 +49,7 @@ body {
   /* Main container */
 
   #everything {
-    width:              70%;
-
-    padding:            2em;
-    border:             0em;
+    max-width:          85%;
     margin:             auto;
   }
 
@@ -95,41 +91,30 @@ body {
         }
 
 
+    /* Pretty directory and filename showing */
 
-    /* Site section display (i.e. name of page or something similar.) */
+    span.pretty_dir {
+      color:              #ccc;
 
-    #section_info {
-      display:            block;
-      clear:              none;
+      font-style:         italic;
+      font-weight:        normal;
 
-      text-align:         right;
+      letter-spacing:     0.2em;
+
+      margin-right:       0.2em;
     }
 
-      span.pretty_dir {
-        color:              #ccc;
+    span.pretty_name {
+      font-weight:        normal;
 
-        font-style:         italic;
-        font-size:          1em;
-        font-weight:        normal;
-
-        letter-spacing:     0.2em;
-
-        margin-right:       0.2em;
-      }
-
-      span.pretty_name {
-        font-weight:        normal;
-
-        letter-spacing:     0.2em;
-      }
+      letter-spacing:     0.2em;
+    }
 
 
     /* Content stuff further down */
 
     #content {
       clear:                both;
-
-      margin-top:           1em;
     }
 
     /* Footer information at the bottom */
@@ -175,64 +160,49 @@ body {
     /* Single page */
 
     #page_view {
+      padding-left: 250px;
     }
 
-      #page_actions {
-        display:            inline;
-        float:              left;
-        clear:              none;
+      #page_view #page_actions {
+        position:           fixed;
+        left:               110px;
+        top:                140px;
 
         text-align:         right;
         line-height:        2em;
 
-        padding-right:      1em;
+        padding-right:      9px;
         border-right:       1px solid #bcf;
       }
 
-        #page_actions ul {
+        #page_view #page_actions ul {
           list-style-type:    none;
         }
 
-        #page_view_details {
-          clear:              both;
 
-          color:              #777;
+      #page_view #page_content {
+        position:           relative;
+        right:              150px;
 
-          text-align:         right;
-          font-size:          0.7em;
-        }
+        min-height:         10em;
 
-          #page_view_details p {
-            display:            inline;
-          }
-
-          #page_view_details ul {
-            display:            inline;
-
-            list-style-type:    none;
-          }
-
-            #page_view_details ul li {
-              display:            inline;
-            }
-
-          #page_view_details .branch_name {
-            font-style:         italic;
-          }
-
-
-      #page_view div.page_content, #page_viev div.page_edit_area {
-        display:            block;
-        float:              right;
-        clear:              none;
+        padding-left:       40px;
+        margin-left:        10px;
       }
 
-      #page_view div.page_content {
-        min-height:         10em;
-        min-width:          75%;
+      #page_view #page_content #body {
+        padding-top:        30px;
+      }
 
-        margin-left:        2em;
-        margin-right:       2em;
+    #page_view_details {
+      clear:              both;
+
+      text-align:         right;
+      font-size:          0.7em;
+    }
+
+      #page_view_details ul {
+        list-style-type:    none;
       }
 
 
