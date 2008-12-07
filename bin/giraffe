@@ -208,10 +208,6 @@ end
 
 # support methods
 
-def page_url(page)
-  "#{request.env["rack.url_scheme"]}://#{request.env["HTTP_HOST"]}/#{page}"
-end
-
 
 private
 
