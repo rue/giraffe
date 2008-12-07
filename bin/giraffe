@@ -157,15 +157,6 @@ get "/a/patch/*:page/:rev" do
   Page.from_uri(params[:splats].first, params[:page]).delta params[:rev]
 end
 
-# Generate a .tgz of wiki pages for user
-#
-get "/a/tarball" do
-  header "Content-Type"         => "application/x-gzip"
-  header "Content-Disposition"  => "filename=archive.tgz"
-
-  File.read Giraffe.repo.archive("HEAD", nil, :format => "tgz", :prefix => "wiki/")
-end
-
 
 # file upload attachments -- DISABLED
 
