@@ -1,35 +1,29 @@
 <div id="section_info">
   <% pretty_dir, pretty_name = @page.pretty_name %>
-  <h1 id="pagenamebanner"><span class="pretty_dir"><%= File.join pretty_dir %>/</span><span class="pretty_name"><%= pretty_name %></h1>
+  <h1><span class="pretty_dir"><%= File.join pretty_dir %>/</span><span class="pretty_name"><%= pretty_name %></h1>
 </div>
-
-<%= @env %>
 
 <div id="page_view">
 
   <div id="page_actions">
     <ul>
       <% if params[:rev] %>
-        <li><a href="/<%= @page.name %>" class="nav_link">current</a></li>
+        <li><a href="/<%= @page.uri %>" class="nav_link">current</a></li>
       <% else %>
-        <li><a href="/e/<%= @page.name %>" class="nav_link">edit</a></li>
+        <li><a href="/e/<%= @page.uri %>" class="nav_link">edit</a></li>
       <% end %>
 
-      <% if params[:rev] %>
-        <li><a href="/h/<%= @page.name %>/<%= @page.commit %>.txt" class="nav_link">raw</a></li>
-      <% else %>
-        <li><a href="<%= @page.name %>.txt" class="nav_link">raw</a></li>
+      <li><a href="<%= @page.uri %>/raw" class="nav_link">raw</a></li>
+
+      <li><a href="/h/<%= @page.uri %>" class="nav_link">history</a></li>
+      <li><a href="/a/search?search=<%= @page.uri %>" class="nav_link">backlinks</a></li>
+
+      <% if @page.older %>
+        <li><a href="/h/<%= @page.uri %>/<%= @page.older %>" class="nav_link">older</a></li>
       <% end %>
 
-      <li><a href="/h/<%= @page.name %>" class="nav_link">history</a></li>
-      <li><a href="/a/search?search=<%= @page.name %>" class="nav_link">backlinks</a></li>
-
-      <% if @page.previous_commit %>
-        <li><a href="/h/<%= @page.name %>/<%= @page.previous_commit %>" class="nav_link">older</a></li>
-      <% end %>
-
-      <% if @page.next_commit %>
-        <li><a href="/h/<%= @page.name %>/<%= @page.next_commit %>" class="nav_link">newer</a></li>
+      <% if @page.newer %>
+        <li><a href="/h/<%= @page.uri %>/<%= @page.newer %>" class="nav_link">newer</a></li>
       <% end %>
 
       <% if files = @page.attachments %>

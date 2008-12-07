@@ -1,10 +1,10 @@
 <h1 id="editbanner">Editing <a href="/<%= @page.name %>"><%= @page.name %></a></h1>
 
 <ul class="sub_nav">
-  <li><a href="/<%= @page.name %>" class="nav_link">back</a></li>
-  <li><a href="/a/file/upload/<%= @page.name %>" class="nav_link">attach</a></li>
-  <% if @page.tracked? %>
-    <li><a href="/h/<%= @page.name %>" class="nav_link">history</a></li>
+  <li><a href="/<%= @page.uri %>" class="nav_link">back</a></li>
+  <li><a href="/a/file/upload/<%= @page.uri %>" class="nav_link">attach</a></li>
+  <% if @page.exists? %>
+    <li><a href="/h/<%= @page.uri %>" class="nav_link">history</a></li>
   <% end %>
   
   <% if files = @page.attachments %>
@@ -31,7 +31,7 @@
 </ul>
 
 <div class="content">
-  <form method="post" action="/e/<%= @page.name %>">
+  <form method="post" action="/e/<%= @page.uri %>">
     <textarea name="body" id="edit_textarea"><%= @page.escaped_raw_body %></textarea>
     Edit summary:
     <textarea name="message" rows="4" id="message_textarea"></textarea>
