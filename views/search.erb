@@ -1,30 +1,30 @@
-<% if @grep.empty? %>
-  <h1>No pages match</h1>
-<% else %>
-  <h1>Results for '<span class="search_term"><%= @search %></span>'</h1>
-<% end %>
-
-<div class="sub_nav">
-  <div class="details">
-    <%= @grep.size %> pages contain match<br />
-    <%= @grep.map { |g| g[1].size }.inject { |acc, n| acc + n } %> results
-  </div>
-</div>
-
-<div class="content">
-  <% @grep.each do |sha, arr_match| %>
-    <div class="search_result">
-      <% (sha, file) = sha.split(':') %>
-        <% arr_match.each do |line, match| %>
-          <div class="match">
-            <tt><%= match %></tt>
-            <br />
-            &mdash; <a href="/<%= file %>"><%= file %></a>, line <%= line %> (<%= Giraffe.repo.object(sha).name %>)
-          </div>
-        <% end %>
-    </div>
+<div id="section_info">
+  <% if @matches.empty? %>
+    <h1>No pages match '<span class="search_term"><%= @search %></span>'</h1>
+  <% else %>
+    <h1>Results for '<span class="search_term"><%= @search %></span>'</h1>
   <% end %>
 </div>
 
+<div id="search_results">
 
+  <div class="sub_nav">
+    <div class="details">
+      <%= @matches.size %> pages matched.<br />
+    </div>
+  </div>
+
+  <div class="content">
+    <ul id="matches">
+      <% @matches.each do |object, line| %>
+        <% page = Page.from_git object %>
+        <li class="match">
+          <a href="/<%= page.uri %>" title="Go to match: <%= object.name %>"><%= page.pretty_name.last %></a>
+          <span class="excerpt">: <%= line %></span>
+        </li>
+      <% end %>
+    </ul>
+  </div>
+
+</div>
 

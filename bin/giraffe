@@ -133,10 +133,8 @@ end
 #
 get '/a/search' do
   @search = params[:search]
-  @grep = Giraffe.repo.object("HEAD").grep @search, nil, :ignore_case => true,
-                                                         :word_regexp => true
-  p @grep
-  @grep.each {|k,v| p Giraffe.repo.object k.split(":").first }
+  @matches = Giraffe.wiki.grep @search
+
   show :search, 'Search Results'
 end
 
@@ -194,15 +192,6 @@ get "/*:page" do
   redirect "/a/list/#{@page.name}" if @page.directory?
 
   if @page.exists? then show :show, @page.name else redirect "/e/" + @page.name end
-end
-
-# Give user the raw source text of the page.
-#
-get "/*:page/raw" do
-  headers 'Content-Type' => 'text/plain;charset=utf-8'
-
-  @page = Page.from_uri params[:splats].first, params[:page]
-  send_data @page.raw_body, :type => 'text/plain', :disposition => 'inline'
 end
 
 
