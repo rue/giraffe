@@ -100,6 +100,7 @@ class Page
     message = if exists? then "Giraffe edited #{@name}" else "Giraffe created #{@name}" end
     message << " : #{comments}" if comments
 
+    #TODO
     @object.data = content + "\n"
     @object.add!
     @object.commit! message
@@ -112,7 +113,7 @@ class Page
   # TODO: ADD
   #
   def updated_at()
-    Time.now
+    Time.at @object.commits(1).first.time.to_i
   end
 
 end
