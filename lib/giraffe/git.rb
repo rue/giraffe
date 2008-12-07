@@ -96,6 +96,7 @@ module Git
     #
     def initialize(path, commit)
       # Cheat a little bit.
+      @repo = self
       @path = path
       @commit = commit
 
@@ -105,24 +106,6 @@ module Git
 
     rescue Errno::ENOENT, Errno::EACCES, Errno::EPERM
       raise NoRepo
-    end
-
-    # Tree from this repository directory downwards.
-    #
-    def tree()
-      Tree.new self, @path
-    end
-
-    # Shell out a command and capture all output.
-    #
-    def git(command)
-      there { `git #{command} 2>&1`.strip }
-    end
-
-    # Use the path as the repo to work with.
-    #
-    def there(&block)
-      Dir.chdir @path, &block
     end
 
   end
