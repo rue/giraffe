@@ -40,6 +40,12 @@ module Git
       }
     end
 
+    # Produce diff using this as the current revision.
+    #
+    def diff(other_sha1)
+      git "diff #{other_sha1} -- #{@path}"
+    end
+
     # Shell out a command and capture all output.
     #
     def git(command)
@@ -197,6 +203,12 @@ module Git
     #
     def HEAD()
       self.class.open @dir, "HEAD"
+    end
+
+    # Move to a specific commit.
+    #
+    def at(commit)
+      self.class.open @dir, commit
     end
 
   end

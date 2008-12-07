@@ -371,6 +371,7 @@ describe "searching the repository" do
       `git init`
       `git add file0.txt`
       `git add file1.txt`
+      `git add file2.txt`
       `git commit -m "First"`
     }
 
@@ -396,6 +397,37 @@ describe "searching the repository" do
     matches.size.should == 2
     matches.first.first.path.should == "file0.txt"
     matches.last.first.path.should == "file1.txt"
+  end
+
+end
+
+describe "diffing revisions" do
+
+  before :each do
+    FileUtils.mkdir_p "/tmp/giraffe_repo/tracked/subdir"
+
+    Dir.chdir("/tmp/giraffe_repo") {
+      `git init`
+      File.open("file0.txt", "w+") {|f| f.puts "hi bob" }
+      `git add file0.txt`
+      `git commit -m "First"`
+      File.open("file0.txt", "w+") {|f| f.puts "hi joe" }
+      `git add file0.txt`
+      `git commit -m "Second"`
+    }
+
+    @repo = Git::Repository.open "/tmp/giraffe_repo"
+  end
+
+  after :each do
+    FileUtils.rm_r "/tmp/giraffe_repo"
+  end
+
+  it "shows diff using receiver as current revision" do
+    prev = @repo.object_for("file0.txt").commits.last.sha1
+    diff = @repo.object_for("file0.txt").diff prev
+
+    diff.should =~ /^-hi bob\s+^\+hi joe/m
   end
 
 end
