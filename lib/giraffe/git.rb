@@ -125,6 +125,17 @@ module Git
                   }.compact
     end
 
+    # Search for word in repo.
+    #
+    # Case-insensitive, only considers full words.
+    #
+    def grep(word)
+      git("grep --ignore-case --word-regexp --extended-regexp #{word}").split("\n").map {|match|
+        name, line = match.split /:\s*/, 2
+        [object_for(name), line]
+      }
+    end
+
     # Locate object directly by path or return nil.
     #
     def object_for(path)

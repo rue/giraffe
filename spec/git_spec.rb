@@ -358,3 +358,44 @@ describe "repository history" do
 end
 
 
+describe "searching the repository" do
+
+  before :each do
+    FileUtils.mkdir_p "/tmp/giraffe_repo/tracked/subdir"
+
+    File.open("/tmp/giraffe_repo/file0.txt", "w+") {|f| f.puts "hi bob" }
+    File.open("/tmp/giraffe_repo/file1.txt", "w+") {|f| f.puts "Hi, james" }
+    File.open("/tmp/giraffe_repo/file2.txt", "w+") {|f| f.puts "hippie" }
+
+    Dir.chdir("/tmp/giraffe_repo") {
+      `git init`
+      `git add file0.txt`
+      `git add file1.txt`
+      `git commit -m "First"`
+    }
+
+    @repo = Git::Repository.open "/tmp/giraffe_repo"
+  end
+
+  after :each do
+    FileUtils.rm_r "/tmp/giraffe_repo"
+  end
+
+  it "returns an Array of objects + line that matched inside object" do
+    matches = @repo.grep "bob"
+    matches.size.should == 1
+    matches.first.first.path.should == "file0.txt"
+  end
+
+  it "only considers whole words" do
+    @repo.grep("hi").select {|obj, line| obj.path == "file2.txt" }.should be_empty
+  end
+
+  it "is case insensitive" do
+    matches = @repo.grep "hi"
+    matches.size.should == 2
+    matches.first.first.path.should == "file0.txt"
+    matches.last.first.path.should == "file1.txt"
+  end
+
+end
