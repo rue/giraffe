@@ -157,13 +157,13 @@ body {
       }
 
 
-    /* Single page */
+    /* Single page and page editing*/
 
-    #page_view {
+    #page_view, #page_edit {
       padding-left: 250px;
     }
 
-      #page_view #page_actions {
+      #page_view #page_actions, #page_edit #page_edit_actions {
         position:           fixed;
         left:               110px;
         top:                140px;
@@ -175,12 +175,12 @@ body {
         border-right:       1px solid #bcf;
       }
 
-        #page_view #page_actions ul {
+        #page_view #page_actions ul, #page_edit #page_edit_actions ul {
           list-style-type:    none;
         }
 
 
-      #page_view #page_content {
+      #page_view #page_content, #page_edit_forms {
         position:           relative;
         right:              150px;
 
@@ -190,7 +190,7 @@ body {
         margin-left:        10px;
       }
 
-      #page_view #page_content #body {
+      #page_view #page_content #body, #page_edit #page_edit_forms #forms {
         padding-top:        30px;
       }
 
@@ -205,6 +205,24 @@ body {
         list-style-type:    none;
       }
 
+
+    /* Additional page edit stuff */
+
+    #page_edit #edit_textarea {
+      width:              100%;
+
+      min-height:         20em;
+
+      padding:            0.2em 0 0.2em 0.2em;
+      margin-top:         1em;
+    }
+
+    #page_edit #message_textarea {
+      width:              100%;
+      min-height:         2em;
+      max-height:         2em;
+      padding:            0.2em;
+    }
 
     /* Page list */
 
@@ -240,3 +258,9 @@ body {
       list-style-type:    none;
     }
 
+
+    /* Utility stuff */
+
+    p.right {
+      text-align:         right;
+    }

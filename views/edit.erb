@@ -1,17 +1,34 @@
-<h1 id="editbanner">Editing <a href="/<%= @page.uri %>"><%= @page.pretty_name.last %></a></h1>
+<div id="page_edit">
 
-<ul class="sub_nav">
-  <li><a href="/<%= @page.uri %>" class="nav_link">back</a></li>
-  <% if @page.exists? %>
-    <li><a href="/h/<%= @page.uri %>" class="nav_link">history</a></li>
-  <% end %>
-</ul>
+  <div id="page_edit_actions">
+    <ul>
+      <li>
+        <a href="/<%= @page.uri %>" class="nav_link" title="Go to page without editing">back</a>
+      </li>
+      <% if @page.exists? %>
+        <li><a href="/h/<%= @page.uri %>" class="nav_link" title="View page history">history</a></li>
+      <% end %>
+    </ul>
+  </div>
 
-<div class="content">
-  <form method="post" action="/e/<%= @page.uri %>">
-    <textarea name="body" id="edit_textarea"><%= @page.escaped_raw_body %></textarea>
-    Edit summary:
-    <textarea name="message" rows="4" id="message_textarea"></textarea>
-    <p class="right"><input type="submit" value="Save" class="submit" /></p>
-  </form>
+  <div id="page_edit_forms">
+
+    <div id="page_path">
+      <h1>
+        Editing <a href="/<%= @page.uri %>" title="Go to page unedited" class="pretty_name"><%= @page.pretty_name.last %></a>
+      </h1>
+    </div>
+
+    <div id="forms">
+      <form method="post" action="/e/<%= @page.uri %>">
+        <textarea name="body" id="edit_textarea"><%= @page.escaped_raw_body %></textarea>
+        <p>Edit summary:</p>
+        <textarea name="message" rows="4" id="message_textarea"></textarea>
+        <p class="right"><input type="submit" value="Save" class="submit" /></p>
+      </form>
+    </div>
+
+  </div>
+
 </div>
+
