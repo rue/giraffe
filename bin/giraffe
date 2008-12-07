@@ -49,7 +49,7 @@ post "/e/*:page" do
   @page = Page.from_uri params[:splats].first, params[:page]
   @page.update(params[:body], params[:message])
 
-  redirect '/' + @page.name
+  redirect '/' + @page.uri
 end
 
 # Show page as it was in given revision.
