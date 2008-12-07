@@ -52,6 +52,15 @@ post "/e/*:page" do
   redirect '/' + @page.name
 end
 
+# Show page as it was in given revision.
+#
+get '/h/*:page/:commit' do
+  Giraffe.wiki = Giraffe.wiki.at params[:commit]
+  @page = Page.from_uri params[:splats].first, params[:page]
+
+  show :show, "#{@page.pretty_name.last} (in #{params[:commit]})"
+end
+
 # Show page history.
 #
 get '/h/*:page' do
@@ -61,18 +70,15 @@ get '/h/*:page' do
   show :page_history, "History of #{@page.pretty_name.last}"
 end
 
-# Show page as it was in given revision.
-#
-get '/h/*:page/:rev' do
-  @page = Page.from_uri params[:splats].first, params[:page], params[:rev]
-  show :show, "#{@page.pretty_name.last} (version #{params[:rev]})"
-end
-
 # Show diff of page revision to HEAD
 #
-get '/d/*:page/:rev' do
-  @page = Page.from_uri params[:splats].first, params[:page], params[:rev]
-  show :delta, "Diff of #{@page.pretty_name.last}"
+get '/d/*:page/:commit' do
+  @page = Page.from_uri params[:splats].first, params[:page]
+  @diff = @page.object.diff params[:commit]
+
+  @commit = @params[:commit][0..7] + "..."
+
+  show :delta, "Diff of #{@page.pretty_name.last} against #{params[:commit]}"
 end
 
 # Wiki history
@@ -104,7 +110,6 @@ get "/a/raw/*:page" do
   @page = Page.from_uri params[:splats].first, params[:page]
 
   headers 'Content-Type' => 'text/plain;charset=utf-8'
-
   send_data @page.raw_body, :type => 'text/plain', :disposition => 'inline'
 end
 

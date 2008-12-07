@@ -1,17 +1,17 @@
-<script language="javascript" type="text/javascript" src="/sh_main.min.js"></script>
-<script language="javascript" type="text/javascript" src="/sh_diff.min.js"></script>
-<link rel="stylesheet" href="/sh_style.css" type="text/css" media="screen" />
+<script language="javascript" type="text/javascript" src="/script/sh_main.min.js"></script>
+<script language="javascript" type="text/javascript" src="/script/sh_diff.min.js"></script>
+<link rel="stylesheet" href="/css/sh_style.css" type="text/css" media="screen" />
 
-<h1>Diff of <a href="/<%= @page.name %>"><%= @page.name %></a></h1>
+<h1>Diff of <a href="/<%= @page.uri %>"><%= @page.pretty_name.last %> against <%= @commit %></a></h1>
 
 <ul class="sub_nav">
-  <li><a href="/a/patch/<%= @page.name %>/<%= params[:rev] %>" class="nav_link">patch file</a></li>
-  <li><a href="/h/<%= @page.name %>" class="nav_link">history</a></li>
-  <li><a href="/e/<%= @page.name %>" class="nav_link">edit</a></li>
+  <li><a href="/a/patch/<%= @page.uri %>/<%= params[:commit] %>" class="nav_link">patch file</a></li>
+  <li><a href="/h/<%= @page.uri %>" class="nav_link">history</a></li>
+  <li><a href="/e/<%= @page.uri %>" class="nav_link">edit</a></li>
 </ul>
 
 <div class="content">
-  <pre class="sh_diff"><%= @page.delta(params[:rev]) %></pre>
+  <pre class="sh_diff"><%= @diff %></pre>
 </div>
 
 <script type="text/javascript">
