@@ -43,44 +43,6 @@ module Git
 
   end
 
-  # Directory that git knows about.
-  #
-  class Tree < Object
-
-    attr_reader :objects
-
-    # Populate a tree from the given path.
-    #
-    def initialize(repo, name, path, parent, sha1, mode)
-      super
-
-      @objects =  git("ls-tree #{@repo.commit}").split("\n").map {|entry|
-                    mode, type, sha1, name = entry.split /\s+/, 4
-
-                    path = if @path.empty? then name else File.join(@path, name) end
-
-                    type = Git.const_get(type.capitalize)
-                    type.new repo, name, path, self, sha1, mode
-                  }
-    end
-
-    # Locate object directly by path or return nil.
-    #
-    def object_for(path)
-      # We do the traversal so that the user does not need to.
-      path.split("/").inject(self) {|tree, name|
-        tree.objects.find {|obj| obj.name == name }
-      }
-    end
-
-    # Use the path as the repo to work with.
-    #
-    def there(&block)
-      Dir.chdir File.join(@repo.dir, @path), &block
-    end
-
-  end
-
   # Blob is a file git knows about.
   #
   class Blob < Object
@@ -103,7 +65,7 @@ module Git
       git "show #{@sha1}"
     end
 
-    # Write to the file (does not commit)
+    # Write to the file (does not commit).
     #
     def data=(string)
       File.open(@full_path, "w+") {|f| f << string }
@@ -111,10 +73,73 @@ module Git
 
   end
 
+
   # Commit information
   #
   class Commit < Object
+
+    attr_reader :subject
+
+    # New commit info
+    #
+    def initialize(repo, sha1, subject)
+      @repo = repo
+      @sha1 = sha1
+      @subject = subject
+    end
+
   end
+
+
+  # Directory that git knows about.
+  #
+  class Tree < Object
+
+    attr_reader :objects
+
+    # Populate a tree from the given path.
+    #
+    def initialize(repo, name, path, parent, sha1, mode)
+      super
+
+      @objects =  git("ls-tree #{@repo.commit}").split("\n").map {|entry|
+                    mode, type, sha1, name = entry.split /\s+/, 4
+                    next if type == "commit"
+
+                    path = if @path.empty? then name else File.join(@path, name) end
+
+                    type = Git.const_get(type.capitalize)
+                    type.new repo, name, path, self, sha1, mode
+                  }.compact
+    end
+
+    # Show commits for this tree.
+    #
+    def commits()
+      git("rev-list --pretty=oneline #{@repo.commit}").split("\n").map {|commit|
+        sha1, subject = commit.split /\s+/, 2
+
+        Commit.new @repo, sha1, subject
+      }
+    end
+
+    # Locate object directly by path or return nil.
+    #
+    def object_for(path)
+      # We do the traversal so that the user does not need to.
+      path.split("/").inject(self) {|tree, name|
+        tree.objects.find {|obj| obj.name == name }
+      }
+    end
+
+    # Use the path as the repo to work with.
+    #
+    def there(&block)
+      Dir.chdir File.join(@repo.dir, @path), &block
+    end
+
+  end
+
 
   # A repository is a branch at a path.
   #

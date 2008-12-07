@@ -301,4 +301,49 @@ describe "blob" do
 
 end
 
+describe "repository history" do
+
+  before :each do
+    FileUtils.mkdir "/tmp/giraffe_not_a_repo"
+
+    FileUtils.mkdir_p "/tmp/giraffe_repo/tracked/subdir"
+
+    FileUtils.touch   "/tmp/giraffe_repo/tracked/file.txt"
+    FileUtils.touch   "/tmp/giraffe_repo/tracked/subdir/file2.txt"
+    FileUtils.touch   "/tmp/giraffe_repo/tracked/no_file.txt"
+
+    FileUtils.mkdir_p "/tmp/giraffe_repo/not_tracked"
+    FileUtils.touch   "/tmp/giraffe_repo/not_tracked/no_file.txt"
+
+    Dir.chdir("/tmp/giraffe_repo") {
+      `git init`
+      `git add tracked/file.txt`
+      `git commit -m "First"`
+      `git add tracked/subdir`
+      `git commit -m "Second"`
+    }
+
+    @repo = Git::Repository.open "/tmp/giraffe_repo"
+  end
+
+  after :each do
+    FileUtils.rm_r "/tmp/giraffe_repo"
+    FileUtils.rm_r "/tmp/giraffe_not_a_repo"
+  end
+
+  it "is accessed through Tree#commits" do
+    @repo.commits
+  end
+
+  it "consists of an Array of Commit objects" do
+    @repo.commits.each {|c| c.should be_kind_of(Git::Commit) }
+  end
+
+  it "sorts commits newest to oldest" do
+    @repo.commits[0].subject.should == "Second"
+    @repo.commits[1].subject.should == "First"
+  end
+
+end
+
 
