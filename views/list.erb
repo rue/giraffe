@@ -1,42 +1,51 @@
-<% if @pages.empty? %>
-  <h1>There are no pages yet!</h1>
-  <p><a href="/e/<%= Giraffe.home %>" title="Create your home page">Go to create your first page.</a></p>
-<% else %>
-  <h1 id="pagelistbanner">Pages<%= " Under <span class=\"pretty_dir\">#{@subdir}/</span>" if @subdir %></h1>
+<div id="section_info">
+  <% if @objects.empty? %>
+    <h1>There are no pages yet!</h1>
+  <% else %>
+    <h1>Pages<%= " Under <span class=\"pretty_dir\">#{@subdir}/</span>" if @subdir %></h1>
+  <% end %>
+</div>
 
-  <div class="content">
-    <ul class="page_list">
+<div id="page_list">
+  <% if @objects.empty? %>
+    <p><a href="/e/<%= Giraffe.home %>" title="Create your home page">Go to create your first page.</a></p>
+  <% else %>
+    <div class="content">
+      <ul class="page_list">
 
-      <% @recursor = lambda do |page, continuation| %>
-        <li>
-          <% if page.kind_of? Array %>
-            <ul class="directory">
-              <li class="directory_label"><%= File.basename page.first %>/
-                <% unless page.last.empty? %>
-                  <% page.last.each {|child| continuation.call child, continuation } %>
-                <% else %>
-                  <li class="empty_directory">&lt;empty&gt;</li>
-                <% end %>
-              </li>
-            </ul>
+        <% @recursor = lambda do |object, continuation| %>
+          <% if object.kind_of? Git::Tree %>
+            <li class="entry">
+              <ul class="directory">
+                <li class="directory_label"><%= object.name %>/
+                  <% object.objects.each {|child| continuation.call child, continuation } %>
+                </li>
+              </ul>
+            </li>
           <% else %>
-            <ul class="page">
-              <li class="name">
-                <a href="/<%= page.name %>"><%= page.pretty_name.last %></a>
-              </li>
-              <li class="actions">
-                <ul>
-                  <li><a href="/e/<%= page.name %>">.edit</a></li>
-                  <li><a href="/h/<%= page.name %>">.history</a></li>
-                </ul>
-              </li>
-            </ul>
+            <% next unless Giraffe.list_filter.call object.path %>
+            <% page = Page.from_git object %>
+            <li class="entry">
+              <ul class="page">
+                <li class="name">
+                  <a href="/<%= page.uri %>"><%= page.pretty_name.last %></a>
+                </li>
+                <li class="actions">
+                  <ul>
+                    <li class="action"><a href="/e/<%= page.uri %>">.edit</a></li>
+                    <li class="action"><a href="/h/<%= page.uri %>">.history</a></li>
+                  </ul>
+                </li>
+              </ul>
+            </li>
           <% end %>
-        </li>
-      <% end %>
+        <% end %>
 
-      <% @pages.each {|page| @recursor.call page, @recursor } %>
+        <% @objects.each {|obj| @recursor.call obj, @recursor } %>
 
-    </ul>
-  </div>
-<% end %>
+      </ul>
+
+    </div>
+
+  <% end %>
+</div>
