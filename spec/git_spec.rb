@@ -344,6 +344,17 @@ describe "repository history" do
     @repo.commits[1].subject.should == "First"
   end
 
+  it "can be viewed for individual blob with Blob#commits" do
+    commits = @repo.object_for("tracked/file.txt").commits
+    commits.size.should == 1
+    commits.first.subject.should == "First"
+  end
+
+  it "can be limited by giving the number of commits to show" do
+    @repo.commits.size.should == 2
+    @repo.commits(1).size.should == 1
+  end
+
 end
 
 

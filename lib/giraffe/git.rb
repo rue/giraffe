@@ -29,6 +29,17 @@ module Git
       @full_path = File.join @repo.dir, @path
     end
 
+    # Show commits for this object.
+    #
+    def commits(count = 30)
+      data = git "log -n#{count} --pretty=format:\"%H %ct %s\" #{@repo.commit} #{@path}"
+      data.split("\n").map {|c|
+        sha1, timestamp, subject = c.split /\s+/, 3
+
+        Commit.new @repo, sha1, Time.at(timestamp.to_i), subject
+      }
+    end
+
     # Shell out a command and capture all output.
     #
     def git(command)
@@ -78,13 +89,14 @@ module Git
   #
   class Commit < Object
 
-    attr_reader :subject
+    attr_reader :subject, :time
 
     # New commit info
     #
-    def initialize(repo, sha1, subject)
+    def initialize(repo, sha1, time, subject)
       @repo = repo
       @sha1 = sha1
+      @time = time
       @subject = subject
     end
 
@@ -111,16 +123,6 @@ module Git
                     type = Git.const_get(type.capitalize)
                     type.new repo, name, path, self, sha1, mode
                   }.compact
-    end
-
-    # Show commits for this tree.
-    #
-    def commits()
-      git("rev-list --pretty=oneline #{@repo.commit}").split("\n").map {|commit|
-        sha1, subject = commit.split /\s+/, 2
-
-        Commit.new @repo, sha1, subject
-      }
     end
 
     # Locate object directly by path or return nil.
