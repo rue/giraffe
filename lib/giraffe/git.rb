@@ -29,6 +29,18 @@ module Git
       @full_path = File.join @repo.dir, @path
     end
 
+    # Stage to be committed.
+    #
+    def add!()
+      git "add #{@path}"
+    end
+
+    # Commit (whatever is in index)
+    #
+    def commit!(message)
+      git "commit -m \"#{message}\""
+    end
+
     # Show commits for this object.
     #
     def commits(count = 30)
@@ -63,18 +75,6 @@ module Git
   # Blob is a file git knows about.
   #
   class Blob < Object
-
-    # Stage to be committed.
-    #
-    def add!()
-      git "add #{@path}"
-    end
-
-    # Commit (whatever is in index)
-    #
-    def commit!(message)
-      git "commit -m \"#{message}\""
-    end
 
     # Contents of file at whichever revision we are using.
     #
