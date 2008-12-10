@@ -146,13 +146,12 @@ get "/*:page" do
 end
 
 
-# support methods
+# Slightly simplify generating the output.
+#
+def show(template, title)
+  @title = title
+  erb template
+end
 
-
-private
-
-  def show(template, title)
-    @title = title
-    erb(template)
-  end
+private :show
 

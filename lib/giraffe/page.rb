@@ -1,6 +1,5 @@
 class Page
-  # The basename is just a hack to display trees better.
-  #
+
   attr_reader :name, :dir, :uri, :filename, :relative_path, :full_path
   attr_reader :object
   attr_reader :attach_dir
@@ -109,8 +108,6 @@ class Page
   end
 
   # Time of last commit.
-  #
-  # TODO: ADD
   #
   def updated_at()
     Time.at @object.commits(1).first.time.to_i

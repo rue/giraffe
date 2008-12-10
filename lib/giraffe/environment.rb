@@ -41,5 +41,6 @@ Giraffe.relative      = if Giraffe.wikiroot != Giraffe.reporoot
                           ""
                         end
 
+# Only existing repositories are allowed currently.
 Giraffe.wiki = Git::Repository.open Giraffe.wikiroot
 
