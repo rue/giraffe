@@ -1,8 +1,7 @@
 class Page
 
-  attr_reader :name, :dir, :uri, :filename, :relative_path, :full_path
+  attr_reader :name, :dir, :uri, :filename
   attr_reader :object
-  attr_reader :attach_dir
 
   def self.from_git(object)
     name  = Giraffe.to_uri.call object.name
@@ -14,20 +13,17 @@ class Page
 
   def self.from_uri(dir, name)
     name      = name
-    dir       = dir.split "/"
+    dir       = if dir == "." then [] else dir.split "/" end
     uri       = if dir.empty? then name else File.join(dir, name) end
+
+    p dir, name, uri
 
     filename  = Giraffe.to_filename.call name
     relative  = if dir.empty? then filename else File.join(dir, filename) end
 
-    begin
-      object    = Giraffe.wiki.object_for relative
-    rescue
-      raise ArgumentError, "Invalid path"
-    end
+    object    = Giraffe.wiki.object_for relative
 
-    attach_dir    = File.join Giraffe.wikiroot, '_attachments'
-
+    p name, dir, uri, object.name
     new name, dir, uri, object
   end
 
@@ -113,4 +109,38 @@ class Page
     Time.at @object.commits(1).first.time.to_i
   end
 
+end
+
+class Resource < Page
+
+  def self.from_uri(dir, name, info)
+    name      = name
+    dir       = dir.split "/"
+    uri       = if dir.empty? then name else File.join(dir, name) end
+
+    filename  = name
+    relative  = if dir.empty? then filename else File.join(dir, filename) end
+
+    object    = Giraffe.wiki.object_for relative
+
+    new name, dir, uri, object, info
+  end
+
+  def initialize(name, dir, uri, object, info)
+    @name = name
+    @dir = dir
+    @uri = uri
+    @object = object
+
+    @mime = info[:mime]
+  end
+
+  def raw_body()
+    File
+  end
+
+  alias_method  :body, :raw_body
+  alias_method  :escaped_raw_body, :raw_body
+
+  attr_reader   :mime
 end

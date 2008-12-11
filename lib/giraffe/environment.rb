@@ -15,6 +15,11 @@ Giraffe.reporoot      = Giraffe.wikiroot
 Giraffe.to_filename   = lambda {|uri| uri }
 Giraffe.to_uri        = lambda {|file| file }
 
+Giraffe.list_filter   = lambda {|file| true }
+
+Giraffe.resource_filter = lambda {|uri| false }
+
+
 # Wiki setup.
 Giraffe.home          = "/Home"
 

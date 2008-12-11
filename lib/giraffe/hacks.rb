@@ -71,46 +71,19 @@ module Sinatra
       @param_keys = []
       @options = options
 
-      regex = @path.to_s.gsub(/(:(#{URI_CHAR}+))|(\*)/) do
-        if $2
-          @param_keys << $2.intern
-          "(#{URI_CHAR}+)"
-        elsif $3
-          @param_keys << "splat"
-          "(.*?)"
-        end
-      end
-
-      @pattern = /^#{regex}$/
+      @pattern = /^#{path}$/
     end
 
     # Work around splat issue.
     #
     def invoke(request)
       return unless pattern =~ request.path_info.squeeze('/')
-
-      raw = param_keys.zip $~.captures.map(&:from_param)
-
-      splats, named = raw.partition {|key, capture| key == "splat" }
-      splats.map! {|key, capture| capture }
-
-      Result.new block, Hash["splats", splats, *named.flatten], 200
+      Result.new block, Hash.new, 200
     end
   end
 
   class EventContext
     include HttpAuthentication::Basic
-  end
-end
-
-
-# Work around stupid directory handling
-#
-def (Giraffe.repo).working()
-  unless Giraffe.relative.empty?
-    self.gtree("HEAD").trees[Giraffe.relative]
-  else
-    self.gtree "HEAD"
   end
 end
 

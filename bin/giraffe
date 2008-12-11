@@ -135,16 +135,34 @@ end
 
   # These come last since they could match anything
 
-# Show page in or send to create.
-#
-get "/*:page" do
-  @page = Page.from_uri params[:splats].first, params[:page] rescue redirect "/a/list"
 
-  redirect "/a/list/#{@page.name}" if @page.directory?
+# Resource pages have an extension.
+#
+get "/.+\\..+" do
+  path, name = File.split request.path_info[1..-1]
+
+  info = Giraffe.resource_filter.call(path + name)
+
+  if info
+    @resource = Resource.from_uri path, name, info
+    send_file @resource.object.full_path, :type => @resource.mime, :disposition => "inline"
+  end
+end
+
+# Regular pages do not have an extension.
+#
+get "/.+" do
+  path, name = File.split request.path_info[1..-1]
+  @page = Page.from_uri path, name
+
+  redirect "/a/list/#{@page.uri}" if @page.directory?
+
+  if Resource === @page
+    send_data @page.body, :type => @page.mime, :disposition => "inline"
+  end
 
   if @page.exists? then show :show, @page.name else redirect "/e/" + @page.name end
 end
-
 
 # Slightly simplify generating the output.
 #
