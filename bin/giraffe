@@ -40,13 +40,15 @@ get('/') { redirect Giraffe.home }
 #
 get "/e/(.+)" do
   @page = Page.from_uri *File.split(params[:matches][1])
-  show :edit, "Editing #{@page.name}"
+  show :edit, "Editing #{@page.pretty_name.last}"
 end
 
 # Process edit.
 #
 post "/e/(.+)" do
   @page = Page.from_uri *File.split(params[:matches][1])
+  @page.make! unless @page.exists?
+
   @page.update(params[:body], params[:message])
 
   redirect '/' + @page.uri
@@ -161,10 +163,6 @@ get "/(.+)" do
   @page = Page.from_uri *File.split(params[:matches][1])
 
   redirect "/a/list/#{@page.uri}" if @page.directory?
-
-  if Resource === @page
-    send_data @page.body, :type => @page.mime, :disposition => "inline"
-  end
 
   if @page.exists? then show :show, @page.name else redirect "/e/" + @page.uri end
 end

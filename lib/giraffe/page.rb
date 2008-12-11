@@ -66,7 +66,23 @@ class Page
   # Is page already in the repo?
   #
   def exists?()
-    !!@object
+    if @exists.nil?
+      @exists = !!@object
+    end
+
+    @exists
+  end
+
+  # Set up a blank to use as the backend object.
+  #
+  def make!()
+    dir = Giraffe.wiki.object_for @dir.join("/")
+    name = Giraffe.to_filename.call @name
+
+    @object = Git::Blob.new dir.repo, name,
+                            File.join(dir.path, name),
+                            dir, "no sha1", 0
+    self
   end
 
   # Slightly more humane file path.
@@ -92,14 +108,17 @@ class Page
 
   # Update file contents and commit the change.
   #
-  def update(content, comments = nil)
-    message = if exists? then "Giraffe edited #{@name}" else "Giraffe created #{@name}" end
-    message << " : #{comments}" if comments
+  def update(content, comments)
+    comments = "<no comment by author>" if !comments or comments.empty?
+    action = if exists? then "edited" else "created" end
 
-    #TODO
+    message = "Giraffe #{action} #{@name}: #{comments}"
+
     @object.data = content + "\n"
     @object.add!
     @object.commit! message
+
+    @exists = true
 
     Giraffe.wiki = Giraffe.wiki.HEAD
   end
