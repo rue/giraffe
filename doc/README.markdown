@@ -15,6 +15,7 @@ As such, some behaviours may not suit all other use cases.
 
 These are all available through Gems.
 
+- metaid
 - mongrel (or something, see Sinatra's help.)
 - rack
 - rdiscount
