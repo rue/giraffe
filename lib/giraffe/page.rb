@@ -79,9 +79,10 @@ class Page
     dir = Giraffe.wiki.object_for @dir.join("/")
     name = Giraffe.to_filename.call @name
 
+    path = if dir.path.empty? then name else File.join(dir.path, name) end
+
     @object = Git::Blob.new dir.repo, name,
-                            File.join(dir.path, name),
-                            dir, "no sha1", 0
+                            path, dir, "no sha1", 0
     self
   end
 
@@ -117,8 +118,6 @@ class Page
     @object.data = content + "\n"
     @object.add!
     @object.commit! message
-
-    @exists = true
 
     Giraffe.wiki = Giraffe.wiki.HEAD
   end
