@@ -166,7 +166,7 @@ get "/(.+)" do
     send_data @page.body, :type => @page.mime, :disposition => "inline"
   end
 
-  if @page.exists? then show :show, @page.name else redirect "/e/" + @page.name end
+  if @page.exists? then show :show, @page.name else redirect "/e/" + @page.uri end
 end
 
 # Slightly simplify generating the output.
