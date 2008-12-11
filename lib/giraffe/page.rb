@@ -83,7 +83,11 @@ class Page
   # Unrendered page body.
   #
   def raw_body()
-    @raw_body ||= @object.data
+    unless @raw_body
+      @raw_body = if @object then @object.data else "" end
+    end
+
+    @raw_body
   end
 
   # Update file contents and commit the change.
@@ -130,10 +134,6 @@ class Resource < Page
     @object = object
 
     @mime = info[:mime]
-  end
-
-  def raw_body()
-    File
   end
 
   alias_method  :body, :raw_body
