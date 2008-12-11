@@ -8,7 +8,7 @@
 
 <div id="page_list">
   <% if @objects.empty? %>
-    <p><a href="/e/<%= Giraffe.home %>" title="Create your home page">Go to create your first page.</a></p>
+    <p><a href="/e/<%= Giraffe.home %>" title="Create your home page" accesskey="i">Go to create your first page.</a></p>
   <% else %>
     <div class="content">
       <ul class="page_list">
@@ -28,12 +28,12 @@
             <li class="entry">
               <ul class="page">
                 <li class="name">
-                  <a href="/<%= page.uri %>"><%= page.pretty_name.last %></a>
+                  <a href="/<%= page.uri %>" title="View page"><%= page.pretty_name.last %></a>
                 </li>
                 <li class="actions">
                   <ul>
-                    <li class="action"><a href="/e/<%= page.uri %>">.edit</a></li>
-                    <li class="action"><a href="/h/<%= page.uri %>">.history</a></li>
+                    <li class="action"><a href="/e/<%= page.uri %>" title="Edit page">.edit</a></li>
+                    <li class="action"><a href="/h/<%= page.uri %>" title="Page history">.history</a></li>
                   </ul>
                 </li>
               </ul>
