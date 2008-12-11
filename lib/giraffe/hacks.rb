@@ -78,7 +78,8 @@ module Sinatra
     #
     def invoke(request)
       return unless pattern =~ request.path_info.squeeze('/')
-      Result.new block, Hash.new, 200
+
+      Result.new block, Hash[:matches => $~.dup], 200
     end
   end
 

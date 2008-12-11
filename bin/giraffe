@@ -38,15 +38,15 @@ get('/') { redirect Giraffe.home }
 
 # Page editor.
 #
-get "/e/*:page" do
-  @page = Page.from_uri params[:splats].first, params[:page]
+get "/e/(.+)" do
+  @page = Page.from_uri *File.split(params[:matches][1])
   show :edit, "Editing #{@page.name}"
 end
 
 # Process edit.
 #
-post "/e/*:page" do
-  @page = Page.from_uri params[:splats].first, params[:page]
+post "/e/(.+)" do
+  @page = Page.from_uri *File.split(params[:matches][1])
   @page.update(params[:body], params[:message])
 
   redirect '/' + @page.uri
@@ -54,17 +54,17 @@ end
 
 # Show page as it was in given revision.
 #
-get '/h/*:page/:commit' do
-  Giraffe.wiki = Giraffe.wiki.at params[:commit]
-  @page = Page.from_uri params[:splats].first, params[:page]
+get '/h/(.+)/(.+)' do
+  Giraffe.wiki = Giraffe.wiki.at params[:matches][2]
+  @page = Page.from_uri *File.split(params[:matches][1])
 
-  show :show, "#{@page.pretty_name.last} (in #{params[:commit]})"
+  show :show, "#{@page.pretty_name.last} (in #{params[:matches][2]})"
 end
 
 # Show page history.
 #
-get '/h/*:page' do
-  @page = Page.from_uri params[:splats].first, params[:page]
+get '/h/(.+)' do
+  @page = Page.from_uri *File.split(params[:matches][1])
   @commits = @page.object.commits 30
 
   show :page_history, "History of #{@page.pretty_name.last}"
@@ -72,13 +72,16 @@ end
 
 # Show diff of page revision to HEAD
 #
-get '/d/*:page/:commit' do
-  @page = Page.from_uri params[:splats].first, params[:page]
-  @diff = @page.object.diff params[:commit]
+get '/d/(.+)/(.+)' do
+  path, name = *File.split(params[:matches][1])
+  commit = params[:matches][2]
 
-  @commit = @params[:commit][0..7] + "..."
+  @page = Page.from_uri path, name
+  @diff = @page.object.diff commit
 
-  show :delta, "Diff of #{@page.pretty_name.last} against #{params[:commit]}"
+  @commit = commit[0..7] + "..."
+
+  show :delta, "Diff of #{@page.pretty_name.last} against #{commit}"
 end
 
 # Wiki history
@@ -97,8 +100,8 @@ end
 
 # Subdirectory page listing
 #
-get "/a/list/*" do
-  @subdir = params[:splats].first.chomp "/"
+get "/a/list/(.+)" do
+  @subdir = params[:matches][1]
   @objects = Giraffe.wiki.object_for(@subdir).objects
 
   show :list, "Pages Under #{@subdir}/"
@@ -106,8 +109,9 @@ end
 
 # Raw, unrendered text from the file.
 #
-get "/a/raw/*:page" do
-  @page = Page.from_uri params[:splats].first, params[:page]
+get "/a/raw/(.+)" do
+  path, name = File.split(params[:matches][1])
+  @page = Page.from_uri path, name
 
   headers 'Content-Type' => 'text/plain;charset=utf-8'
   send_data @page.raw_body, :type => 'text/plain', :disposition => 'inline'
@@ -124,8 +128,11 @@ end
 
 # Generate patchfile for diff
 #
-get "/a/patch/*:page/:commit" do
-  diff = Page.from_uri(params[:splats].first, params[:page]).object.diff params[:commit]
+get "/a/patch/(.+)/(.+)" do
+  path, name = File.split(params[:matches][1])
+  commit = params[:matches][2]
+
+  diff = Page.from_uri(path, name).object.diff commit
 
   header "Content-Type"         => "text/x-diff"
   header "Content-Disposition"  => "filename=patch.diff"
@@ -138,9 +145,8 @@ end
 
 # Resource pages have an extension.
 #
-get "/.+\\..+" do
-  path, name = File.split request.path_info[1..-1]
-
+get "/(.+\\..+)" do
+  path, name = File.split(params[:matches][1])
   info = Giraffe.resource_filter.call(path + name)
 
   if info
@@ -151,9 +157,8 @@ end
 
 # Regular pages do not have an extension.
 #
-get "/.+" do
-  path, name = File.split request.path_info[1..-1]
-  @page = Page.from_uri path, name
+get "/(.+)" do
+  @page = Page.from_uri *File.split(params[:matches][1])
 
   redirect "/a/list/#{@page.uri}" if @page.directory?
 

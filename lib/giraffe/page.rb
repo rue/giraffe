@@ -16,14 +16,11 @@ class Page
     dir       = if dir == "." then [] else dir.split "/" end
     uri       = if dir.empty? then name else File.join(dir, name) end
 
-    p dir, name, uri
-
     filename  = Giraffe.to_filename.call name
     relative  = if dir.empty? then filename else File.join(dir, filename) end
 
     object    = Giraffe.wiki.object_for relative
 
-    p name, dir, uri, object.name
     new name, dir, uri, object
   end
 
