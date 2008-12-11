@@ -65,6 +65,22 @@
 #
 #Giraffe.list_filter = lambda {|file| file =~ /\.markdown$/ }
 
+# Resource files allowed.
+#
+# Typically this is a file extension, but the full URI is
+# given for more elaborate mappings.
+#
+# If the URI is not an allowed resource, falseish should
+# be returned. If it does match, a Hash with some metadata
+# is expected returned. Currently the following keys must
+# be present:
+#
+#   :mime   File's mimetype as String, e.g. "image/jpeg" etc.
+#
+# By default no resource files are allowed.
+#
+#Giraffe.resource_filter = lambda {|uri| false }
+
 
   # Wiki parameters
 
