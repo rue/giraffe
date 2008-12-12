@@ -38,7 +38,7 @@ describe Git, "'opening'  a Repository" do
   it "fails if the given path does not exist" do
     lambda {
       Git::Repository.open "/tmp/giraffe_nonesuch_#{$$}"
-    }.should raise_error(Git::NoRepo)
+    }.should raise_error
   end
 
   it "fails if the given path is not a git repo" do
