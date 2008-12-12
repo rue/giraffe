@@ -1,167 +1,67 @@
-
 require "giraffe/git"
-require "giraffe/environment"
-require "giraffe/hacks"
 require "giraffe/page"
-require "rubygems"
-require "rdiscount"
-require "rubypants"
 
-# # Authentication.
-#
-before do
-  authenticate Giraffe.authenticator if Giraffe.authenticator
-end
+require "ostruct"
+require "pathname"
 
+module Giraffe
 
-  # Resource mapping
+  Conf = OpenStruct.new
 
+  # TODO: Move statics out of method
+  def self.reload()
+    # No authentication by default.
+    Conf.authenticator = nil
 
-# Default page.
-#
-get('/') { redirect Giraffe.home }
+    # Root of wiki pages and root of the repository if needed.
+    Conf.wikiroot      = File.join ENV["HOME"], "wiki"
+    Conf.reporoot      = Conf.wikiroot
 
+    # Page name <-> filesystem mapping (none by default).
+    Conf.to_filename   = lambda {|uri| uri }
+    Conf.to_uri        = lambda {|file| file }
 
-# Pages handled at bottom due to wildcarding
+    Conf.list_filter   = lambda {|file| true }
 
-
-# Page editor.
-#
-get "/e/(.+)" do
-  @page = Page.from_uri *File.split(params[:matches][1])
-  show :edit, "Editing #{@page.pretty_name.last}"
-end
-
-# Process edit.
-#
-post "/e/(.+)" do
-  @page = Page.from_uri *File.split(params[:matches][1])
-  @page.make! unless @page.exists?
-
-  @page.update(params[:body], params[:message])
-
-  redirect '/' + @page.uri
-end
-
-# Show page as it was in given revision.
-#
-get '/h/(.+)/(.+)' do
-  Giraffe.wiki = Giraffe.wiki.at params[:matches][2]
-  @page = Page.from_uri *File.split(params[:matches][1])
-
-  show :show, "#{@page.pretty_name.last} (in #{params[:matches][2]})"
-end
-
-# Show page history.
-#
-get '/h/(.+)' do
-  @page = Page.from_uri *File.split(params[:matches][1])
-  @commits = @page.object.commits 30
-
-  show :page_history, "History of #{@page.pretty_name.last}"
-end
-
-# Show diff of page revision to HEAD
-#
-get '/d/(.+)/(.+)' do
-  path, name = *File.split(params[:matches][1])
-  commit = params[:matches][2]
-
-  @page = Page.from_uri path, name
-  @diff = @page.object.diff commit
-
-  @commit = commit[0..7] + "..."
-
-  show :delta, "Diff of #{@page.pretty_name.last} against #{commit}"
-end
-
-# Wiki history
-#
-get '/a/history' do
-  @history = Giraffe.wiki.commits 30
-  show :history, "Wiki History"
-end
-
-# Toplevel page listing
-#
-get "/a/list" do
-  @objects = Giraffe.wiki.objects
-  show :list, "All pages"
-end
-
-# Subdirectory page listing
-#
-get "/a/list/(.+)" do
-  @subdir = params[:matches][1]
-  @objects = Giraffe.wiki.object_for(@subdir).objects
-
-  show :list, "Pages Under #{@subdir}/"
-end
-
-# Raw, unrendered text from the file.
-#
-get "/a/raw/(.+)" do
-  path, name = File.split(params[:matches][1])
-  @page = Page.from_uri path, name
-
-  headers 'Content-Type' => 'text/plain;charset=utf-8'
-  send_data @page.raw_body, :type => 'text/plain', :disposition => 'inline'
-end
-
-# Search
-#
-get '/a/search' do
-  @search = params[:search]
-  @matches = Giraffe.wiki.grep @search
-
-  show :search, 'Search Results'
-end
-
-# Generate patchfile for diff
-#
-get "/a/patch/(.+)/(.+)" do
-  path, name = File.split(params[:matches][1])
-  commit = params[:matches][2]
-
-  diff = Page.from_uri(path, name).object.diff commit
-
-  header "Content-Type"         => "text/x-diff"
-  header "Content-Disposition"  => "filename=patch.diff"
-
-  send_data diff, :type => "text/x-diff", :disposition => "inline"
-end
-
-  # These come last since they could match anything
+    Conf.resource_filter = lambda {|uri| false }
 
 
-# Resource pages have an extension.
-#
-get "/(.+\\..+)" do
-  path, name = File.split(params[:matches][1])
-  info = Giraffe.resource_filter.call(path + name)
+    # Wiki setup.
+    Conf.home          = "/Home"
 
-  if info
-    @resource = Resource.from_uri path, name, info
-    send_file @resource.object.full_path, :type => @resource.mime, :disposition => "inline"
+    # Some type of a link to software version used.
+    Conf.itself        = (`git remote -v` =~ (/origin\s+git@(.+?)\.git/) && "http://#{$1.sub ":", "/"}/") ||
+                            "http://github.com/rue/giraffe/"
+
+    # Load user config overrides if any, rest of ARGV goes unchanged.
+    load(ENV["GIRAFFE_CONF"] || "config.rb")
+
+    # Expand all paths just in case.
+    Conf.wikiroot      = File.expand_path Conf.wikiroot
+    Conf.reporoot      = File.expand_path Conf.reporoot
+
+    # Compute relative path to wiki root if necessary.
+    Conf.relative      = if Conf.wikiroot != Conf.reporoot
+                              wiki = Pathname.new Conf.wikiroot
+                              repo = Pathname.new Conf.reporoot
+
+                              # TODO: Check that wiki is a child of repo
+                              wiki.relative_path_from(repo).to_s
+                            else
+                              ""
+                            end
   end
+
+  def self.wiki!(commit = "HEAD")
+    return @wiki if @wiki
+
+    reload
+    @wiki = Git::Repository.open Conf.wikiroot, commit
+  end
+
+  def self.wiki()
+    @wiki
+  end
+
 end
-
-# Regular pages do not have an extension.
-#
-get "/(.+)" do
-  @page = Page.from_uri *File.split(params[:matches][1])
-
-  redirect "/a/list/#{@page.uri}" if @page.directory?
-
-  if @page.exists? then show :show, @page.name else redirect "/e/" + @page.uri end
-end
-
-# Slightly simplify generating the output.
-#
-def show(template, title)
-  @title = title
-  erb template
-end
-
-private :show
 
