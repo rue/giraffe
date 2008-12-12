@@ -71,6 +71,7 @@ Giraffe::Conf.resource_filter = lambda {|uri|
   end
 
   after do
+    FileUtils.rm_r @config
     FileUtils.rm_r @repo
     Waves.applications.clear
   end
