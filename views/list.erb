@@ -8,7 +8,7 @@
 
 <div id="page_list">
   <% if @objects.empty? %>
-    <p><a href="/e/<%= Giraffe.home %>" title="Create your home page" accesskey="i">Go to create your first page.</a></p>
+    <p><a href="/e/<%= Giraffe::Conf.home %>" title="Create your home page" accesskey="i">Go to create your first page.</a></p>
   <% else %>
     <div class="content">
       <ul class="page_list">
@@ -23,8 +23,8 @@
               </ul>
             </li>
           <% else %>
-            <% next unless Giraffe.list_filter.call object.path %>
-            <% page = Page.from_git object %>
+            <% next unless Giraffe::Conf.list_filter.call object.path %>
+            <% page = Giraffe::Page.from_git object %>
             <li class="entry">
               <ul class="page">
                 <li class="name">

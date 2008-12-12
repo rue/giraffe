@@ -43,7 +43,7 @@
 
         <!-- Page content -->
         <div id="content">
-          <%= yield %>
+          <%= @content %>
         </div>
 
         <!-- Footer with info -->
@@ -52,7 +52,7 @@
             <li><a href="http://validator.w3.org/check?uri=referer">Valid XHTML 1.1</a></li>
             <li><a href="http://jigsaw.w3.org/css-validator/check/referer">Valid CSS 2.1</a></li>
             <li><a href="http://www.section508.info/check_this.cfm?URLtest=http://http://cs.helsinki.fi/u/esaynatk&amp;s508=1&amp;CheckURL=0">508 OK</a></li>
-            <li><a href="<%= Giraffe.itself %>" title="Giraffe website" class="imagelink">
+            <li><a href="<%= Giraffe::Conf.itself %>" title="Giraffe website" class="imagelink">
               <img src="/giraffe/images/giraffe_logo_small.png" alt="Giraffe" /> power!
             </a></li>
           </ul>
