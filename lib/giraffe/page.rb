@@ -110,10 +110,17 @@ class Page
   # Update file contents and commit the change.
   #
   def update(content, comments)
-    comments = "<no comment by author>" if !comments or comments.empty?
+    comments = if !comments or comments.empty?
+                 "."
+               else
+                 ": #{comments}"
+               end
+
     action = if exists? then "edited" else "created" end
 
-    message = "Giraffe #{action} #{@name}: #{comments}"
+    message = "Giraffe #{action} #{@name}#{comments}"
+
+    content.gsub! /\r\n/, "\n"
 
     @object.data = content + "\n"
     @object.add!

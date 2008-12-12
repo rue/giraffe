@@ -1,7 +1,9 @@
 #!/usr/bin/env ruby
 
-libdir = File.join File.dirname(__FILE__), "..", "lib"
-$LOAD_PATH.unshift(File.dirname(__FILE__), "..")
+root = File.expand_path(File.join(File.dirname(__FILE__), ".."))
+libdir = File.join root, "lib"
+
+$LOAD_PATH.unshift root
 $LOAD_PATH.unshift libdir if File.directory? libdir
 
 
