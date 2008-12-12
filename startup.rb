@@ -15,7 +15,11 @@ module Giraffe
     auto_load true, :directories => "resources"
 
     class Map
-      on(:get, ["list", 0..-1]) { to :list }
+
+      # /l/ is listing of pages in repository
+      #
+      on(:get, ["l", 0..-1]) { to :list }
+
     end
 
   end
