@@ -12,12 +12,10 @@ require "waves"
 require "runtime/mocks"
 
 require "rubygems"
-  require "bacon"
-  require "facon"
   require "nokogiri"
 
 Waves::Runtime.instance = Waves::Runtime.new
-Bacon::Context.module_eval { include Waves::Mocks }
+Object.send :include, Waves::Mocks
 
 require "startup"
 

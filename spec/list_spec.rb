@@ -2,7 +2,7 @@ require "spec/spec_helper"
 
 describe "Wiki page list at toplevel" do
 
-  before do
+  before :each do
     time = Time.now.to_i
 
     @repo   = "/tmp/giraffe_list_spec_repo_#{$$}_#{time}"
@@ -70,7 +70,7 @@ Giraffe::Conf.resource_filter = lambda {|uri|
     Waves << Giraffe
   end
 
-  after do
+  after :each do
     FileUtils.rm_r @config
     FileUtils.rm_r @repo
     Waves.applications.clear
@@ -116,12 +116,12 @@ Giraffe::Conf.resource_filter = lambda {|uri|
     entries.find {|entry|
       link = entry.css("a").first
       link["href"] =~ %r|^/subdir/file5| and link.content =~ %r|file5|i
-    }.should.not == nil
+    }.should_not == nil
 
     entries.find {|entry|
       link = entry.css("a").first
       link["href"] =~ %r|^/subdir/sub_subdir/file9| and link.content =~ %r|file9|i
-    }.should.not == nil
+    }.should_not == nil
   end
 
   it "contains links to page, an editable page and the page history" do
