@@ -19,7 +19,7 @@ require "rubygems"
 Waves::Runtime.instance = Waves::Runtime.new
 Bacon::Context.module_eval { include Waves::Mocks }
 
-ENV["GIRAFFE_CONF"] = File.join(GIRAFFE_ROOT, "spec", "repos", "config_good.rb")
+require "startup"
 
-require "startup.rb"
+require "fileutils"
 
