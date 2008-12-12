@@ -1,51 +1,55 @@
+require "giraffe/git"
+
 require "ostruct"
 require "pathname"
 
+module Giraffe
 
-Giraffe = OpenStruct.new unless defined? Giraffe
+  Conf = OpenStruct.new unless defined? Conf
 
-# No authentication by default.
-Giraffe.authenticator = nil
+  # No authentication by default.
+  Conf.authenticator = nil
 
-# Root of wiki pages and root of the repository if needed.
-Giraffe.wikiroot      = File.join ENV["HOME"], "wiki"
-Giraffe.reporoot      = Giraffe.wikiroot
+  # Root of wiki pages and root of the repository if needed.
+  Conf.wikiroot      = File.join ENV["HOME"], "wiki"
+  Conf.reporoot      = Conf.wikiroot
 
-# Page name <-> filesystem mapping (none by default).
-Giraffe.to_filename   = lambda {|uri| uri }
-Giraffe.to_uri        = lambda {|file| file }
+  # Page name <-> filesystem mapping (none by default).
+  Conf.to_filename   = lambda {|uri| uri }
+  Conf.to_uri        = lambda {|file| file }
 
-Giraffe.list_filter   = lambda {|file| true }
+  Conf.list_filter   = lambda {|file| true }
 
-Giraffe.resource_filter = lambda {|uri| false }
-
-
-# Wiki setup.
-Giraffe.home          = "/Home"
-
-# Some type of a link to software version used.
-Giraffe.itself        = (`git remote -v` =~ (/origin\s+git@(.+?)\.git/) && "http://#{$1.sub ":", "/"}/") ||
-                        "http://github.com/rue/giraffe/"
-
-# Load user config overrides if any, rest of ARGV goes unchanged.
-load ARGV.slice!(0, 2).last if ARGV.first == "-f"
+  Conf.resource_filter = lambda {|uri| false }
 
 
-# Expand all paths just in case.
-Giraffe.wikiroot      = File.expand_path Giraffe.wikiroot
-Giraffe.reporoot      = File.expand_path Giraffe.reporoot
+  # Wiki setup.
+  Conf.home          = "/Home"
 
-# Compute relative path to wiki root if necessary.
-Giraffe.relative      = if Giraffe.wikiroot != Giraffe.reporoot
-                          wiki = Pathname.new Giraffe.wikiroot
-                          repo = Pathname.new Giraffe.reporoot
+  # Some type of a link to software version used.
+  Conf.itself        = (`git remote -v` =~ (/origin\s+git@(.+?)\.git/) && "http://#{$1.sub ":", "/"}/") ||
+                          "http://github.com/rue/giraffe/"
 
-                          # TODO: Check that wiki is a child of repo
-                          wiki.relative_path_from(repo).to_s
-                        else
-                          ""
-                        end
+  # Load user config overrides if any, rest of ARGV goes unchanged.
+  load(ENV["GIRAFFE_CONF"] || "config.rb")
 
-# Only existing repositories are allowed currently.
-Giraffe.wiki = Git::Repository.open Giraffe.wikiroot
 
+  # Expand all paths just in case.
+  Conf.wikiroot      = File.expand_path Conf.wikiroot
+  Conf.reporoot      = File.expand_path Conf.reporoot
+
+  # Compute relative path to wiki root if necessary.
+  Conf.relative      = if Conf.wikiroot != Conf.reporoot
+                            wiki = Pathname.new Conf.wikiroot
+                            repo = Pathname.new Conf.reporoot
+
+                            # TODO: Check that wiki is a child of repo
+                            wiki.relative_path_from(repo).to_s
+                          else
+                            ""
+                          end
+
+  # Only existing repositories are allowed currently.
+  Conf.wiki = Git::Repository.open Conf.wikiroot
+
+end

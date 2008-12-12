@@ -184,6 +184,7 @@ module Git
     # Raises if the path does not seem to be a git repo.
     #
     def initialize(path, commit)
+      p :opening, path, commit
       @repo = self
       @dir = path
       @path = ""
@@ -192,9 +193,6 @@ module Git
       raise NoRepo if git("status") =~ /not a git repo/i
 
       super(self, "", @path, nil, @commit, File.stat(@dir).mode)
-
-    rescue Errno::ENOENT, Errno::EACCES, Errno::EPERM
-      raise NoRepo
     end
 
     # Repository for current HEAD
