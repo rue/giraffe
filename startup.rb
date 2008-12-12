@@ -44,6 +44,5 @@ module Giraffe
 
 end
 
-require "giraffe/environment"
-require "giraffe/page"
+require "giraffe"
 
