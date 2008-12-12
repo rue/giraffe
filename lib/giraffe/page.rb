@@ -8,6 +8,8 @@ module Giraffe
     def self.from_git(object)
       name  = Giraffe::Conf.to_uri.call object.name
       dir   = File.dirname(object.path).split "/"
+      dir   = [] if dir == ["."]
+
       uri   = if dir.empty? then name else File.join(dir, name) end
 
       new name, dir, uri, object

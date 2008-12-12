@@ -184,7 +184,6 @@ module Git
     # Raises if the path does not seem to be a git repo.
     #
     def initialize(path, commit)
-      p :opening, path, commit
       @repo = self
       @dir = path
       @path = ""
