@@ -41,13 +41,21 @@ up, issue the following from the project root:
 - Serve from repository root or any subdirectory.
 - URI-to-file-to-URI mapping and file- and resource visibility mapping.
 - User authentication through HTTP basic. (See Configuration.)
+- Rack support.
 
 
  Configuration
 ---------------
 
+Currently, you must have an existing Git repository (although
+it may be empty--the .git/ stuff must exist.)
+
 See doc/config.rb.sample for information. The configuration
-file to be used can be given using the `-f` option.
+file to be used can be given using the `-f` option. At a
+minimum, you will probably give the path to your repository.
+
+You can write a rackup file to serve the application. See
+`config.ru` for an example.
 
 
  Running
@@ -60,4 +68,7 @@ Run at port 8080:
 Use production environment (development by default):
 
     $ bin/giraffe -f config.rb -e production -p 8080
+
+If you are writing a rackup file, you presumably know
+what you are doing :)
 
