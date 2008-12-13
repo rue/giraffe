@@ -29,7 +29,7 @@ module Giraffe
 
         @commits = object.commits 30
 
-        eruby = Erubis::Eruby.new File.read("views/page_history.erb")
+        eruby = Erubis::Eruby.new File.read("views/history.erb")
         @content = eruby.result binding
 
         eruby = Erubis::Eruby.new File.read("views/layout.erb")

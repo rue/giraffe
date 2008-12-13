@@ -1,31 +1,35 @@
 <div id="section_info">
-  <h1>Wiki History</h1>
+  <h1>History</h1>
 </div>
 
-<div id="history_view">
+<div id="page_history">
 
   <div class="sidebar">
-    <ul class="info">
-      <li>Showing <%= @history.size %> commits:</li>
+    <ul class="sub_nav">
+      <% if @page %>
+        <li><a href="/<%= @page.uri %>" class="nav_link">current</a></li>
+        <li><a href="/e/<%= @page.uri %>" class="nav_link">edit</a></li>
+      <% end %>
     </ul>
   </div>
 
   <div class="content">
-    <ul>
-      <% @history.each do |commit| %>
+    <ul class="commits">
+      <% @commits.each do |commit| %>
         <li class="commit">
-          <span class="subject">
+          <a href="/c/<%= commit.sha1 %>" title="View commit">
             <%= commit.subject %>
-          </span>
-          <span class="time">
-            <script type="text/javascript">
-              document.write(time_ago_in_words(<%= commit.time.for_time_ago_in_words %>) + ' ago');
-            </script>
-          </span>
+          </a>
+          <% unless commit == @commits.first or !@page %>
+            <a href="/d/<%= commit.sha1 %>/<%= @page.uri %>" title="Diff against current">diff</a>
+            <a href="/<%= @page.uri %>?<%= commit.sha1 %>" title="View old version">view as it was</a>
+          <% end %>
+          <script type="text/javascript">
+            document.write(time_ago_in_words(<%= commit.time.to_i * 1000 %>) + ' ago');
+          </script>
         </li>
       <% end %>
     </ul>
   </div>
 
 </div>
-
