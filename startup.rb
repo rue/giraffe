@@ -16,13 +16,37 @@ module Giraffe
 
     class Map
 
-      # By default the client is looking for a page.
+      # Pages have no path.
       #
       on(:get, true) { to :page }
+
+      # Posting to a Page updates it.
+      #
+      #on(:post, true) { to :page }
+
+      # Empty path is the home page.
+      #
+      #on(:get, []) { redirect Giraffe::Conf.home }
+
+      # /d/ is a diff file between commits to a page.
+      #
+      #on(:get, ["d", true]) { to :diff }
+
+      # /e/ is an editable page.
+      #
+      #on(:get, ["e", true]) { to :editable }
+
+      # /h/ is history of page, subdirectory or repository.
+      #
+      #on(:get, ["h", 0..-1]) { to :history }
 
       # /l/ is listing of pages in repository.
       #
       on(:get, ["l", 0..-1]) { to :list }
+
+      # /r/ is the raw text of a page.
+      #
+      #on(:get, ["r", true]) { to :raw }
 
     end
 
