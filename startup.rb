@@ -39,7 +39,7 @@ module Giraffe
 
       # /h/ is history of page, subdirectory or repository.
       #
-      #on(:get, ["h", 0..-1]) { to :history }
+      on(true, ["h", 0..-1]) { to :history }
 
       # /l/ is listing of pages in repository.
       #
