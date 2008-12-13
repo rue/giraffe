@@ -19,11 +19,27 @@ module Giraffe
     # Requests are forwarded to the correct Resource, which
     # then deals with accepted methods and further resolution.
     #
+    # Since the matching is done sequentially, the most commonly
+    # used resources are toward the bottom. The exception to this
+    # are naturally the prefixless page paths which match last
+    # (and are obviously the most common..oh, the competition.)
+    #
+    # NOTE: If hoarding the names from the front of the path is a
+    #       problem (e.g. you want to have a page named "commit"
+    #       for whatever silly reason), consider transforming
+    #       the filenames to use WikiCase for URIs. I.e.,
+    #
+    #           /commit => some commit resource
+    #
+    #       but
+    #
+    #           /Commit => commit.txt     # Or whatever
+    #
     class Map
 
       # Normal pages have no particular prefix.
       #
-      on(true, true) { to :page }
+      on(true, ["wiki", true]) { to :page }
 
       # Empty path is the home page.
       #
@@ -32,33 +48,33 @@ module Giraffe
         request.redirect Giraffe::Conf.home, 301
       }
 
-      # /c/ is a specific commit.
+      # /commit/ is a specific commit.
       #
-      #on(:get, ["c", :commit]) { to: commit }
+      #on(:get, ["commit", :sha]) { to: commit }
 
-      # /d/ is a diff file between commits to a page.
+      # /diff/ from an earlier to current version.
       #
-      #on(:get, ["d", true]) { to :diff }
+      #on(:get, ["diff", true]) { to :diff }
 
-      # /e/ is an editable page.
+      # /raw/ text corresponding to a page's source.
       #
-      on(true, ["e", true]) { to :editable }
+      on(true, ["raw", true]) { to :raw }
 
-      # /h/ is history of page, subdirectory or repository.
+      # /changes/ to the file, directory or repository as commits.
       #
-      on(true, ["h", 0..-1]) { to :history }
+      on(true, ["changes", 0..-1]) { to :changes }
 
-      # /l/ is listing of pages in repository.
+      # /search/ results for term given in the path.
       #
-      on(true, ["l", 0..-1]) { to :list }
+      on(true, ["search", true]) { to :search }
 
-      # /r/ is the raw text of a page.
+      # /pages/ in the repository or a subdirectory.
       #
-      on(true, ["r", true]) { to :raw }
+      on(true, ["pages", 0..-1]) { to :list }
 
-      # /s is a search result.
+      # /editable/ page that can be used to update the real page.
       #
-      on(true, ["s", 0..-1]) { to :search }
+      on(true, ["editable", true]) { to :editable }
 
     end
 
