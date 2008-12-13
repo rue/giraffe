@@ -23,8 +23,8 @@ module Giraffe
 
         @page = Giraffe::Page.from_uri captured.path, name
 
-        redirect "/l/#{@page.uri}" if @page.directory?
-        redirect "/e/#{@page.uri}" unless @page.exists?
+        request.redirect "/l/#{@page.uri}", 303 if @page.directory?
+        request.redirect "/e/#{@page.uri}", 303 unless @page.exists?
 
         eruby = Erubis::Eruby.new File.read("views/page.erb")
         @content = eruby.result binding
@@ -44,7 +44,8 @@ module Giraffe
         response.status = 400 and return "400 Bad Request" if @page.exists?
         @page.create! query["contents"], query["message"]
 
-        redirect "/#{@page.uri}"
+        # TODO: This *should* be 201
+        request.redirect "/#{@page.uri}", 302
       }
 
       # Update existing page resource.
@@ -58,7 +59,8 @@ module Giraffe
         response.status = 400 and return "400 Bad Request" unless @page.exists?
         @page.update! query["contents"], query["message"]
 
-        redirect "/#{@page.uri}"
+        # TODO: This *should* be 201
+        request.redirect "/#{@page.uri}", 302
       }
 
     end
