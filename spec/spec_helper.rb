@@ -27,10 +27,11 @@ require "fileutils"
 def create_good_repo()
   time = Time.now.to_i
 
-  @repo   = "/tmp/giraffe_list_spec_repo_#{$$}_#{time}"
+  @proc   = $$
+  @repo   = "/tmp/giraffe_spec_repo_#{$$}_#{time}"
   @wiki   = "weeky"
 
-  @config = "/tmp/giraffe_list_spec_config_#{$$}_#{time}"
+  @config = "/tmp/giraffe_spec_config_#{$$}_#{time}"
 
   FileUtils.mkdir_p File.join(@repo, @wiki, "subdir", "sub_subdir")
 
@@ -39,18 +40,18 @@ def create_good_repo()
   end
 
   Dir.chdir File.join(@repo, @wiki) do
-    File.open("file1.txt", "w+")                         {|f| f << "File *one* list text #{$$}" }
-    File.open("file2", "w+")                             {|f| f << "File two list text #{$$}" }
-    File.open("file3.markdown", "w+")                    {|f| f << "File three list text #{$$}" }
-    File.open("file4.txt", "w+")                         {|f| f << "File four list text #{$$}" }
-    File.open("subdir/file5.txt", "w+")                  {|f| f << "File *five* list text #{$$}" }
-    File.open("subdir/file6", "w+")                      {|f| f << "File six list text #{$$}" }
-    File.open("subdir/file7.markdown", "w+")             {|f| f << "File seven list text #{$$}" }
-    File.open("subdir/file8.txt", "w+")                  {|f| f << "File eight list text #{$$}" }
-    File.open("subdir/sub_subdir/file9.txt", "w+")       {|f| f << "File *nine* list text #{$$}" }
-    File.open("subdir/sub_subdir/file10", "w+")          {|f| f << "File ten list text #{$$}" }
-    File.open("subdir/sub_subdir/file11.markdown", "w+") {|f| f << "File eleven list text #{$$}" }
-    File.open("subdir/sub_subdir/file12.txt", "w+")      {|f| f << "File twelve list text #{$$}" }
+    File.open("file1.txt", "w+")                         {|f| f << "File *one* text #{$$}" }
+    File.open("file2", "w+")                             {|f| f << "File two text #{$$}" }
+    File.open("file3.markdown", "w+")                    {|f| f << "File three text #{$$}" }
+    File.open("file4.txt", "w+")                         {|f| f << "File four text #{$$}" }
+    File.open("subdir/file5.txt", "w+")                  {|f| f << "File *five* text #{$$}" }
+    File.open("subdir/file6", "w+")                      {|f| f << "File six text #{$$}" }
+    File.open("subdir/file7.markdown", "w+")             {|f| f << "File seven text #{$$}" }
+    File.open("subdir/file8.txt", "w+")                  {|f| f << "File eight text #{$$}" }
+    File.open("subdir/sub_subdir/file9.txt", "w+")       {|f| f << "File *nine* text #{$$}" }
+    File.open("subdir/sub_subdir/file10", "w+")          {|f| f << "File ten text #{$$}" }
+    File.open("subdir/sub_subdir/file11.markdown", "w+") {|f| f << "File eleven text #{$$}" }
+    File.open("subdir/sub_subdir/file12.txt", "w+")      {|f| f << "File twelve text #{$$}" }
 
 
     `git add file1.txt subdir/file5.txt subdir/sub_subdir/file11.markdown`
