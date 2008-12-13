@@ -45,5 +45,10 @@ describe "POSTing an update to an existing page resource" do
     noob.should_not =~ /\bwhaTever\b/
   end
 
+  it "fails if the page did not already exist" do
+    response = post "/file0", :input => "contents=Bleh%20this%20sucks&message=whatever"
+    response.status.should == 400
+  end
+
 end
 
