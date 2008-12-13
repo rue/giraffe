@@ -27,7 +27,10 @@ module Giraffe
 
       # Empty path is the home page.
       #
-      on(true, []) { request.redirect Giraffe::Conf.home, 301 }
+      on(true, []) {
+        Giraffe.wiki!
+        request.redirect Giraffe::Conf.home, 301
+      }
 
       # /c/ is a specific commit.
       #
