@@ -75,8 +75,7 @@ Giraffe::Conf.to_uri      = lambda {|file| file.chomp ".txt" }
 Giraffe::Conf.list_filter = lambda {|file| file =~ /\.txt$/ }
 
 # Resource files allowed
-RESOURCES = { "png"     => {:mime => "image/png"}
-          }
+RESOURCES = { "png"     => {:mime => "image/png"} } unless defined? RESOURCES
 
 Giraffe::Conf.resource_filter = lambda {|uri|
                                 uri.match /.+\.(.+)$/

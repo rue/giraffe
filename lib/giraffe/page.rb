@@ -120,13 +120,15 @@ module Giraffe
     def update!(content, comments)
       message = "Giraffe edited #{@object.path}."
 
-      message = "Giraffe #{action} #{@name}: #{comments}"
+      if comments and not comments.empty?
+        message = comments + "\n\n" + message
+      end
+
+      content.gsub! /\r\n/, "\n"
 
       @object.data = content + "\n"
       @object.add!
       @object.commit! message
-
-      Giraffe::Conf.wiki = Giraffe::Conf.wiki.HEAD
     end
 
     # Time of last commit.

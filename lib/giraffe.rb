@@ -53,8 +53,6 @@ module Giraffe
   end
 
   def self.wiki!(commit = "HEAD")
-    return @wiki if @wiki
-
     reload
     @wiki = Git::Repository.open Conf.wikiroot, commit
   end
