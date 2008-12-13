@@ -117,9 +117,8 @@ module Giraffe
 
     # Update file contents and commit the change.
     #
-    def update(content, comments)
-      comments = "<no comment by author>" if !comments or comments.empty?
-      action = if exists? then "edited" else "created" end
+    def update!(content, comments)
+      message = "Giraffe edited #{@object.path}."
 
       message = "Giraffe #{action} #{@name}: #{comments}"
 

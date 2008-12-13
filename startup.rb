@@ -22,7 +22,7 @@ module Giraffe
 
       # Posting to a Page updates it.
       #
-      #on(:post, true) { to :page }
+      on(:post, true) { to :page }
 
       # Empty path is the home page.
       #

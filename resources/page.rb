@@ -26,6 +26,19 @@ module Giraffe
         eruby.result binding
       }
 
+      # Updating page resource.
+      #
+      on(:post, [{:path => true}]) {
+        Giraffe.wiki!
+
+        name = captured.path.pop
+
+        @page = Giraffe::Page.from_uri captured.path, name
+        @page.update! query["contents"], query["message"]
+
+        redirect "/#{@page.uri}"
+      }
+
     end
 
   end
