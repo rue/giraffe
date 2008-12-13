@@ -16,9 +16,8 @@ module Giraffe
 
         @page = Giraffe::Page.from_uri captured.path, name
 
-#  redirect "/a/list/#{@page.uri}" if @page.directory?
-#
-#  if @page.exists? then show :show, @page.name else redirect "/e/" + @page.uri end
+        redirect "/l/#{@page.uri}" if @page.directory?
+        redirect "/e/#{@page.uri}" unless @page.exists?
 
         eruby = Erubis::Eruby.new File.read("views/page.erb")
         @content = eruby.result binding
