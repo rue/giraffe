@@ -6,9 +6,9 @@
 
   <div class="sidebar">
     <ul class="sub_nav">
-      <%if false %>
-      <li><a href="/<%= @page.name %>" class="nav_link">current</a></li>
-      <li><a href="/e/<%= @page.name %>" class="nav_link">edit</a></li>
+      <% if @page %>
+        <li><a href="/<%= @page.uri %>" class="nav_link">current</a></li>
+        <li><a href="/e/<%= @page.uri %>" class="nav_link">edit</a></li>
       <% end %>
     </ul>
   </div>
@@ -17,11 +17,11 @@
     <ul class="commits">
       <% @commits.each do |commit| %>
         <li class="commit">
-          <a href="/h/>/<%= commit.sha1 %>" title="View revision <%= commit.sha1 %>">
+          <a href="/<%= @uri %>/<%= commit.sha1 %>" title="View at revision <%= commit.sha1 %>">
             <%= commit.subject %>
           </a>
           <% unless commit == @commits.first %>
-          <a href="/d//<%= commit.sha1 %>">diff</a>
+          <a href="/d/<%= @uri %>/<%= commit.sha1 %>">diff</a>
           <% end %>
           <script type="text/javascript">
             document.write(time_ago_in_words(<%= commit.time.to_i * 1000 %>) + ' ago');

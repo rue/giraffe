@@ -14,15 +14,18 @@ module Giraffe
       on(:get, ["h", {:subdir => 0..-1}]) {
         Giraffe.wiki!
 
-        object = case captured.subdir.size
-                 when 0
-                   Giraffe.wiki
-                 when 1
-                   Giraffe::Page.from_uri([], captured.subdir.first).object
-                 else
-                   name = captured.subdir.pop
-                   Giraffe::Page.from_uri(captured.subdir, name).object
-                 end
+        object =  case captured.subdir.size
+                  # TODO: Allow "page" for root
+                  when 0
+                    Giraffe.wiki
+                  when 1
+                    @page = Giraffe::Page.from_uri [], captured.subdir.first
+                    @page.object
+                  else
+                    name = captured.subdir.pop
+                    @page = Giraffe::Page.from_uri captured.subdir, name
+                    @page.object
+                  end
 
         @commits = object.commits 30
 

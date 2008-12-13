@@ -49,6 +49,10 @@ module Giraffe
       #
       #on(:get, ["r", true]) { to :raw }
 
+      # /s/ is a search result.
+      #
+      #on(true, ["s", true]) { to :search }
+
     end
 
   end
