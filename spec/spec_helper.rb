@@ -88,6 +88,17 @@ Giraffe::Conf.resource_filter = lambda {|uri|
   ENV["GIRAFFE_CONF"] = @config
 end
 
+def add_commits()
+  Dir.chdir File.join(@repo, @wiki) do
+    File.open("file1.txt", "a+")                         {|f| f << "more file one" }
+    File.open("subdir/file5.txt", "a+")                  {|f| f << "file more five" }
+    File.open("subdir/sub_subdir/file9.txt", "a+")       {|f| f << "nine more file" }
+
+    `git add file1.txt subdir/file5.txt subdir/sub_subdir/file9.txt`
+    `git commit -m \"Fourth Commit\"`
+  end
+end
+
 def delete_good_repo()
   FileUtils.rm @config
   FileUtils.rm_r @repo

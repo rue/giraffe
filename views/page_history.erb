@@ -1,5 +1,5 @@
 <div id="section_info">
-  <h1>History of</h1>
+  <h1>History</h1>
 </div>
 
 <div id="page_history">
@@ -17,11 +17,11 @@
     <ul class="commits">
       <% @commits.each do |commit| %>
         <li class="commit">
-          <a href="/<%= @uri %>/<%= commit.sha1 %>" title="View at revision <%= commit.sha1 %>">
+          <a href="/<%= @page.uri %>?<%= commit.sha1 %>" title="View at revision <%= commit.sha1 %>">
             <%= commit.subject %>
           </a>
           <% unless commit == @commits.first %>
-          <a href="/d/<%= @uri %>/<%= commit.sha1 %>">diff</a>
+            <a href="/d/<%= commit.sha1 %>/<%= @page.uri %>">diff</a>
           <% end %>
           <script type="text/javascript">
             document.write(time_ago_in_words(<%= commit.time.to_i * 1000 %>) + ' ago');
