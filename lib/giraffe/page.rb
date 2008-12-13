@@ -1,3 +1,7 @@
+require "rubygems"
+  require "rdiscount"
+  require "rubypants"
+
 module Giraffe
 
   class Page
@@ -17,13 +21,13 @@ module Giraffe
 
     def self.from_uri(dir, name)
       name      = name
-      dir       = if dir == "." then [] else dir.split "/" end
+      dir       = dir
       uri       = if dir.empty? then name else File.join(dir, name) end
 
       filename  = Giraffe::Conf.to_filename.call name
       relative  = if dir.empty? then filename else File.join(dir, filename) end
 
-      object    = Giraffe::Conf.wiki.object_for relative
+      object    = Giraffe.wiki.object_for relative
 
       new name, dir, uri, object
     end

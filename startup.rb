@@ -16,7 +16,11 @@ module Giraffe
 
     class Map
 
-      # /l/ is listing of pages in repository
+      # By default the client is looking for a page.
+      #
+      on(:get, true) { to :page }
+
+      # /l/ is listing of pages in repository.
       #
       on(:get, ["l", 0..-1]) { to :list }
 
