@@ -21,13 +21,17 @@ module Giraffe
     #
     class Map
 
-      # Pages have no particular prefix.
+      # Normal pages have no particular prefix.
       #
       on(true, true) { to :page }
 
       # Empty path is the home page.
       #
       on(true, []) { request.redirect Giraffe::Conf.home, 301 }
+
+      # /c/ is a specific commit.
+      #
+      #on(:get, ["c", :commit]) { to: commit }
 
       # /d/ is a diff file between commits to a page.
       #
