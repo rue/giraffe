@@ -3,12 +3,12 @@ require "erubis"
 module Giraffe
   module Resources
 
-    class Raw
+    class Plaintext
       include Waves::Resources::Mixin
 
-      # Raw page content.
+      # /plaintext/ corresponding to page content.
       #
-      on(:get, ["r", {:path => true}]) {
+      on(:get, ["plaintext", {:path => true}]) {
         Giraffe.wiki!
 
         name = captured.path.pop

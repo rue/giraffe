@@ -56,9 +56,9 @@ module Giraffe
       #
       #on(:get, ["diff", true]) { to :diff }
 
-      # /raw/ text corresponding to a page's source.
+      # /plaintext/ corresponding to a page's source.
       #
-      on(true, ["raw", true]) { to :raw }
+      on(true, ["plaintext", true]) { to :plaintext }
 
       # /changes/ to the file, directory or repository as commits.
       #
