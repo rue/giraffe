@@ -25,13 +25,11 @@ require "fileutils"
 # Helpers
 
 def create_good_repo()
-  time = Time.now.to_i
-
   @proc   = $$
-  @repo   = "/tmp/giraffe_spec_repo_#{$$}_#{time}"
+  @repo   = "/tmp/giraffe_spec_repo_#{$$}"
   @wiki   = "weeky"
 
-  @config = "/tmp/giraffe_spec_config_#{$$}_#{time}"
+  @config = "/tmp/giraffe_spec_config_#{$$}"
 
   FileUtils.mkdir_p File.join(@repo, @wiki, "subdir", "sub_subdir")
 
