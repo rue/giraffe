@@ -159,3 +159,31 @@ describe "Subdirectory given as a page" do
   end
 
 end
+
+describe "Completely empty path" do
+
+  before :each do
+    create_good_repo
+
+    Waves << Giraffe
+  end
+
+  after :each do
+    delete_good_repo
+
+    Waves.applications.clear
+  end
+
+  it "redirects to the page named as Giraffe::Conf.home" do
+    response = get("")
+
+    response.status.should == 302
+    response.location.should == Giraffe::Conf.home
+
+    response = get("/")
+
+    response.status.should == 302
+    response.location.should == Giraffe::Conf.home
+  end
+
+end
