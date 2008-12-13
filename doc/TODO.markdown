@@ -4,6 +4,8 @@
  In Process
 ------------
 
+- Security. Need to ensure data going to Git is clean.
+
 - Diffs from old versions of page to current.
 - Commit view.
 - Patch file creation.
@@ -12,6 +14,7 @@
 - Configuration file placement/override.
 - Rackup for Waves.
 - Merging back and forth with upstream.
+- Clean up specs with XPATH usage.
 
 
  Definitely
