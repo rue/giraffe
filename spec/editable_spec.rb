@@ -17,7 +17,7 @@ describe "Existing editable page" do
 
   it "presents the current raw content of the page in an editable section" do
     inputs = Nokogiri::HTML.parse(get("/e/file1").body).css("#forms > form > textarea")
-    current = inputs.find {|i| i["name"] == "body" }
+    current = inputs.find {|i| i["name"] == "contents" }
 
     current.content.should =~ /^\s*File \*one\* text #{@proc}\s*$/
   end
@@ -65,7 +65,7 @@ describe "Nonexisting editable page" do
 
   it "presents an empty content input section" do
     inputs = Nokogiri::HTML.parse(get("/e/file0").body).css("#forms > form > textarea")
-    current = inputs.find {|i| i["name"] == "body" }
+    current = inputs.find {|i| i["name"] == "contents" }
 
     current.content.should == ""
   end
@@ -114,7 +114,7 @@ describe "Editable page in a subdirectory" do
 
   it "presents the page's current content in an editable field" do
     inputs = Nokogiri::HTML.parse(get("/e/subdir/file5").body).css("#forms > form > textarea")
-    current = inputs.find {|i| i["name"] == "body" }
+    current = inputs.find {|i| i["name"] == "contents" }
 
     current.content.should =~ /^\s*File \*five\* text #{@proc}\s*$/
   end
