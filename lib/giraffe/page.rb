@@ -41,12 +41,6 @@ module Giraffe
       @object = object
     end
 
-    # List any attachments for page.
-    #
-    def attachments()
-      false
-    end
-
     # Rendered page body.
     #
     def body()
@@ -129,6 +123,9 @@ module Giraffe
     end
 
     # Update file contents and commit the change.
+    #
+    # Git kindly already forgoes committing if the file has
+    # not actually changed.
     #
     def update!(content, comments)
       message = "Giraffe edited #{@object.path}."
