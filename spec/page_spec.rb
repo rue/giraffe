@@ -27,15 +27,15 @@ describe "Existing wiki page at wiki root" do
     links = Nokogiri::HTML.parse(get("/file1").body).css "#page_actions a"
 
     links.find {|link|
-      link["href"] == "/e/file1" and link.content =~ /edit/i
+      link["href"] == "/editable/file1" and link.content =~ /edit/i
     }.should_not == nil
 
     links.find {|link|
-      link["href"] == "/h/file1" and link.content =~ /history/i
+      link["href"] == "/changes/file1" and link.content =~ /history/i
     }.should_not == nil
 
     links.find {|link|
-      link["href"] == "/r/file1" and link.content =~ /raw/i
+      link["href"] == "/plaintext/file1" and link.content =~ /plaintext/i
     }.should_not == nil
   end
 
@@ -67,15 +67,15 @@ describe "Existing wiki page in a subdirectory" do
     links = Nokogiri::HTML.parse(get("/subdir/file5").body).css "#page_actions a"
 
     links.find {|link|
-      link["href"] == "/e/subdir/file5" and link.content =~ /edit/i
+      link["href"] == "/editable/subdir/file5" and link.content =~ /edit/i
     }.should_not == nil
 
     links.find {|link|
-      link["href"] == "/h/subdir/file5" and link.content =~ /history/i
+      link["href"] == "/changes/subdir/file5" and link.content =~ /history/i
     }.should_not == nil
 
     links.find {|link|
-      link["href"] == "/r/subdir/file5" and link.content =~ /raw/i
+      link["href"] == "/plaintext/subdir/file5" and link.content =~ /plaintext/i
     }.should_not == nil
   end
 
@@ -99,12 +99,12 @@ describe "Page which does not exist" do
     response = get("/file0")
 
     response.status.should == 303
-    response.location.should == "/e/file0"
+    response.location.should == "/editable/file0"
 
     response = get("/subdir/file0")
 
     response.status.should == 303
-    response.location.should == "/e/subdir/file0"
+    response.location.should == "/editable/subdir/file0"
   end
 
 end
@@ -127,12 +127,12 @@ describe "Page which exists in repo but does not conform to URI mapping (.txt he
     response = get("/file0")
 
     response.status.should == 303
-    response.location.should == "/e/file0"
+    response.location.should == "/editable/file0"
 
     response = get("/subdir/file0")
 
     response.status.should == 303
-    response.location.should == "/e/subdir/file0"
+    response.location.should == "/editable/subdir/file0"
   end
 
 end
@@ -155,7 +155,7 @@ describe "Subdirectory given as a page" do
     response = get("/subdir")
 
     response.status.should == 303
-    response.location.should == "/l/subdir"
+    response.location.should == "/pages/subdir"
   end
 
 end
