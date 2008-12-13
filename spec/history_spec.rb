@@ -43,6 +43,16 @@ describe "Page history for a top-level page" do
     links.last.content.should =~ /edit/i
   end
 
+  it "commits link to commit view" do
+    commits = Nokogiri::HTML.parse(get("/h/file1").body).css ".commit"
+    commits.size.should == 1
+
+    cs = Giraffe.wiki.object_for("file1.txt").commits
+
+    commits[0].css("a").size.should == 1
+    commits[0].css("a").first["href"].should == "/c/#{cs.first.sha1}"
+  end
+
   it "all older commits have a link to diff against most recent commit" do
     add_commits
 
@@ -103,6 +113,16 @@ describe "Page history for a page in a subdirectory" do
     links.last.content.should =~ /edit/i
   end
 
+  it "commits link to commit view" do
+    commits = Nokogiri::HTML.parse(get("/h/subdir/sub_subdir/file9").body).css ".commit"
+    commits.size.should == 1
+
+    cs = Giraffe.wiki.object_for("subdir/sub_subdir/file9.txt").commits
+
+    commits[0].css("a").size.should == 1
+    commits[0].css("a").first["href"].should == "/c/#{cs.first.sha1}"
+  end
+
   it "all older commits have a link to diff against most recent commit" do
     add_commits
 
@@ -146,5 +166,14 @@ describe "Page history for repository" do
   it "does not contain sidebar links" do
     links = Nokogiri::HTML.parse(get("/h").body).css ".sidebar a"
     links.size.should == 0
+  end
+
+  it "links commits to commit view" do
+    commits = Nokogiri::HTML.parse(get("/h").body).css ".commit"
+
+    cs = Giraffe.wiki.commits
+
+    commits[0].css("a").size.should == 1
+    commits[0].css("a").first["href"].should == "/c/#{cs.first.sha1}"
   end
 end
