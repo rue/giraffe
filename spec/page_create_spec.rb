@@ -42,5 +42,9 @@ describe "Creating a new page resource with PUT" do
     noob.should_not =~ /cool\s+#{@proc}\s+message/i
   end
 
+  it "fails if the page already existed" do
+    response = put "/file1", :input => "contents=Bleh%20this%20sucks&message=whatever"
+    response.status.should == 400
+  end
 end
 
