@@ -2,15 +2,11 @@
 
   <div id="page_actions">
     <ul>
-      <% if params[:commit] %>
-        <li><a href="/<%= @page.uri %>" class="nav_link" accesskey="c">current</a></li>
-      <% end %>
+      <li><a href="/<%= @page.uri %>" class="nav_link" accesskey="c">current</a></li>
       <li><a href="/e/<%= @page.uri %>" class="nav_link" accesskey="e">edit</a></li>
-
       <li><a href="/r/<%= @page.uri %>" class="nav_link" accesskey="r">raw</a></li>
-
       <li><a href="/h/<%= @page.uri %>" class="nav_link" accesskey="h">history</a></li>
-      <li><a href="/a/search?search=<%= @page.uri %>" class="nav_link">backlinks</a></li>
+      <li><a href="/s/<%= @page.uri %>" class="nav_link">backlinks</a></li>
     </ul>
   </div>
 

@@ -1,11 +1,12 @@
 <script language="javascript" type="text/javascript" src="/giraffe/scripts/sh_main.min.js"></script>
 <script language="javascript" type="text/javascript" src="/giraffe/scripts/sh_diff.min.js"></script>
+
 <link rel="stylesheet" href="/giraffe/css/sh_style.css" type="text/css" media="screen" />
 
 <h1>Diff of <a href="/<%= @page.uri %>"><%= @page.pretty_name.last %> against <%= @commit %></a></h1>
 
 <ul class="sub_nav">
-  <li><a href="/a/patch/<%= @page.uri %>/<%= params[:commit] %>" class="nav_link">patch file</a></li>
+  <li><a href="/p/<%= @page.uri %>/" class="nav_link">patch file</a></li>
   <li><a href="/h/<%= @page.uri %>" class="nav_link">history</a></li>
   <li><a href="/e/<%= @page.uri %>" class="nav_link">edit</a></li>
 </ul>
