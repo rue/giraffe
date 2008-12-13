@@ -37,7 +37,7 @@ module Giraffe
 
       application do
         use ::Rack::ShowExceptions
-        use ::Rack::Static, :urls => ["/giraffe"], :root => "public"
+        use ::Rack::Static, :urls => ["/giraffe", "/favicon.ico"], :root => "public"
 
         run ::Waves::Dispatchers::Default.new
       end
