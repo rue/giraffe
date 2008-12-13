@@ -47,3 +47,4 @@ describe "Raw page resource in a subirectory" do
   end
 
 end
+

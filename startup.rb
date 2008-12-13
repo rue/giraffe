@@ -47,7 +47,7 @@ module Giraffe
 
       # /r/ is the raw text of a page.
       #
-      #on(:get, ["r", true]) { to :raw }
+      on(true, ["r", true]) { to :raw }
 
       # /s/ is a search result.
       #
