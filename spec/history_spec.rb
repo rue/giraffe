@@ -60,12 +60,23 @@ describe "Page history for a top-level page" do
     commits.size.should == 2
 
     commits[0].css("a").size.should == 1
-    commits[1].css("a").size.should == 2
+    commits[1].css("a").size.should == 3
 
     cs = Giraffe.wiki.object_for("file1.txt").commits
 
-    commits[1].css("a").last["href"].should == "/d/#{cs[1].sha1}/file1"
-    commits[1].css("a").last.content.should =~ /diff/i
+    commits[1].css("a")[1]["href"].should == "/d/#{cs[1].sha1}/file1"
+    commits[1].css("a")[1].content.should =~ /diff/i
+  end
+
+  it "contains link to view page at commit for older commits" do
+    add_commits
+
+    commits = Nokogiri::HTML.parse(get("/h/file1").body).css ".commit"
+
+    cs = Giraffe.wiki.object_for("file1.txt").commits
+
+    commits[1].css("a")[2]["href"].should == "/file1?#{cs[1].sha1}"
+    commits[1].css("a")[2].content.should =~ /view as it was/i
   end
 end
 
@@ -130,12 +141,12 @@ describe "Page history for a page in a subdirectory" do
     commits.size.should == 2
 
     commits[0].css("a").size.should == 1
-    commits[1].css("a").size.should == 2
+    commits[1].css("a").size.should == 3
 
     cs = Giraffe.wiki.object_for("subdir/sub_subdir/file9.txt").commits
 
-    commits[1].css("a").last["href"].should == "/d/#{cs[1].sha1}/subdir/sub_subdir/file9"
-    commits[1].css("a").last.content.should =~ /diff/i
+    commits[1].css("a")[1]["href"].should == "/d/#{cs[1].sha1}/subdir/sub_subdir/file9"
+    commits[1].css("a")[1].content.should =~ /diff/i
   end
 
 end
