@@ -2,10 +2,8 @@
 
   <div id="page_edit_actions">
     <ul>
-      <li>
-        <a href="/<%= @page.uri %>" class="nav_link" title="Go to page without editing" accesskey="b">back</a>
-      </li>
       <% if @page.exists? %>
+        <li> <a href="/<%= @page.uri %>" class="nav_link" title="Go to page without editing" accesskey="b">back</a> </li>
         <li><a href="/h/<%= @page.uri %>" class="nav_link" title="View page history" accesskey="h">history</a></li>
       <% end %>
     </ul>
@@ -27,7 +25,7 @@
 
     <div id="forms">
       <p>Markdown syntax used. No WikiLinks, just use [description](/some/page).</p>
-      <form method="post" action="/e/<%= @page.uri %>">
+      <form method="post" action="/<%= @page.uri %>">
         <textarea name="body" id="edit_textarea" accesskey="t"><%= @page.escaped_raw_body %></textarea>
         <p>Edit summary:</p>
         <textarea name="message" rows="4" id="message_textarea" accesskey="m"></textarea>
