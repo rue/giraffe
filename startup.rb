@@ -34,7 +34,7 @@ module Giraffe
 
       # /e/ is an editable page.
       #
-      #on(:get, ["e", true]) { to :editable }
+      on(:get, ["e", true]) { to :editable }
 
       # /h/ is history of page, subdirectory or repository.
       #
