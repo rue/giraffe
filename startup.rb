@@ -75,6 +75,9 @@ module Giraffe
     class Development
       reloadable [Resources]
 
+      host  "0.0.0.0"
+      port  8080
+
       application do
         use ::Rack::ShowExceptions
         use ::Rack::Static, :urls => ["/giraffe", "/favicon.ico"], :root => "public"
