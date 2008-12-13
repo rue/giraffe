@@ -14,19 +14,20 @@ module Giraffe
 
     auto_load true, :directories => "resources"
 
+    # First-tier resource mapper.
+    #
+    # Requests are forwarded to the correct Resource, which
+    # then deals with accepted methods and further resolution.
+    #
     class Map
 
-      # Pages have no path.
+      # Pages have no particular prefix.
       #
-      on(:get, true) { to :page }
-
-      # Posting to a Page updates it.
-      #
-      on(:post, true) { to :page }
+      on(true, true) { to :page }
 
       # Empty path is the home page.
       #
-      on(:get, []) { redirect Giraffe::Conf.home }
+      on(true, []) { redirect Giraffe::Conf.home }
 
       # /d/ is a diff file between commits to a page.
       #
@@ -34,7 +35,7 @@ module Giraffe
 
       # /e/ is an editable page.
       #
-      on(:get, ["e", true]) { to :editable }
+      on(true, ["e", true]) { to :editable }
 
       # /h/ is history of page, subdirectory or repository.
       #
@@ -42,7 +43,7 @@ module Giraffe
 
       # /l/ is listing of pages in repository.
       #
-      on(:get, ["l", 0..-1]) { to :list }
+      on(true, ["l", 0..-1]) { to :list }
 
       # /r/ is the raw text of a page.
       #
