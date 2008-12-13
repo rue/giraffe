@@ -64,9 +64,13 @@ module Giraffe
       #
       on(true, ["changes", 0..-1]) { to :changes }
 
-      # /search/ results for term given in the path.
+      # /grep/ for results for term given in the path.
       #
-      on(true, ["search", true]) { to :search }
+      on(true, ["grep", true]) { to :grep }
+
+      # /s?for=term forwards to /grep/term? for fun and profit.
+      #
+      on(true, "s") { request.redirect "/grep/#{query["for"}", 303 }
 
       # /pages/ in the repository or a subdirectory.
       #

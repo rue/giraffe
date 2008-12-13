@@ -31,11 +31,11 @@
         <div id="navigation">
           <ul>
             <li><a href="<%= Giraffe::Conf.home %>" title="Go to home page" accesskey="i">home</a></li>
-            <li><a href="/h"  title="View wiki history" accesskey="y">history</a></li>
-            <li><a href="/l"  title="List of pages" accesskey="l">pages</a></li>
+            <li><a href="/changes"  title="View wiki history" accesskey="y">history</a></li>
+            <li><a href="/pages"  title="List of pages" accesskey="l">pages</a></li>
             <li>
               <form method="GET" action="/s" class="search" accesskey="s">
-                <input type="text" name="search" size="15" value="search" onfocus="clearField(this);" />
+                /<input type="text" name="for" size="15" value="search" onfocus="clearField(this);" />/
               </form>
             </li>
           </ul>

@@ -3,12 +3,12 @@ require "erubis"
 module Giraffe
   module Resources
 
-    class Search
+    class Grep
       include Waves::Resources::Mixin
 
-      # Search results.
+      # /grep/ for term in wiki.
       #
-      on(:get, ["s", :term]) {
+      on(:get, ["grep", :term]) {
         @search = captured.term
 
         # TODO: May need further guarding here.
@@ -17,18 +17,11 @@ module Giraffe
                       Giraffe::Conf.list_filter.call obj.name
                     }
 
-        eruby = Erubis::Eruby.new File.read("views/search.erb")
+        eruby = Erubis::Eruby.new File.read("views/grep.erb")
         @content = eruby.result binding
 
         eruby = Erubis::Eruby.new File.read("views/layout.erb")
         eruby.result binding
-      }
-
-      # Empty search.
-      #
-      on(:get, ["s"]) {
-        response.status = 400
-        "You must include some search term(s)! E.g. /s/term?"
       }
 
     end
