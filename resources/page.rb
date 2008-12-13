@@ -41,6 +41,7 @@ module Giraffe
         name = captured.path.pop
 
         @page = Giraffe::Page.from_uri captured.path, name
+        response.status = 400 and return "400 Bad Request" if @page.exists?
         @page.create! query["contents"], query["message"]
 
         redirect "/#{@page.uri}"
@@ -54,6 +55,7 @@ module Giraffe
         name = captured.path.pop
 
         @page = Giraffe::Page.from_uri captured.path, name
+        response.status = 400 and return "400 Bad Request" unless @page.exists?
         @page.update! query["contents"], query["message"]
 
         redirect "/#{@page.uri}"
