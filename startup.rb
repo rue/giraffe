@@ -39,7 +39,7 @@ module Giraffe
 
       # Normal pages have no particular prefix.
       #
-      on(true, ["wiki", true]) { to :page }
+      on(true, true) { to :page }
 
       # Empty path is the home page.
       #
@@ -70,11 +70,18 @@ module Giraffe
 
       # /s?for=term forwards to /grep/term? for fun and profit.
       #
-      on(true, "s") { request.redirect "/grep/#{query["for"]}", 303 }
+      on(true, "s") {
+        if query["for"] and not query["for"].empty?
+          request.redirect "/grep/#{query["for"]}", 303
+        end
+
+        response.status = 400
+        return "Search term was empty!"
+      }
 
       # /pages/ in the repository or a subdirectory.
       #
-      on(true, ["pages", 0..-1]) { to :list }
+      on(true, ["pages", 0..-1]) { to :pages }
 
       # /editable/ page that can be used to update the real page.
       #

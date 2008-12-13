@@ -1,5 +1,8 @@
 require "erubis"
 
+require "rubygems"
+  require "rack/utils"
+
 module Giraffe
   module Resources
 
@@ -8,13 +11,12 @@ module Giraffe
 
       # /grep/ for term in wiki.
       #
-      # TODO: Proper regexp searching.
+      # TODO: Probably horribly unsafe.
       #
       on(:get, ["grep", :term]) {
-        @search = captured.term
+        @search = Rack::Utils.escape captured.term
 
         # TODO: May need further guarding here.
-        # TODO: Definitely need to unfuck the URI-encoding (if any.)
         @matches =  Giraffe.wiki!.grep(@search).select {|obj, match|
                       Giraffe::Conf.list_filter.call obj.name
                     }

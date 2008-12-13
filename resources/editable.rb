@@ -8,7 +8,7 @@ module Giraffe
 
       # Editable page in repository.
       #
-      on(:get, ["e", {:path => true}]) {
+      on(:get, ["editable", {:path => true}]) {
         Giraffe.wiki!
 
         name = captured.path.pop

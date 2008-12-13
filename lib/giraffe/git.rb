@@ -136,7 +136,7 @@ module Git
     # Case-insensitive, only considers full words.
     #
     def grep(word)
-      git("grep --ignore-case --word-regexp --extended-regexp #{word}").chomp.split("\n").map {|match|
+      git("grep --ignore-case --word-regexp --extended-regexp \"#{word}\"").chomp.split("\n").map {|match|
         name, line = match.split /:\s*/, 2
 
         if name =~ /binary file (.+) matches/i

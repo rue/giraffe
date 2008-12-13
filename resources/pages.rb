@@ -4,10 +4,10 @@ require "erubis"
 module Giraffe
   module Resources
 
-    class List
+    class Pages
       include Waves::Resources::Mixin
 
-      # /l/ is listing of pages in repository.
+      # /pages/ in repository or subdirectory.
       #
       # By default, HEAD is used. Optionally a full or partial commit
       # hash may be given as the second component, in which case the
@@ -16,18 +16,16 @@ module Giraffe
       # Lastly a subdirectory may be given, in which case only the tree
       # down from it is shown.
       #
-      on(:get, ["l", {:subdir => 0..-1}]) {
+      on(:get, ["pages", {:subdir => 0..-1}]) {
         Giraffe.wiki!
 
-        @objects =  if captured.subdir
+        @objects =  unless captured.subdir.empty?
                       Giraffe.wiki.object_for(captured.subdir.join "/").objects
                     else
                       Giraffe.wiki.objects
                     end
 
-        @objects.map {|obj| obj.name }.join "\n"
-
-        eruby = Erubis::Eruby.new File.read("views/list.erb")
+        eruby = Erubis::Eruby.new File.read("views/pages.erb")
         @content = eruby.result binding
 
         eruby = Erubis::Eruby.new File.read("views/layout.erb")

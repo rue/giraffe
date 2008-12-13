@@ -23,8 +23,8 @@ module Giraffe
 
         @page = Giraffe::Page.from_uri captured.path, name
 
-        request.redirect "/l/#{@page.uri}", 303 if @page.directory?
-        request.redirect "/e/#{@page.uri}", 303 unless @page.exists?
+        request.redirect "/pages/#{@page.uri}", 303 if @page.directory?
+        request.redirect "/editable/#{@page.uri}", 303 unless @page.exists?
 
         eruby = Erubis::Eruby.new File.read("views/page.erb")
         @content = eruby.result binding
