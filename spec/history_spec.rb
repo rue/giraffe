@@ -31,6 +31,17 @@ describe "Page history for a top-level page" do
     }.should_not == nil
   end
 
+  it "contains link to current resource and to editable resource" do
+    links = Nokogiri::HTML.parse(get("/h/file1").body).css ".sidebar a"
+
+    links.size.should == 2
+
+    links.first["href"].should == "/file1"
+    links.first.content.should =~ /current/i
+
+    links.last["href"].should == "/e/file1"
+    links.last.content.should =~ /edit/i
+  end
 end
 
 
@@ -65,4 +76,45 @@ describe "Page history for a page in a subdirectory" do
     }.should_not == nil
   end
 
+  it "contains link to current resource and to editable resource" do
+    links = Nokogiri::HTML.parse(get("/h/subdir/sub_subdir/file9").body).css ".sidebar a"
+
+    links.size.should == 2
+
+    links.first["href"].should == "/subdir/sub_subdir/file9"
+    links.first.content.should =~ /current/i
+
+    links.last["href"].should == "/e/subdir/sub_subdir/file9"
+    links.last.content.should =~ /edit/i
+  end
+
+end
+
+describe "Page history for repository" do
+  before :each do
+    create_good_repo
+
+    Waves << Giraffe
+  end
+
+  after :each do
+    delete_good_repo
+
+    Waves.applications.clear
+  end
+
+  it "shows all commits affecting wiki in reverse order" do
+    commits = Nokogiri::HTML.parse(get("/h").body).css ".commit"
+
+    commits.size.should == 3
+
+    commits[0].css("a").first.content.should =~ /Third Commit/
+    commits[1].css("a").first.content.should =~ /Second Commit/
+    commits[2].css("a").first.content.should =~ /Initial Commit/
+  end
+
+  it "does not contain sidebar links" do
+    links = Nokogiri::HTML.parse(get("/h").body).css ".sidebar a"
+    links.size.should == 0
+  end
 end
