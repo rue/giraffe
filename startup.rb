@@ -49,9 +49,9 @@ module Giraffe
       #
       on(true, ["r", true]) { to :raw }
 
-      # /s/ is a search result.
+      # /s is a search result.
       #
-      #on(true, ["s", true]) { to :search }
+      on(true, ["s", 0..-1]) { to :search }
 
     end
 
