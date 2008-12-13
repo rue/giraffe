@@ -111,25 +111,16 @@ module Git
 
   # Directory that git knows about.
   #
+  # Trees may contain other objects, loaded as necessary.
+  #
   class Tree < Object
-
-    attr_reader :objects
 
     # Populate a tree from the given path.
     #
     def initialize(repo, name, path, parent, sha1, mode)
       super
-
-      @objects =  git("ls-tree #{@repo.commit}").split("\n").map {|entry|
-                    mode, type, sha1, name = entry.split /\s+/, 4
-                    next if type == "commit"
-
-                    path = if @path.empty? then name else File.join(@path, name) end
-
-                    type = Git.const_get(type.capitalize)
-                    type.new repo, name, path, self, sha1, mode
-                  }.compact
     end
+
 
     # Search for word in repo.
     #
@@ -148,6 +139,22 @@ module Git
       }
     end
 
+
+    # Contained objects
+    #
+    def objects()
+      @objects ||=  git("ls-tree #{@repo.commit}").split("\n").map {|entry|
+                      mode, type, sha1, name = entry.split /\s+/, 4
+                      next if type == "commit"
+
+                      path = if @path.empty? then name else File.join(@path, name) end
+
+                      type = Git.const_get(type.capitalize)
+                      type.new repo, name, path, self, sha1, mode
+                    }.compact
+    end
+
+
     # Locate object directly by path or return nil.
     #
     def object_for(path)
@@ -156,6 +163,7 @@ module Git
         tree.objects.find {|obj| obj.name == name }
       }
     end
+
 
     # Use the path as the repo to work with.
     #

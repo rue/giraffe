@@ -5,7 +5,7 @@
 ------------
 
 - Security. Need to ensure data going to Git is clean.
-
+- Logging.
 - Diffs from old versions of page to current.
 - Commit view.
 - Patch file creation.
