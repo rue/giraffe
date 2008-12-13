@@ -4,26 +4,27 @@
  In Process
 ------------
 
-- Reverting commits.
-- Disallow creating pages that would shadow directories.
+- Diffs from old versions of page to current.
+- Commit view.
+- Patch file creation.
+- Commit hashes as modifiers to resources.
+- Simple basic customizability of UI.
+- Configuration file placement/override.
+- Rackup for Waves.
+- Merging back and forth with upstream.
 
 
  Definitely
 ------------
 
-- Incorporate ditz or other Git-based ticket system.
-- TESTS!! (Probably incorporating Aslak Hellesoy's first.)
 - Use user info when committing if authentication enabled.
-- Refine XHTML, easier "branding" through configuration.
-- Customise commit messages etc.
-- Restricting log output e.g. to start from some defined commit.
+- Issue tracker.
 
 
  Probably
 ----------
 
-- Helpers to link to tickets and source code.
-- Add branching support back.
+- Reverting commits.
 - Deleting and renaming pages.
 
 
@@ -31,8 +32,7 @@
 -------
 
 - Creating subdirectories.
-- More options for mapping URLs to the filesystem.
-- Rethink the URL resource "namespacing."
 - Real user accounts, possibly even somehow discerned from Git.
-- Read-only, no Git required.
+- Restricting log output e.g. to start from some defined commit.
+- Add branching support back.
 
