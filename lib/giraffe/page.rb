@@ -54,6 +54,32 @@ module Giraffe
       @body ||= RubyPants.new(RDiscount.new(raw_body).to_html).to_html
     end
 
+    # Create file and commit it.
+    #
+    def create!(content, comments)
+      # Set up a backend object to fill in.
+      dir = Giraffe.wiki.object_for @dir.join("/")
+      name = Giraffe::Conf.to_filename.call @name
+
+      path = if dir.path.empty? then name else File.join(dir.path, name) end
+
+      @object = Git::Blob.new dir.repo, name,
+                              path, dir, "no sha1", 0
+
+      # Then normal commit.
+      message = "Giraffe created #{@object.path}."
+
+      if comments and not comments.empty?
+        message = comments + "\n\n" + message
+      end
+
+      content.gsub! /\r\n/, "\n"
+
+      @object.data = content + "\n"
+      @object.add!
+      @object.commit! message
+    end
+
     # Whether this entity corresponds to a directory.
     #
     # TODO:   Needs work. Currently if any page name, when lowercased,
@@ -79,19 +105,6 @@ module Giraffe
       end
 
       @exists
-    end
-
-    # Set up a blank to use as the backend object.
-    #
-    def make!()
-      dir = Giraffe::Conf.wiki.object_for @dir.join("/")
-      name = Giraffe::Conf.to_filename.call @name
-
-      path = if dir.path.empty? then name else File.join(dir.path, name) end
-
-      @object = Git::Blob.new dir.repo, name,
-                              path, dir, "no sha1", 0
-      self
     end
 
     # Slightly more humane file path.

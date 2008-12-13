@@ -4,10 +4,17 @@ require "erubis"
 module Giraffe
   module Resources
 
+    # Wiki page.
+    #
+    # Pages may be viewed, updated and created. The latter
+    # two usually occur via Editable resources.
+    #
+    # @see Editable.
+    #
     class Page
       include Waves::Resources::Mixin
 
-      # Page in repository.
+      # View wiki page.
       #
       on(:get, [{:path => true}]) {
         Giraffe.wiki!
@@ -26,7 +33,20 @@ module Giraffe
         eruby.result binding
       }
 
-      # Updating page resource.
+      # Create new wiki page.
+      #
+      on(:put, [{:path => true}]) {
+        Giraffe.wiki!
+
+        name = captured.path.pop
+
+        @page = Giraffe::Page.from_uri captured.path, name
+        @page.create! query["contents"], query["message"]
+
+        redirect "/#{@page.uri}"
+      }
+
+      # Update existing page resource.
       #
       on(:post, [{:path => true}]) {
         Giraffe.wiki!
