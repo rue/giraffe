@@ -26,7 +26,7 @@ module Giraffe
 
       # Empty path is the home page.
       #
-      #on(:get, []) { redirect Giraffe::Conf.home }
+      on(:get, []) { redirect Giraffe::Conf.home }
 
       # /d/ is a diff file between commits to a page.
       #
