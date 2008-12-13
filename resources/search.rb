@@ -9,8 +9,11 @@ module Giraffe
       # Search results.
       #
       on(:get, ["s", :term]) {
+        @search = captured.term
+
         # TODO: May need further guarding here.
-        @matches =  Giraffe.wiki!.grep(captured.term).select {|obj, match|
+        # TODO: Definitely need to unfuck the URI-encoding (if any.)
+        @matches =  Giraffe.wiki!.grep(@search).select {|obj, match|
                       Giraffe::Conf.list_filter.call obj.name
                     }
 

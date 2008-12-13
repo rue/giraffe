@@ -35,6 +35,9 @@ module Giraffe
 
       # Create new wiki page.
       #
+      # NOTE: The PUT request is simulated using a hidden input field,
+      #       but it works fine for our purposes. See views/editable.erb.
+      #
       on(:put, [{:path => true}]) {
         Giraffe.wiki!
 
