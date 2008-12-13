@@ -25,7 +25,11 @@
 
     <div id="forms">
       <p>Markdown syntax used. No WikiLinks, just use [description](/some/page).</p>
-      <form method="post" action="/<%= @page.uri %>">
+      <% if @page.exists? %>
+        <form method="post" action="/<%= @page.uri %>">
+      <% else %>
+        <form method="put" action="/<%= @page.uri %>">
+      <% end %>
         <textarea name="contents" id="edit_textarea" accesskey="t"><%= @page.escaped_raw_body %></textarea>
         <p>Edit summary:</p>
         <textarea name="message" rows="4" id="message_textarea" accesskey="m"></textarea>

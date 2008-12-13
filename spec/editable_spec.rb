@@ -82,10 +82,10 @@ describe "Nonexisting editable page" do
     inputs.find {|i| i["type"] == "submit" }.should_not == nil
   end
 
-  it "will POST to the page resource" do
+  it "will PUT to the page resource" do
     form = Nokogiri::HTML.parse(get("/e/file0").body).css("#forms > form").first
 
-    form["method"].should == "post"
+    form["method"].should == "put"
     form["action"].should == "/file0"
   end
 
