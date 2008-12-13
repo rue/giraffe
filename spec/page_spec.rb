@@ -98,12 +98,12 @@ describe "Page which does not exist" do
   it "redirects to editable page of the same name" do
     response = get("/file0")
 
-    response.status.should == 302
+    response.status.should == 303
     response.location.should == "/e/file0"
 
     response = get("/subdir/file0")
 
-    response.status.should == 302
+    response.status.should == 303
     response.location.should == "/e/subdir/file0"
   end
 
@@ -126,12 +126,12 @@ describe "Page which exists in repo but does not conform to URI mapping (.txt he
   it "redirects to editable page of the same name that conforms to URI mapping" do
     response = get("/file0")
 
-    response.status.should == 302
+    response.status.should == 303
     response.location.should == "/e/file0"
 
     response = get("/subdir/file0")
 
-    response.status.should == 302
+    response.status.should == 303
     response.location.should == "/e/subdir/file0"
   end
 
@@ -154,7 +154,7 @@ describe "Subdirectory given as a page" do
   it "redirects to page list for that directory" do
     response = get("/subdir")
 
-    response.status.should == 302
+    response.status.should == 303
     response.location.should == "/l/subdir"
   end
 
@@ -177,12 +177,12 @@ describe "Completely empty path" do
   it "redirects to the page named as Giraffe::Conf.home" do
     response = get("")
 
-    response.status.should == 302
+    response.status.should == 301
     response.location.should == Giraffe::Conf.home
 
     response = get("/")
 
-    response.status.should == 302
+    response.status.should == 301
     response.location.should == Giraffe::Conf.home
   end
 
