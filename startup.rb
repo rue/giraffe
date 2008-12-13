@@ -70,7 +70,7 @@ module Giraffe
 
       # /s?for=term forwards to /grep/term? for fun and profit.
       #
-      on(true, "s") { request.redirect "/grep/#{query["for"}", 303 }
+      on(true, "s") { request.redirect "/grep/#{query["for"]}", 303 }
 
       # /pages/ in the repository or a subdirectory.
       #

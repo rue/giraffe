@@ -8,7 +8,7 @@
     <ul class="sub_nav">
       <% if @page %>
         <li><a href="/<%= @page.uri %>" class="nav_link">current</a></li>
-        <li><a href="/e/<%= @page.uri %>" class="nav_link">edit</a></li>
+        <li><a href="/editable/<%= @page.uri %>" class="nav_link">edit</a></li>
       <% end %>
     </ul>
   </div>
@@ -17,11 +17,11 @@
     <ul class="commits">
       <% @commits.each do |commit| %>
         <li class="commit">
-          <a href="/c/<%= commit.sha1 %>" title="View commit">
+          <a href="/commit/<%= commit.sha1 %>" title="View commit">
             <%= commit.subject %>
           </a>
           <% unless commit == @commits.first or !@page %>
-            <a href="/d/<%= commit.sha1 %>/<%= @page.uri %>" title="Diff against current">diff</a>
+            <a href="/diff/<%= commit.sha1 %>/<%= @page.uri %>" title="Diff against current">diff</a>
             <a href="/<%= @page.uri %>?<%= commit.sha1 %>" title="View old version">view as it was</a>
           <% end %>
           <script type="text/javascript">

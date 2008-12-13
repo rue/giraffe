@@ -4,7 +4,7 @@
     <ul>
       <% if @page.exists? %>
         <li> <a href="/<%= @page.uri %>" class="nav_link" title="Go to page without editing" accesskey="b">back</a> </li>
-        <li><a href="/h/<%= @page.uri %>" class="nav_link" title="View page history" accesskey="h">history</a></li>
+        <li><a href="/changes/<%= @page.uri %>" class="nav_link" title="View change history" accesskey="h">history</a></li>
       <% end %>
     </ul>
   </div>

@@ -8,6 +8,8 @@ module Giraffe
 
       # /grep/ for term in wiki.
       #
+      # TODO: Proper regexp searching.
+      #
       on(:get, ["grep", :term]) {
         @search = captured.term
 
