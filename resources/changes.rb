@@ -3,15 +3,17 @@ require "erubis"
 module Giraffe
   module Resources
 
-    class History
+    class Changes
       include Waves::Resources::Mixin
 
-      # /h/ is history of objects.
+      # /changes/ to object.
       #
       # Object may be a single page, a directory or the repository.
-      # By default the last 30 are shown.
+      # The last 30 commits are shown.
       #
-      on(:get, ["h", {:subdir => 0..-1}]) {
+      # TODO: Make commit count configurable.
+      #
+      on(:get, ["changes", {:subdir => 0..-1}]) {
         Giraffe.wiki!
 
         object =  case captured.subdir.size
@@ -29,7 +31,7 @@ module Giraffe
 
         @commits = object.commits 30
 
-        eruby = Erubis::Eruby.new File.read("views/history.erb")
+        eruby = Erubis::Eruby.new File.read("views/changes.erb")
         @content = eruby.result binding
 
         eruby = Erubis::Eruby.new File.read("views/layout.erb")
