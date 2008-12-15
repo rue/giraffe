@@ -1,0 +1,3 @@
+[submodule "waves"]
+	path = waves
+	url = git://github.com/rue/waves.git
