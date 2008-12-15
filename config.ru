@@ -1,15 +1,19 @@
+# Default rackup script to run Giraffe on Waves.
+#
+# Use this only if you have a running server already.
+#
 
-lib_dir = File.join(File.dirname(__FILE__), "lib")
-$LOAD_PATH.unshift(lib_dir) if File.directory?(lib_dir)
+WAVES = ENV["WAVES"] || File.join(File.dirname(__FILE__), "waves", "lib")
 
-require "sinatra/lib/sinatra"
+$LOAD_PATH.unshift WAVES
 
-Sinatra::Application.default_options.merge!(
-  :run => false,
-  :env => ENV['RACK_ENV'],
-  :raise_errors => true
-)
+require "waves"
+require "waves/runtime/rackup"
 
-require 'giraffe'
+# Rack configuration is defined along with the rest
+# of it in the application itself. No point moving
+# it here.
+#
+run Waves::Rackup.load(:startup => "run_giraffe_run.rb")
 
-run Sinatra.application
+>>>>>>> Rackup file. Requires the modified Waves (included as a submodule.):config.ru
