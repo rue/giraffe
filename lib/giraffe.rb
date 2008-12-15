@@ -4,61 +4,76 @@ require "giraffe/page"
 require "ostruct"
 require "pathname"
 
+
 module Giraffe
 
-  Conf = OpenStruct.new
+  class << self
 
-  # TODO: Move statics out of method
+    # Configuration
+    #
+    attr_accessor :wikiroot,
+                  :reporoot,
+
+                  :to_filename,
+                  :to_uri,
+
+                  :list_filter,
+                  :resource_filter,
+
+                  :home,
+
+                  :authenticator,
+
+                  :itself
+
+    # Wiki object
+    #
+    attr_reader   :wiki
+
+  end
+
+  # Default configuration
+  #
   def self.reload()
     # No authentication by default.
-    Conf.authenticator = nil
+    self.authenticator    = nil
 
     # Root of wiki pages and root of the repository if needed.
-    Conf.wikiroot      = File.join ENV["HOME"], "wiki"
-    Conf.reporoot      = Conf.wikiroot
+    self.wikiroot         = File.join ENV["HOME"], "wiki"
+    self.reporoot         = wikiroot
 
     # Page name <-> filesystem mapping (none by default).
-    Conf.to_filename   = lambda {|uri| uri }
-    Conf.to_uri        = lambda {|file| file }
+    self.to_filename      = lambda {|uri| uri }
+    self.to_uri           = lambda {|file| file }
 
-    Conf.list_filter   = lambda {|file| true }
-
-    Conf.resource_filter = lambda {|uri| false }
-
+    self.list_filter      = lambda {|file| true }
+    self.resource_filter  = lambda {|uri| false }
 
     # Wiki setup.
-    Conf.home          = "/Home"
+    self.home             = "/Home"
 
     # Some type of a link to software version used.
-    Conf.itself        = (`git remote -v` =~ (/origin\s+git@(.+?)\.git/) && "http://#{$1.sub ":", "/"}/") ||
-                            "http://github.com/rue/giraffe/"
+    self.itself           = (`git remote -v` =~ (/origin\s+git@(.+?)\.git/) && "http://#{$1.sub ":", "/"}/") ||
+                             "http://github.com/rue/giraffe/"
 
-    # Load user config overrides if any, rest of ARGV goes unchanged.
+# Load user config overrides if any, rest of ARGV goes unchanged.
+
     load(ENV["GIRAFFE_CONF"] || "config.rb")
 
     # Expand all paths just in case.
-    Conf.wikiroot      = File.expand_path Conf.wikiroot
-    Conf.reporoot      = File.expand_path Conf.reporoot
-
-    # Compute relative path to wiki root if necessary.
-    Conf.relative      = if Conf.wikiroot != Conf.reporoot
-                              wiki = Pathname.new Conf.wikiroot
-                              repo = Pathname.new Conf.reporoot
-
-                              # TODO: Check that wiki is a child of repo
-                              wiki.relative_path_from(repo).to_s
-                            else
-                              ""
-                            end
+    self.wikiroot      = File.expand_path wikiroot
+    self.reporoot      = File.expand_path reporoot
   end
 
+
+  # Load the wiki.
+  #
+  # By default loads HEAD but can be given a commit
+  # to load from instead.
+  #
   def self.wiki!(commit = "HEAD")
     reload
-    @wiki = Git::Repository.open Conf.wikiroot, commit
-  end
-
-  def self.wiki()
-    @wiki
+    @wiki = Git::Repository.open wikiroot, commit
   end
 
 end

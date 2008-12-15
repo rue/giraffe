@@ -10,7 +10,7 @@ module Giraffe
     attr_reader :object
 
     def self.from_git(object)
-      name  = Giraffe::Conf.to_uri.call object.name
+      name  = Giraffe.to_uri.call object.name
       dir   = File.dirname(object.path).split "/"
       dir   = [] if dir == ["."]
 
@@ -24,7 +24,7 @@ module Giraffe
       dir       = dir
       uri       = if dir.empty? then name else File.join(dir, name) end
 
-      filename  = Giraffe::Conf.to_filename.call name
+      filename  = Giraffe.to_filename.call name
       relative  = if dir.empty? then filename else File.join(dir, filename) end
 
       object    = Giraffe.wiki.object_for relative
@@ -53,7 +53,7 @@ module Giraffe
     def create!(content, comments)
       # Set up a backend object to fill in.
       dir = Giraffe.wiki.object_for @dir.join("/")
-      name = Giraffe::Conf.to_filename.call @name
+      name = Giraffe.to_filename.call @name
 
       path = if dir.path.empty? then name else File.join(dir.path, name) end
 
@@ -82,7 +82,7 @@ module Giraffe
     #         horribly with more complex name mappings.
     #
     def directory?()
-      File.directory? File.join(Giraffe::Conf.wikiroot, File.join(@dir), @name.downcase)
+      File.directory? File.join(Giraffe.wikiroot, File.join(@dir), @name.downcase)
     end
 
     # Escape < and > from the raw page content.
@@ -159,7 +159,7 @@ module Giraffe
       filename  = name
       relative  = if dir.empty? then filename else File.join(dir, filename) end
 
-      object    = Giraffe::Conf.wiki.object_for relative
+      object    = Giraffe.wiki.object_for relative
 
       new name, dir, uri, object, info
     end

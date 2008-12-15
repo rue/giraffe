@@ -174,16 +174,16 @@ describe "Completely empty path" do
     Waves.applications.clear
   end
 
-  it "redirects to the page named as Giraffe::Conf.home" do
+  it "redirects to the page named as Giraffe.home" do
     response = get("")
 
     response.status.should == 301
-    response.location.should == Giraffe::Conf.home
+    response.location.should == Giraffe.home
 
     response = get("/")
 
     response.status.should == 301
-    response.location.should == Giraffe::Conf.home
+    response.location.should == Giraffe.home
   end
 
 end

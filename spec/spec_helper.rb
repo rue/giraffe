@@ -9,15 +9,15 @@ $LOAD_PATH.unshift GIRAFFE_ROOT
 $LOAD_PATH.unshift GIRAFFE_WAVES
 
 require "waves"
-require "runtime/mocks"
+require "waves/runtime/mocks"
 
 require "rubygems"
   require "nokogiri"
 
-Waves::Runtime.instance = Waves::Runtime.new
-Object.send :include, Waves::Mocks
+Waves::Runtime.new
+include Waves::Mocks
 
-require "startup"
+require "run_giraffe_run"
 
 require "fileutils"
 
@@ -62,22 +62,22 @@ def create_good_repo()
 
   config = <<-ENDCONFIG
 # Directory in which the wiki pages live
-Giraffe::Conf.wikiroot    = "#{File.join @repo, @wiki}"
+Giraffe.wikiroot    = "#{File.join @repo, @wiki}"
 
 # Directory in which .git lives
-Giraffe::Conf.reporoot    = "#{File.join @repo, @wiki}/.."
+Giraffe.reporoot    = "#{File.join @repo, @wiki}/.."
 
 # Append extension to *all* page name candidates
-Giraffe::Conf.to_filename = lambda {|uri| uri + ".txt" }
-Giraffe::Conf.to_uri      = lambda {|file| file.chomp ".txt" }
+Giraffe.to_filename = lambda {|uri| uri + ".txt" }
+Giraffe.to_uri      = lambda {|file| file.chomp ".txt" }
 
 # No showing stuff other than .txt for now
-Giraffe::Conf.list_filter = lambda {|file| file =~ /\.txt$/ }
+Giraffe.list_filter = lambda {|file| file =~ /\.txt$/ }
 
 # Resource files allowed
 RESOURCES = { "png"     => {:mime => "image/png"} } unless defined? RESOURCES
 
-Giraffe::Conf.resource_filter = lambda {|uri|
+Giraffe.resource_filter = lambda {|uri|
                                 uri.match /.+\.(.+)$/
                                 RESOURCES[$1]
                                 }

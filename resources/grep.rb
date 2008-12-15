@@ -18,7 +18,7 @@ module Giraffe
 
         # TODO: May need further guarding here.
         @matches =  Giraffe.wiki!.grep(@search).select {|obj, match|
-                      Giraffe::Conf.list_filter.call obj.name
+                      Giraffe.list_filter.call obj.name
                     }
 
         eruby = Erubis::Eruby.new File.read("views/grep.erb")
