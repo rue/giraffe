@@ -93,10 +93,7 @@ For options, see:
 Your server software should have instructions on running rackup
 applications. There is nothing special you need to do for Giraffe.
 
-Note that config.ru /does/ assume you have a running server that
+Note that config.ru *does* assume you have a running server that
 invokes rackup. If you want to run standalone, see instructions
 above.
-
-If you are writing a rackup file, you presumably know
-what you are doing :)
 

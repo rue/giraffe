@@ -2,9 +2,6 @@
 #  Example configuration file for giraffe
 # ========================================
 #
-# When the file is loaded, an OpenStruct object named `Giraffe`
-# exists. This object can be manipulated directly.
-#
 # Currently none of the configuration options is required.
 # In most cases, however, you will want to set the `wikiroot`
 # option to some better location than ~/wiki.
@@ -23,7 +20,7 @@
 #
 #Giraffe.wikiroot = "/home/bob/code/cool_project"
 
-# Directory in which .git can be found. Only use if /not/ the
+# Directory in which .git can be found. Only use if *not* the
 # same as `wikiroot`. This is most often the case if you are
 # using a subdirectory of a repository as the wiki directory.
 #
@@ -44,7 +41,7 @@
 # You could for example convert from `WikiWord` style to a
 # `file_system_style` instead.
 #
-# This is _only_ the filename. Directories are resolved
+# This is *only the filename*. Directories are resolved
 # elsewhere. Although usually implemented with lambdas,
 # anything that responds to #call, takes a String and
 # returns a String works.
@@ -101,5 +98,5 @@
 #
 # Defaults to `nil`.
 #
-#Giraffe.authenticator = lambda {|user, pass| {"bob" => "abba4ever"}[user] == password }
+#Giraffe.authenticator = lambda {|user, pass| {"bob" => "abba4ever"}[user] == pass }
 

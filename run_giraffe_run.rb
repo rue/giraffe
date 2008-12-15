@@ -83,7 +83,7 @@ module Giraffe
         end
 
         response.status = 400
-        return "Search term was empty!"
+        "Search term was empty!"
       }
 
       # /pages/ in the repository or a subdirectory.
