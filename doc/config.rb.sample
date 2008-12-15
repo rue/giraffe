@@ -21,7 +21,7 @@
 #
 # Defaults to ~/wiki/
 #
-#Giraffe::Conf.wikiroot = "/home/bob/code/cool_project"
+#Giraffe.wikiroot = "/home/bob/code/cool_project"
 
 # Directory in which .git can be found. Only use if /not/ the
 # same as `wikiroot`. This is most often the case if you are
@@ -36,7 +36,7 @@
 #
 # Defaults to the same as #wikiroot.
 #
-#Giraffe::Conf.reporoot = Giraffe.wikiroot
+#Giraffe.reporoot = Giraffe.wikiroot
 
 # Mapping from URI path to filesystem path and vice versa.
 # Often this is simply adding/removing an extension.
@@ -51,8 +51,8 @@
 #
 # Both default to a no-op.
 #
-#Giraffe::Conf.to_filename = lambda {|uri| uri.downcase + ".markdown" }
-#Giraffe::Conf.to_uri      = lambda {|file| file.chomp ".markdown" }
+#Giraffe.to_filename = lambda {|uri| uri.downcase + ".markdown" }
+#Giraffe.to_uri      = lambda {|file| file.chomp ".markdown" }
 
 # Related to above, filter directory listings from git.
 #
@@ -63,7 +63,7 @@
 #
 # Default is to accept all.
 #
-#Giraffe::Conf.list_filter = lambda {|file| file =~ /\.markdown$/ }
+#Giraffe.list_filter = lambda {|file| file =~ /\.markdown$/ }
 
 # Resource files allowed.
 #
@@ -79,7 +79,7 @@
 #
 # By default no resource files are allowed.
 #
-#Giraffe::Conf.resource_filter = lambda {|uri| false }
+#Giraffe.resource_filter = lambda {|uri| false }
 
 
   # Wiki parameters
@@ -88,7 +88,7 @@
 #
 # Defaults to "/Home".
 #
-#Giraffe::Conf.home        = "/Index"
+#Giraffe.home        = "/Index"
 
 
   # User accounts
@@ -101,5 +101,5 @@
 #
 # Defaults to `nil`.
 #
-#Giraffe::Conf.authenticator = lambda {|user, pass| {"bob" => "abba4ever"}[user] == password }
+#Giraffe.authenticator = lambda {|user, pass| {"bob" => "abba4ever"}[user] == password }
 
