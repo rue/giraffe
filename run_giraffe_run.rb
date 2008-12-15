@@ -1,11 +1,17 @@
-require "foundations/compact"
 require "autocode"
 
-$LOAD_PATH.unshift File.join(File.dirname(__FILE__), "lib")
+here  = File.dirname __FILE__
+waves = ENV["WAVES"] || File.join(here, "waves", "lib")
 
+$LOAD_PATH.unshift  File.join(here, "lib"),
+                    File.join(here, "resources"),
+                    waves
 
 module Giraffe
-  include Waves::Foundations::Compact
+
+  # Register.
+  #
+  Waves << self
 
   # All of our resources live here.
   #
@@ -35,7 +41,8 @@ module Giraffe
     #
     #           /Commit => commit.txt     # Or whatever
     #
-    class Map
+    class Main
+      include Waves::Resources::Mixin
 
       # Normal pages have no particular prefix.
       #
@@ -45,7 +52,7 @@ module Giraffe
       #
       on(true, []) {
         Giraffe.wiki!
-        request.redirect Giraffe::Conf.home, 301
+        request.redirect Giraffe.home, 301
       }
 
       # /commit/ is a specific commit.
@@ -86,32 +93,63 @@ module Giraffe
       # /editable/ page that can be used to update the real page.
       #
       on(true, ["editable", true]) { to :editable }
+#
+## Generate patchfile for diff
+##
+#get "/a/patch/(.+)/(.+)" do
+#  path, name = File.split(params[:matches][1])
+#  commit = params[:matches][2]
+#
+#  diff = Page.from_uri(path, name).object.diff commit
+#
+#  header "Content-Type"         => "text/x-diff"
+#  header "Content-Disposition"  => "filename=patch.diff"
+#
+#  send_data diff, :type => "text/x-diff", :disposition => "inline"
+#end
 
+##
+#get '/d/(.+)/(.+)' do
+#  path, name = *File.split(params[:matches][1])
+#  commit = params[:matches][2]
+#
+#  @page = Page.from_uri path, name
+#  @diff = @page.object.diff commit
+#
+#  @commit = commit[0..7] + "..."
+#
+#  show :delta, "Diff of #{@page.pretty_name.last} against #{commit}"
+#end
     end
 
   end
 
 
-  # Configurations
-
-
-  # Development config.
+  # Configuration settings.
   #
   module Configurations
 
-    class Development
-      reloadable [Resources]
+    # Sane default config. Can be run standalone or from rackup.
+    #
+    class Development < Waves::Configurations::Default
+      reloadable [Giraffe::Resources]
 
-      host  "0.0.0.0"
-      port  8080
+      # When running standalone.
+      server    Waves::Servers::Mongrel
+      host      "0.0.0.0"
+      port      8080
 
-      application do
-        use ::Rack::ShowExceptions
-        use ::Rack::Static, :urls => ["/giraffe", "/favicon.ico"], :root => "public"
+      resource  Giraffe::Resources::Main
 
-        run ::Waves::Dispatchers::Default.new
-      end
+      application {
+        use Rack::ShowExceptions
+        use Rack::Static, :urls => %w[ /giraffe /favicon.ico ],
+                          :root => "public"
+        run Waves::Dispatchers::Default.new
+      }
+    end
 
+    class Production < Development
     end
 
   end
