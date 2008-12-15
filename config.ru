@@ -16,4 +16,3 @@ require "waves/runtime/rackup"
 #
 run Waves::Rackup.load(:startup => "run_giraffe_run.rb")
 
->>>>>>> Rackup file. Requires the modified Waves (included as a submodule.):config.ru

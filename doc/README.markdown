@@ -36,6 +36,7 @@ Gems needed by Giraffe:
 Optionally:
 
 - rspec
+- nokogiri
 - ruby-debug
 
 The web framework used, Waves, is included as a submodule.
@@ -62,6 +63,14 @@ it may be empty--the .git/ stuff must exist.)
 See doc/config.rb.sample for information. The configuration
 file to be used can be given in the GIRAFFE_CONF environment
 variable, but defaults to "config.rb".
+
+
+ Specs
+-------
+
+There is a minimal amount of specs (please add some):
+
+    $ spec -fs spec
 
 
  Running Standalone
