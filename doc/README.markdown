@@ -10,24 +10,6 @@ are for the purpose of centralising the documentation for Rubinius.
 As such, some behaviours may not suit all other use cases.
 
 
- Requirements
---------------
-
-These are all available through Gems.
-
-- metaid
-- mongrel (or something, see Sinatra's help.)
-- rack
-- rdiscount
-- rubypants
-
-Sinatra (the web framework) is included as a submodule. To set it
-up, issue the following from the project root:
-
-    $ git submodule init
-    $ git submodule update
-
-
  Features
 ----------
 
@@ -40,8 +22,35 @@ up, issue the following from the project root:
 - Minimal configuration done in pure Ruby.
 - Serve from repository root or any subdirectory.
 - URI-to-file-to-URI mapping and file- and resource visibility mapping.
-- User authentication through HTTP basic. (See Configuration.)
-- Rack support.
+- Run directly or with rackup.
+
+
+ Requirements
+--------------
+
+Gems needed by Giraffe:
+
+- rdiscount
+- rubypants
+
+Optionally:
+
+- rspec
+- ruby-debug
+
+The web framework used, Waves, is included as a submodule.
+To set it up, issue the following from the project root:
+
+    $ git submodule init
+    $ git submodule update
+
+Waves has quite a few dependencies, so it is best to use
+its tools to install those. Once you have done the above:
+
+    $ cd waves
+    $ sudo rake setup
+
+This installs the gems necessary.
 
 
  Configuration
@@ -51,23 +60,33 @@ Currently, you must have an existing Git repository (although
 it may be empty--the .git/ stuff must exist.)
 
 See doc/config.rb.sample for information. The configuration
-file to be used can be given using the `-f` option. At a
-minimum, you will probably give the path to your repository.
-
-You can write a rackup file to serve the application. See
-`config.ru` for an example.
+file to be used can be given in the GIRAFFE_CONF environment
+variable, but defaults to "config.rb".
 
 
- Running
----------
+ Running Standalone
+--------------------
 
-Run at port 8080:
+Without further configuration, Giraffe will run on Mongrel
+at 0.0.0.0:8080:
 
-    $ bin/giraffe -f config.rb -p 8080
+    $ waves/bin/waves server --startup run_giraffe_run.rb
 
-Use production environment (development by default):
+For options, see:
 
-    $ bin/giraffe -f config.rb -e production -p 8080
+    $ waves/bin/waves server --help
+    $ waves/bin/waves --help
+
+
+ Running With rackup
+---------------------
+
+Your server software should have instructions on running rackup
+applications. There is nothing special you need to do for Giraffe.
+
+Note that config.ru /does/ assume you have a running server that
+invokes rackup. If you want to run standalone, see instructions
+above.
 
 If you are writing a rackup file, you presumably know
 what you are doing :)
