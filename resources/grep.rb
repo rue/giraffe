@@ -14,7 +14,9 @@ module Giraffe
       # TODO: Probably horribly unsafe.
       #
       on(:get, ["grep", :term]) {
-        @search = Rack::Utils.escape captured.term
+        @search = Rack::Utils.unescape captured.term
+        @search.delete! "'`\"\\"
+        @search.gsub! "$", "\\$"
 
         # TODO: May need further guarding here.
         @matches =  Giraffe.wiki!.grep(@search).select {|obj, match|
