@@ -55,10 +55,6 @@ module Giraffe
         request.redirect Giraffe.home, 301
       }
 
-      # /commit/ is a specific commit.
-      #
-      #on(:get, ["commit", :sha]) { to: commit }
-
       # /diff/ from an earlier to current version.
       #
       #on(:get, ["diff", true]) { to :diff }
