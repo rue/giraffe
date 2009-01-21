@@ -1,8 +1,8 @@
 <div id="section_info">
   <% if @matches.empty? %>
-    <h1>No pages match '<span class="search_term"><%= Rack::Utils.escape @search %></span>'</h1>
+    <h1>No pages match '<span class="search_term"><%= @search %></span>'</h1>
   <% else %>
-    <h1>Results for '<span class="search_term"><%= Rack::Utils.escape @search %></span>'</h1>
+    <h1>Results for '<span class="search_term"><%= @search %></span>'</h1>
   <% end %>
 </div>
 
