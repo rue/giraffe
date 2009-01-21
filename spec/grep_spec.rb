@@ -28,7 +28,7 @@ describe "Grep result page" do
   end
 
   it "contains (unrendered) line that matched in successful search" do
-    match = Nokogiri::HTML.parse(get("/grep/one?").body).css ".match"
+    match = Nokogiri::HTML.parse(get("/grep/one").body).css ".match"
     match.size.should == 1
 
     match.first.content.should =~ /File \*one\* text #{$$}/
@@ -47,12 +47,67 @@ describe "Grep result page" do
     links = Nokogiri::HTML.parse(get("/grep/one/").body).css ".match a"
     links.find {|link| link["href"] =~ /file(2|3|4|6|7|8)/}.should == nil
   end
+end
 
-  it "has some measure of safety" do
-    fail
+
+describe "Grep safety measures" do
+
+  require "giraffe/git.rb"
+
+  before :each do
+    create_good_repo
+
+    module Git
+      class Tree
+        alias_method :old_grep, :grep
+
+        def grep(string)
+          $grepped = string
+          []
+        end
+      end
+    end
+
+    $grepped = nil
+
+    Waves << Giraffe
+  end
+
+  after :each do
+    delete_good_repo
+
+    module Git
+      class Tree
+        alias_method :grep, :old_grep
+      end
+    end
+
+    Waves.applications.clear
+  end
+
+  it "strip quotes and backticks from the search string" do
+    get URI.encode("/grep/hi \"there")
+    $grepped.should == "hi there"
+
+    get URI.encode("/grep/hi 'there")
+    $grepped.should == "hi there"
+
+    get URI.encode("/grep/hi `there")
+    $grepped.should == "hi there"
+  end
+
+  it "strip backslashes from the search string" do
+    get URI.encode("/grep/hi \\there")
+    $grepped.should == "hi there"
+  end
+
+  it "quote $ in the search string" do
+    get URI.encode("/grep/hi $there")
+    $grepped.should == "hi \\$there"
   end
 
 end
+
 
 describe "Initiating a grep from the top menu" do
 
